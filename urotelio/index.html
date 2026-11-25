@@ -1,0 +1,3522 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="tool">
+  <meta name="design-style" content="vitals">
+  <title>Classificazione &amp; Checklist Uropatologica WHO 2022 (5ª ed.)</title>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* 1. Vitals style tokens */
+      --background: #ffffff;
+      --surface-container-low: #f1f7f8;
+      --surface-container: #e3f1f3;
+      --surface-container-high: #d5e9ec;
+
+      --on-surface: #1b2b33;
+      --on-surface-variant: #46585f;
+
+      --outline: #7b9198;
+      --outline-variant: #d5e3e5;
+
+      --primary: #0f7c8a;
+      --on-primary: #ffffff;
+      --primary-container: #e3f1f3;
+      --on-primary-container: #0a5560;
+      --secondary: #1d5e3a;
+      --tertiary: #2e7d4f;
+      --error: #b3261e;
+      --on-error: #ffffff;
+
+      --data-1: #0f7c8a;
+      --data-2: #2e7d4f;
+      --data-3: #b86e00;
+      --data-4: #5c5fb0;
+      --data-context: #b8c7ca;
+
+      /* Font di sistema: nessuna risorsa esterna (uso offline) */
+      --font-headline: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-label: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+      --rounded: 0.625rem;
+      --rounded-lg: 0.875rem;
+      --rounded-full: 9999px;
+
+      --top-bar: 6px solid var(--primary);
+      --status-bar-width: 4px;
+      --card-border: 1px solid var(--outline-variant);
+      --card-lift: 0 1px 2px rgb(27 43 51 / 0.05), 0 6px 16px rgb(27 43 51 / 0.05);
+
+      /* 2. Shared semantic & focus tokens */
+      --positive: var(--tertiary);
+      --warning: var(--data-3);
+      --on-warning-container: #784600;
+      --warning-container: #fdf4e3;
+      --error-container: #fbeceb;
+      --ok-container: #e9f5ee;
+      --focus: var(--primary);
+      --primary-hover: #0b636f;
+
+      /* 3. Focused Tool type scale */
+      --display-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    header { position: static !important; }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    .page {
+      border-top: var(--top-bar);
+      min-height: 100vh;
+    }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-lg);
+      max-width: 1280px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Header block */
+    .app-header {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .header-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .kicker {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--display-size);
+      letter-spacing: -0.015em;
+      line-height: 1.08;
+      color: var(--on-surface);
+      margin: 0;
+    }
+
+    .lede {
+      font-size: var(--subhead-size);
+      line-height: 1.55;
+      color: var(--on-surface-variant);
+      max-width: 65ch;
+      margin: var(--space-sm) 0 0 0;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .nav-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      border-top: 1px solid var(--outline-variant);
+      padding-top: var(--space-md);
+    }
+
+    .nav-link {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      text-decoration: none;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .nav-link:hover {
+      background: var(--surface-container-low);
+      color: var(--primary);
+    }
+    .nav-link.is-active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      border-radius: var(--rounded) var(--rounded) 0 0;
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--background);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--surface-container-low);
+    }
+
+    .btn-ghost {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      border-color: var(--outline-variant);
+    }
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--surface-container);
+    }
+
+    .btn-danger-outline {
+      background: var(--background);
+      color: var(--error);
+      border-color: var(--error);
+    }
+    .btn-danger-outline:hover:not(:disabled) {
+      background: var(--error-container);
+    }
+
+    /* Chips */
+    .chip {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      background: var(--ok-container);
+      color: var(--secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      line-height: 1.4;
+    }
+    .chip[data-status="info"] {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .chip[data-status="warn"] {
+      background: var(--warning-container);
+      color: var(--on-warning-container);
+    }
+    .chip[data-status="alert"] {
+      background: var(--error-container);
+      color: var(--error);
+    }
+
+    /* Section headings */
+    .section-block {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+    }
+
+    .section-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      letter-spacing: -0.015em;
+      line-height: 1.15;
+      color: var(--on-surface);
+      margin: 0;
+    }
+
+    .section-subtitle {
+      color: var(--on-surface-variant);
+      margin: var(--space-xs) 0 0 0;
+      max-width: 65ch;
+    }
+
+    /* Status cards */
+    .status-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .status-card[data-status="ok"]    { border-left-color: var(--tertiary); }
+    .status-card[data-status="warn"]  { border-left-color: var(--warning); }
+    .status-card[data-status="alert"] { border-left-color: var(--error); }
+    .status-card[data-status="info"]  { border-left-color: var(--primary); }
+
+    .card {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+
+    /* Callouts */
+    .callout {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      font-size: 0.9375rem;
+    }
+    .callout[data-status="warn"] {
+      background: var(--warning-container);
+      color: var(--on-warning-container);
+      border-left-color: var(--warning);
+    }
+    .callout[data-status="alert"] {
+      background: var(--error-container);
+      color: var(--error);
+      border-left-color: var(--error);
+    }
+
+    /* Preset strip */
+    .preset-panel {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .preset-btn {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      padding: var(--space-xs) var(--space-md);
+      min-height: 44px;
+      border-radius: var(--rounded-full);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      border: 1px solid var(--outline-variant);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .preset-btn:hover {
+      background: var(--surface-container);
+      border-color: var(--primary);
+    }
+    .preset-btn.is-active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    /* Main Workspace Grid: Checklist (left) + Verdict (right) */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .steps-stack {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .step-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .step-badge-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: var(--label-size);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      letter-spacing: 0.04em;
+    }
+
+    .step-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      margin: 0;
+      color: var(--on-surface);
+    }
+
+    /* Option grid inside steps */
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+
+    .option-btn {
+      text-align: left;
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+      transition: background-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .option-btn:hover {
+      background: var(--surface-container-low);
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    .option-btn[aria-pressed="true"] {
+      background: var(--surface-container);
+      box-shadow: inset 0 0 0 2px var(--primary);
+      border-color: var(--primary);
+    }
+    .option-btn-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--on-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-xs);
+    }
+    .option-btn-desc {
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      line-height: 1.4;
+    }
+
+    /* Dual Slider + Number controls */
+    .control-box {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .control-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--on-surface);
+      display: block;
+    }
+
+    .dual-input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .slider-wrap {
+      flex: 1 1 220px;
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      min-height: 44px;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .num-wrap {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    input[type="number"], input[type="text"], select, textarea {
+      background: var(--background);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      color: var(--on-surface);
+    }
+    select {
+      padding-right: var(--space-xl);
+    }
+    input[type="number"] {
+      width: 96px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* Reference range meter for 5% cutoff and ROL 1.0mm */
+    .threshold-meter {
+      position: relative;
+      height: 12px;
+      border-radius: var(--rounded-full);
+      background: var(--outline-variant);
+      overflow: hidden;
+    }
+    .threshold-band-safe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: var(--tertiary);
+      opacity: 0.25;
+    }
+    .threshold-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: var(--primary);
+      transition: width var(--dur-micro) var(--ease-out);
+    }
+    .threshold-marker {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--error);
+    }
+    .threshold-legend {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+
+    /* Checkboxes */
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+    .check-label {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      background: var(--background);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .check-label:hover { background: var(--surface-container-low); }
+    .icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .inline-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .btn-mini {
+      min-height: 32px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+    }
+    .check-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* Verdict Panel */
+    .verdict-column {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .verdict-card {
+      box-shadow: var(--card-lift);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .verdict-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .verdict-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 1.375rem;
+      line-height: 1.15;
+      margin: var(--space-xs) 0 0 0;
+      color: var(--on-surface);
+    }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+
+    .kpi-mini {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      border: 1px solid var(--outline-variant);
+    }
+    .kpi-mini-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--on-surface-variant);
+    }
+    .kpi-mini-val {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+      margin-top: 2px;
+    }
+
+    /* Histology Schematic SVG wrapper */
+    .schematic-box {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-sm);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .schematic-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .schematic-caption {
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      padding: 0 var(--space-xs);
+    }
+
+    .detail-list {
+      margin: 0;
+      padding-left: var(--space-lg);
+      display: grid;
+      gap: var(--space-xs);
+      font-size: 0.9375rem;
+    }
+
+    .detail-group-title {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .report-box {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .report-text {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      color: var(--on-surface);
+      margin: 0;
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+
+    .inline-feedback {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      min-height: 1.25em;
+    }
+
+    /* Saved case log */
+    .saved-list {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .saved-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      font-size: 0.875rem;
+    }
+    .saved-item-meta {
+      display: grid;
+      gap: 2px;
+    }
+    .saved-item-actions {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    /* Filter toolbar & Comparative Table */
+    .filter-toolbar {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .search-field {
+      display: grid;
+      gap: var(--space-xs);
+      min-width: 240px;
+      flex: 1 1 240px;
+      max-width: 340px;
+    }
+
+    .table-wrap {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      overflow-x: auto;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      min-width: 780px;
+    }
+    table.data-table th {
+      background: var(--surface-container-low);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--on-surface-variant);
+      text-align: left;
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    table.data-table td {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      vertical-align: top;
+      color: var(--on-surface);
+    }
+    table.data-table tr:last-child td { border-bottom: none; }
+    table.data-table tbody tr:hover {
+      background: var(--surface-container-low);
+    }
+
+    /* Adaptive card grid for pitfalls & subtypes */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+
+    .pitfall-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+      align-content: start;
+    }
+
+    .pitfall-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+    }
+    .compare-box {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      border-top: 3px solid var(--primary);
+      font-size: 0.8125rem;
+    }
+    .compare-box[data-side="malignant"] {
+      border-top-color: var(--error);
+    }
+    .compare-box[data-side="benign"] {
+      border-top-color: var(--tertiary);
+    }
+    .compare-box h4 {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    /* IHC Simulator Grid */
+    .ihc-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .ihc-controls {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .field-group {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .marker-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+
+    .marker-tile {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .marker-name {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    /* Subtype pills list */
+    .subtype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+    .subtype-item {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      font-size: 0.875rem;
+    }
+    .subtype-item strong {
+      display: block;
+      font-family: var(--font-headline);
+      color: var(--on-surface);
+    }
+
+    /* Footer */
+    .app-footer {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .hidden { display: none !important; }
+
+    /* Container queries for component cards */
+    .card-wrapper { container-type: inline-size; }
+    @container (max-width: 460px) {
+      .pitfall-compare { grid-template-columns: 1fr; }
+      .kpi-strip { grid-template-columns: 1fr; }
+      .marker-strip { grid-template-columns: 1fr; }
+    }
+
+    /* Mobile breakpoint */
+    @media (max-width: 900px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+      .ihc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid {
+        grid-template-columns: 1fr;
+        padding: var(--space-md);
+        gap: var(--space-lg);
+      }
+      .pitfall-compare { grid-template-columns: 1fr; }
+      .kpi-strip { grid-template-columns: 1fr; }
+      .marker-strip { grid-template-columns: 1fr; }
+      .header-actions { width: 100%; }
+      .btn { flex: 1 1 auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="page-grid">
+
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="header-top-row">
+          <div>
+            <p class="kicker">Uropatologia Diagnostica &middot; Classificazione WHO 2022 (5ª edizione)</p>
+            <h1 class="title">Checklist Decisionale delle Proliferazioni e Neoplasie Uroteliali</h1>
+            <p class="lede">
+              Strumento operativo per l&rsquo;inquadramento istologico di lesioni piatte, papillari e invasive: valutazione passo-passo, soglia del 5% per l&rsquo;alto grado, substaging pT1 (ROL e livello anatomico), trappole morfologiche e impiego selettivo dell&rsquo;IHC.
+            </p>
+          </div>
+          <div class="header-actions">
+            <button type="button" class="btn btn-secondary" id="btn-export-report" onclick="exportCurrentReport()">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              <span>Esporta referto (.txt)</span>
+            </button>
+            <button type="button" class="btn btn-ghost" id="btn-reset-checklist" data-armed="false" onclick="handleResetChecklist(this)">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>Ripristina checklist</span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="nav-strip" aria-label="Sezioni principali">
+          <a href="#checklist" class="nav-link is-active" onclick="setActiveNav(this)">
+            <span>1. Checklist &amp; Albero Decisionale</span>
+          </a>
+          <a href="#matrice" class="nav-link" onclick="setActiveNav(this)">
+            <span>2. Matrice Comparativa (10 Entità)</span>
+          </a>
+          <a href="#trappole" class="nav-link" onclick="setActiveNav(this)">
+            <span>3. Trappole Morfologiche &amp; Sottotipi</span>
+          </a>
+          <a href="#immunoistochimica" class="nav-link" onclick="setActiveNav(this)">
+            <span>4. Pannello IHC (CK20, p53, CD44) &amp; TPS</span>
+          </a>
+        </nav>
+      </header>
+
+      <!-- SEZIONE 1: CHECKLIST & ALBERO DECISIONALE -->
+      <section id="checklist" class="section-block" aria-labelledby="heading-checklist">
+        <div class="section-header">
+          <div>
+            <h2 id="heading-checklist" class="section-title">1. Albero Decisionale &amp; Checklist Passo-Passo</h2>
+            <p class="section-subtitle">
+              La morfologia su ematossilina-eosina è il fondamento tassonomico. Seleziona i parametri istologici o carica uno scenario di riferimento.
+            </p>
+          </div>
+        </div>
+
+        <!-- Preset Scenari -->
+        <div class="preset-panel">
+          <span class="detail-group-title">Scenari diagnostici di riferimento (caricamento rapido)</span>
+          <div class="preset-row" id="preset-row">
+            <button type="button" class="preset-btn" data-preset="pTa_LG" onclick="applyPreset('pTa_LG')">pTa Basso Grado puro</button>
+            <button type="button" class="preset-btn" data-preset="pTa_HG_5" onclick="applyPreset('pTa_HG_5')">Papillare eterogeneo (HG 8% &ge; 5%)</button>
+            <button type="button" class="preset-btn" data-preset="pTa_LG_minorHG" onclick="applyPreset('pTa_LG_minorHG')">Papillare con focus HG 3% (&lt; 5%)</button>
+            <button type="button" class="preset-btn" data-preset="CIS_denudato" onclick="applyPreset('CIS_denudato')">CIS piatto / Clinging (pTis)</button>
+            <button type="button" class="preset-btn" data-preset="reattiva_BCG" onclick="applyPreset('reattiva_BCG')">Atipia reattiva post-BCG</button>
+            <button type="button" class="preset-btn" data-preset="pT1_ROL2" onclick="applyPreset('pT1_ROL2')">Carcinoma invasivo pT1 (ROL2)</button>
+            <button type="button" class="preset-btn" data-preset="tangenziale" onclick="applyPreset('tangenziale')">Sospetto taglio tangenziale pTa</button>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <!-- COLONNA SINISTRA: 4 PASSI + MODIFICATORI -->
+          <div class="steps-stack">
+
+            <!-- PASSO 1: ARCHITETTURA -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">PASSO 1</span>
+                  <h3 class="step-title">Architettura della proliferazione</h3>
+                </div>
+                <span class="chip" data-status="info">Esame a piccolo ingrandimento (4&times;&ndash;10&times;)</span>
+              </div>
+              <div class="option-grid" id="arch-options">
+                <button type="button" class="option-btn" data-arch="piatta" aria-pressed="false" onclick="setArchitecture('piatta')">
+                  <span class="option-btn-title">Piatta / Non papillare</span>
+                  <span class="option-btn-desc">Mucosa piatta, ispessita, atrofica o denudata; assenza di assi fibrovascolari.</span>
+                </button>
+                <button type="button" class="option-btn" data-arch="papillare" aria-pressed="false" onclick="setArchitecture('papillare')">
+                  <span class="option-btn-title">Papillare (esofitica o invertita)</span>
+                  <span class="option-btn-desc">Papille con assi fibrovascolari o crescita endofitica a margini espansivi (<em>pushing</em>).</span>
+                </button>
+                <button type="button" class="option-btn" data-arch="invasiva" aria-pressed="false" onclick="setArchitecture('invasiva')">
+                  <span class="option-btn-title">Invasiva / Infiltrante</span>
+                  <span class="option-btn-desc">Nidi irregolari, cordoni, singole cellule oltre la membrana basale o pattern <em>nested</em>/microcistico.</span>
+                </button>
+              </div>
+              <div class="callout" id="upump-note">
+                <strong>Aggiornamento WHO 2022 (UPUMP / AUP abolita):</strong> la categoria &ldquo;proliferazione uroteliale papillare a potenziale maligno indeterminato&rdquo; (2016) non è più riconosciuta come entità autonoma; tali lesioni ondulanti sono oggi classificate come pTa LG precoci o estensioni marginali di carcinoma papillare.
+              </div>
+            </div>
+
+            <!-- PASSO 2: SPESSORE E POLARITÀ -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">PASSO 2</span>
+                  <h3 class="step-title">Spessore epiteliale, polarità e coesione</h3>
+                </div>
+              </div>
+              <div class="option-grid" id="polarity-options">
+                <!-- Populated dynamically based on architecture -->
+              </div>
+            </div>
+
+            <!-- PASSO 3: GRADO CITONUCLEARE & CUT-OFF 5% -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">PASSO 3</span>
+                  <h3 class="step-title">Grado citonucleare &amp; soglia WHO 2022 del 5%</h3>
+                </div>
+              </div>
+              <div class="option-grid" id="grade-options">
+                <button type="button" class="option-btn" data-grade="assente" aria-pressed="false" onclick="setGrade('assente')">
+                  <span class="option-btn-title">Assente (normale)</span>
+                  <span class="option-btn-desc">Al 10&times; nuclei puntiformi (&lt; 3&times; linfocita); cromatina omogenea, assenza di pleomorfismo.</span>
+                </button>
+                <button type="button" class="option-btn" data-grade="reattivo" aria-pressed="false" onclick="setGrade('reattivo')">
+                  <span class="option-btn-title">Reattivo / Rigenerativo</span>
+                  <span class="option-btn-desc">Ingrandimento nucleare uniforme, cromatina fine/chiara, nucleoli centrali; N/C conservato.</span>
+                </button>
+                <button type="button" class="option-btn" data-grade="lieve" aria-pressed="false" onclick="setGrade('lieve')">
+                  <span class="option-btn-title">Lieve / Basso grado (LG)</span>
+                  <span class="option-btn-desc">Lieve variazione nucleare, cromatina lievemente granulare, mitosi rare e basali.</span>
+                </button>
+                <button type="button" class="option-btn" data-grade="alto" aria-pressed="false" onclick="setGrade('alto')">
+                  <span class="option-btn-title">Marcato / Alto grado (HG)</span>
+                  <span class="option-btn-desc">Nuclei 5&ndash;6&times; linfocita, ipercromasia, cromatina grossolana, membrane irregolari, mitosi alte/atipiche.</span>
+                </button>
+              </div>
+
+              <!-- Controllo soglia 5% per papillari -->
+              <div class="control-box" id="hg-percent-box">
+                <label class="control-label" for="num-hg-pct">
+                  Quota di componente citologica ad Alto Grado nei tumori papillari (%)
+                </label>
+                <div class="dual-input-row">
+                  <div class="slider-wrap">
+                    <input type="range" id="slider-hg-pct" min="0" max="100" step="1" value="0" aria-label="Percentuale componente alto grado con cursore" oninput="syncHgFromSlider(this.value)">
+                    <div class="threshold-meter" aria-hidden="true">
+                      <div class="threshold-band-safe" style="width: 5%;"></div>
+                      <div class="threshold-fill" id="hg-meter-fill" style="width: 0%;"></div>
+                      <div class="threshold-marker" style="left: 5%;"></div>
+                    </div>
+                    <div class="threshold-legend">
+                      <span>0% (LG puro)</span>
+                      <span>Cut-off WHO 2022: 5%</span>
+                      <span>100% (HG puro)</span>
+                    </div>
+                  </div>
+                  <div class="num-wrap">
+                    <label class="control-label" for="num-hg-pct">% HG</label>
+                    <input type="number" id="num-hg-pct" min="0" max="100" step="1" value="" placeholder="&mdash;" oninput="syncHgFromNumber(this.value)">
+                  </div>
+                </div>
+                <div class="inline-row">
+                  <p class="section-subtitle" id="hg-threshold-readout" style="margin: 0; font-size: 0.875rem;">
+                    Quota HG non valutata.
+                  </p>
+                  <button type="button" class="btn btn-ghost btn-mini" onclick="clearHgPct()">Non valutata</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PASSO 4: MEMBRANA BASALE, LAMINA PROPRIA E DETRUSORE -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">PASSO 4</span>
+                  <h3 class="step-title">Membrana basale, lamina propria (pT1) e detrusore (pT2)</h3>
+                </div>
+              </div>
+              <div class="option-grid" id="invasion-options">
+                <button type="button" class="option-btn" data-inv="integra" aria-pressed="false" onclick="setInvasion('integra')">
+                  <span class="option-btn-title">Membrana basale integra</span>
+                  <span class="option-btn-desc">Lesione non invasiva (piatta o papillare esofitica/invertita senza distruzione stromale).</span>
+                </button>
+                <button type="button" class="option-btn" data-inv="lamina_propria" aria-pressed="false" onclick="setInvasion('lamina_propria')">
+                  <span class="option-btn-title">Invasione Lamina Propria (pT1)</span>
+                  <span class="option-btn-desc">Superamento della membrana basale nel connettivo subepiteliale; muscolare propria indenne.</span>
+                </button>
+                <button type="button" class="option-btn" data-inv="detrusore" aria-pressed="false" onclick="setInvasion('detrusore')">
+                  <span class="option-btn-title">Invasione Detrusore (pT2)</span>
+                  <span class="option-btn-desc">Infiltrazione di grossi fasci muscolari lisci compatti della muscolare propria.</span>
+                </button>
+                <button type="button" class="option-btn" data-inv="indeterminato" aria-pressed="false" onclick="setInvasion('indeterminato')">
+                  <span class="option-btn-title">Indeterminato per invasione</span>
+                  <span class="option-btn-desc">Artefatto termico, scarso orientamento o sospetto taglio tangenziale / <em>floater</em>.</span>
+                </button>
+              </div>
+
+              <!-- Sub-pannello Substaging pT1 -->
+              <div class="control-box hidden" id="pt1-substaging-box">
+                <div class="step-head">
+                  <span class="control-label">Substaging pT1 (fortemente raccomandato da WHO 2022)</span>
+                  <span class="chip" id="rol-chip" data-status="info">ROL1 (&lt; 1,0 mm)</span>
+                </div>
+                <div class="dual-input-row">
+                  <div class="slider-wrap">
+                    <label class="control-label" for="slider-pt1-mm">Estensione massima invasione in lamina propria (mm)</label>
+                    <input type="range" id="slider-pt1-mm" min="0.1" max="5.0" step="0.1" value="0.6" oninput="syncPt1FromSlider(this.value)">
+                    <div class="threshold-meter" aria-hidden="true">
+                      <div class="threshold-band-safe" style="width: 20%;"></div>
+                      <div class="threshold-fill" id="pt1-meter-fill" style="width: 12%;"></div>
+                      <div class="threshold-marker" style="left: 20%;"></div>
+                    </div>
+                    <div class="threshold-legend">
+                      <span>0,1 mm</span>
+                      <span>Cut-off ROL: 1,0 mm (van Rhijn: 0,5 mm)</span>
+                      <span>5,0 mm</span>
+                    </div>
+                  </div>
+                  <div class="num-wrap">
+                    <label class="control-label" for="num-pt1-mm">Misura (mm)</label>
+                    <input type="number" id="num-pt1-mm" min="0.1" max="20.0" step="0.1" value="" placeholder="&mdash;" oninput="syncPt1FromNumber(this.value)">
+                  </div>
+                </div>
+                <div class="inline-row">
+                  <button type="button" class="btn btn-ghost btn-mini" onclick="clearPt1Mm()">Estensione non misurata</button>
+                </div>
+                <div class="field-group">
+                  <label class="control-label" for="select-pt1-anat">Livello istoanatomico rispetto alla <em>muscularis mucosae</em> (MM)</label>
+                  <select id="select-pt1-anat" onchange="setPt1Anat(this.value)">
+                    <option value="">&mdash; Non valutato &mdash;</option>
+                    <option value="sopra_mm">pT1a &mdash; Superficiale alla muscularis mucosae / plesso vascolare</option>
+                    <option value="entro_mm">pT1b &mdash; Nel contesto della muscularis mucosae</option>
+                    <option value="oltre_mm">pT1c (o pT1b nel sistema a 2 livelli) &mdash; Oltre la muscularis mucosae</option>
+                    <option value="non_valutabile">Non valutabile (MM assente o frammentazione TURBT; preferire ROL micrometrico)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Modificatori di contesto clinico-morfologico e IHC -->
+              <div class="field-group">
+                <span class="control-label">Contesto morfologico, trappole e stato IHC (opzionale)</span>
+                <div class="check-grid">
+                  <div class="field-group">
+                    <label class="control-label" for="sel-inflammation">Flogosi intraepiteliale o post-terapia (BCG / RT / MMC)</label>
+                    <select id="sel-inflammation" data-tri="inflammation" onchange="setTri('inflammation', this.value)">
+                      <option value="">&mdash; Non valutato &mdash;</option>
+                      <option value="assente">Assente</option>
+                      <option value="presente">Presente</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label class="control-label" for="sel-tangential">Dubbio taglio tangenziale, <em>floater</em> o cauterizzazione</label>
+                    <select id="sel-tangential" data-tri="tangential" onchange="setTri('tangential', this.value)">
+                      <option value="">&mdash; Non valutato &mdash;</option>
+                      <option value="assente">Assente</option>
+                      <option value="presente">Presente</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label class="control-label" for="sel-bland-subtype">Sottotipo con citologia blanda (<em>nested / large nested / tubulare / microcistico</em>)</label>
+                    <select id="sel-bland-subtype" data-tri="blandSubtype" onchange="setTri('blandSubtype', this.value)">
+                      <option value="">&mdash; Non valutato &mdash;</option>
+                      <option value="assente">Assente</option>
+                      <option value="presente">Presente</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="control-box hidden" id="subtype-detail-box">
+                  <div class="check-grid">
+                    <div class="field-group">
+                      <label class="control-label" for="sel-subtype-name">Sottotipo</label>
+                      <select id="sel-subtype-name" onchange="setSubtypeName(this.value)">
+                        <option value="">&mdash; Da specificare &mdash;</option>
+                        <option value="nested">Nested</option>
+                        <option value="large_nested">Large nested</option>
+                        <option value="tubulare">Tubulare</option>
+                        <option value="microcistico">Microcistico</option>
+                      </select>
+                    </div>
+                    <div class="field-group">
+                      <label class="control-label" for="num-subtype-pct">Quota del sottotipo (%)</label>
+                      <input type="number" id="num-subtype-pct" min="1" max="100" step="1" value="" placeholder="&mdash;" oninput="setSubtypePct(this.value)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="control-label" for="select-ihc-summary">Profilo IHC (CK20, p53, CD44) se eseguito</label>
+                <select id="select-ihc-summary" onchange="setIhcSummary(this.value)">
+                  <option value="none">Non eseguito (diagnosi puramente morfologica)</option>
+                  <option value="reactive">Profilo reattivo (CK20 solo ombrello, p53 wild-type, CD44 full-thickness)</option>
+                  <option value="cis">Profilo neoplastico CIS (CK20 full-thickness, p53 aberrante/null, CD44 basale o assente)</option>
+                  <option value="equivocal">Profilo parziale / non conclusivo (prevale la morfologia)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- PASSO 5: ELEMENTI DI REFERTO -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">PASSO 5</span>
+                  <h3 class="step-title">Elementi di referto (biopsia / TURBT)</h3>
+                </div>
+                <span class="chip" data-status="info">Non cambiano la categoria; entrano nel referto</span>
+              </div>
+              <div class="check-grid">
+                <div class="field-group">
+                  <label class="control-label" for="sel-mp">Muscolare propria (detrusore) nel campione</label>
+                  <select id="sel-mp" data-tri="mp" onchange="setTri('mp', this.value)">
+                    <option value="">&mdash; Non valutato &mdash;</option>
+                    <option value="presente">Presente</option>
+                    <option value="assente">Assente</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="control-label" for="sel-lvi">Invasione linfovascolare</label>
+                  <select id="sel-lvi" data-tri="lvi" onchange="setTri('lvi', this.value)">
+                    <option value="">&mdash; Non valutato &mdash;</option>
+                    <option value="assente">Assente</option>
+                    <option value="presente">Presente</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label class="control-label" for="sel-cis-assoc">CIS associato (nelle lesioni papillari o invasive)</label>
+                  <select id="sel-cis-assoc" data-tri="cisAssoc" onchange="setTri('cisAssoc', this.value)">
+                    <option value="">&mdash; Non valutato &mdash;</option>
+                    <option value="assente">Assente</option>
+                    <option value="presente">Presente</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- COLONNA DESTRA: VERDETTO DIAGNOSTICO LIVE -->
+          <div class="verdict-column">
+            <div class="status-card verdict-card card-wrapper" id="verdict-card" data-status="info">
+              <div class="verdict-header">
+                <div>
+                  <span class="kicker" id="verdict-category-label">Orientamento morfologico WHO 2022 (non sostituisce la diagnosi)</span>
+                  <h3 class="verdict-title" id="verdict-title">Checklist incompleta: verdetto non emesso</h3>
+                </div>
+                <span class="chip" id="verdict-chip" data-status="info">Incompleta</span>
+              </div>
+
+              <div class="kpi-strip">
+                <div class="kpi-mini">
+                  <div class="kpi-mini-label">Stadio / Categoria</div>
+                  <div class="kpi-mini-val" id="kpi-stage">&mdash;</div>
+                </div>
+                <div class="kpi-mini">
+                  <div class="kpi-mini-label">Grado WHO 2022</div>
+                  <div class="kpi-mini-val" id="kpi-grade">&mdash;</div>
+                </div>
+                <div class="kpi-mini">
+                  <div class="kpi-mini-label">Codice ICD-O</div>
+                  <div class="kpi-mini-val" id="kpi-icdo">&mdash;</div>
+                </div>
+              </div>
+
+              <!-- Schema Istologico Dinamico SVG -->
+              <div class="schematic-box">
+                <div class="detail-group-title" style="padding: 0 var(--space-xs);">Schema istologico dinamico degli strati vescicali</div>
+                <svg id="histology-svg" viewBox="0 0 540 220" role="img" aria-label="Rappresentazione schematica degli strati della parete vescicale"></svg>
+                <div class="schematic-caption" id="schematic-caption">
+                  Architettura papillare con membrana basale integra (linea continua) e citologia di basso grado.
+                </div>
+              </div>
+
+              <!-- Avvisi dinamici (trappole / discrepanze / cut-off) -->
+              <div class="callout hidden" id="verdict-alert-box" data-status="alert"></div>
+
+              <div>
+                <h4 class="detail-group-title" id="verdict-criteria-title">Criteri morfologici chiave</h4>
+                <ul class="detail-list" id="verdict-criteria"></ul>
+              </div>
+
+              <div>
+                <h4 class="detail-group-title">Diagnosi differenziali principali</h4>
+                <ul class="detail-list" id="verdict-dd"></ul>
+              </div>
+
+              <div>
+                <h4 class="detail-group-title">Indicazione IHC mirata</h4>
+                <p id="verdict-ihc" style="margin: 0; font-size: 0.9375rem;"></p>
+              </div>
+
+              <!-- Bozza referto strutturato -->
+              <div class="report-box">
+                <div class="step-head">
+                  <span class="detail-group-title" style="margin: 0;">Bozza referto strutturato (WHO 2022)</span>
+                  <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="copyReportText()">
+                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                      <span>Copia referto</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="saveCaseToLog()">
+                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/><line x1="12" x2="12" y1="7" y2="13"/><line x1="15" x2="9" y1="10" y2="10"/></svg>
+                      <span>Salva caso</span>
+                    </button>
+                  </div>
+                </div>
+                <pre class="report-text" id="report-preview"></pre>
+                <div class="inline-feedback" id="copy-feedback" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <!-- Archivio Casi della Sessione (persistito con notebookAppApi) -->
+            <div class="card">
+              <div class="step-head" style="margin-bottom: var(--space-sm);">
+                <div>
+                  <h4 class="step-title" style="font-size: 1rem;">Casi salvati nella sessione</h4>
+                  <p style="margin: 0; font-size: 0.8125rem; color: var(--on-surface-variant);">
+                    Salva i casi valutati per confrontarli o riprenderli al riavvio.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-ghost" id="btn-clear-log" data-armed="false" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="clearCaseLog(this)">
+                  <span>Svuota elenco</span>
+                </button>
+              </div>
+              <div class="saved-list" id="saved-cases-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEZIONE 2: MATRICE COMPARATIVA DELLE 10 ENTITÀ -->
+      <section id="matrice" class="section-block" aria-labelledby="heading-matrice">
+        <div class="section-header">
+          <div>
+            <h2 id="heading-matrice" class="section-title">2. Matrice Comparativa delle 10 Entità Uroteliali (WHO 2022)</h2>
+            <p class="section-subtitle">
+              Confronto diretto di architettura, spessore, polarità, grado citonucleare, integrità della membrana basale e profili immunoistochimici. Clicca &ldquo;Carica&rdquo; su qualsiasi riga per testarla nella checklist.
+            </p>
+          </div>
+        </div>
+
+        <div class="filter-toolbar">
+          <div class="filter-pills" id="matrix-filter-pills">
+            <button type="button" class="preset-btn is-active" data-filter="all" onclick="filterMatrix('all')">Tutte (10)</button>
+            <button type="button" class="preset-btn" data-filter="piatta" onclick="filterMatrix('piatta')">Piatte &amp; Reattive (5)</button>
+            <button type="button" class="preset-btn" data-filter="papillare" onclick="filterMatrix('papillare')">Papillari Non Invasive (4)</button>
+            <button type="button" class="preset-btn" data-filter="invasiva" onclick="filterMatrix('invasiva')">Invasivo pT1 / pT2 (1)</button>
+          </div>
+          <div class="search-field">
+            <label class="control-label" for="matrix-search">Cerca entità, criterio o marcatore</label>
+            <input type="text" id="matrix-search" placeholder="Es. CK20, 5%, ROL, nested, ombrello…" oninput="searchMatrix(this.value)">
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Entità WHO 2022</th>
+                <th scope="col">Architettura &amp; Spessore</th>
+                <th scope="col">Polarità &amp; Coesione</th>
+                <th scope="col">Citologia &amp; Mitosi</th>
+                <th scope="col">Membrana Basale</th>
+                <th scope="col">IHC &amp; Note 2022</th>
+                <th scope="col">Azione</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEZIONE 3: TRAPPOLE MORFOLOGICHE & SOTTOTIPI -->
+      <section id="trappole" class="section-block" aria-labelledby="heading-trappole">
+        <div class="section-header">
+          <div>
+            <h2 id="heading-trappole" class="section-title">3. Trappole Morfologiche, Artefatti e Sottotipi Ingannevoli</h2>
+            <p class="section-subtitle">
+              Errori ricorrenti nelle biopsie vescicali e nei campioni TURBT: come distinguere i mimickers benigni dall&rsquo;invasione reale e dal CIS.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-grid" id="pitfalls-grid"></div>
+
+        <!-- Sottotipi WHO 2022 -->
+        <div class="card" style="display: grid; gap: var(--space-md);">
+          <div>
+            <p class="kicker">Terminologia 5ª Edizione</p>
+            <h3 class="step-title">Sottotipi istologici (ex &ldquo;varianti&rdquo;) e differenziazione divergente</h3>
+            <p class="section-subtitle">
+              Nella WHO 2022 il termine <strong>&ldquo;sottotipo&rdquo;</strong> sostituisce &ldquo;variante&rdquo;. È raccomandato riportare sempre la <strong>presenza e la percentuale (%)</strong> di ciascun sottotipo e delle differenziazioni divergenti (squamosa, ghiandolare, trofoblastica, mülleriana, neuroendocrina).
+            </p>
+          </div>
+          <div class="subtype-grid" id="subtypes-grid"></div>
+        </div>
+      </section>
+
+      <!-- SEZIONE 4: RUOLO LIMITATO DELL'IHC & TPS -->
+      <section id="immunoistochimica" class="section-block" aria-labelledby="heading-ihc">
+        <div class="section-header">
+          <div>
+            <h2 id="heading-ihc" class="section-title">4. Ruolo Selettivo dell&rsquo;Immunoistochimica &amp; Correlazione TPS</h2>
+            <p class="section-subtitle">
+              L&rsquo;IHC è esclusivamente un complemento alla valutazione morfologica su E&amp;E. Nessun marcatore singolo autorizza una diagnosi di CIS o di invasione in assenza di criteri istologici compatibili.
+            </p>
+          </div>
+        </div>
+
+        <div class="ihc-grid">
+          <!-- Simulatore IHC CK20 / p53 / CD44 -->
+          <div class="card ihc-controls">
+            <div>
+              <p class="kicker">Simulatore di Pannello</p>
+              <h3 class="step-title">Interpretazione combinata CK20 / p53 / CD44 nelle lesioni piatte</h3>
+            </div>
+            <div class="field-group">
+              <label class="control-label" for="sim-ck20">CK20 (Citocheratina 20)</label>
+              <select id="sim-ck20" onchange="updateIhcSimulator()">
+                <option value="ombrello">Solo cellule ad ombrello superficiali (normale / reattivo)</option>
+                <option value="full">Positività aberrante a tutto spessore (full-thickness)</option>
+                <option value="negativo">Negativo / assenza di cellule superficiali</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="control-label" for="sim-p53">p53</label>
+              <select id="sim-p53" onchange="updateIhcSimulator()">
+                <option value="wildtype">Wild-type (debole, focale/eterogeneo)</option>
+                <option value="over">Aberrante: diffuso e intenso (&gt; 70&ndash;80%)</option>
+                <option value="null">Aberrante: completamente negativo (pattern null)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="control-label" for="sim-cd44">CD44</label>
+              <select id="sim-cd44" onchange="updateIhcSimulator()">
+                <option value="full">Espressione marcata a tutto spessore (full-thickness)</option>
+                <option value="basale">Limitato allo strato basale o ridotto/assente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="status-card card-wrapper" id="ihc-sim-result" data-status="ok" style="display: grid; gap: var(--space-md);">
+            <div class="verdict-header">
+              <div>
+                <span class="kicker">Lettura del Pannello</span>
+                <h3 class="verdict-title" id="ihc-sim-title" style="font-size: 1.25rem;">Profilo compatibile con urotelio normale o atipia reattiva</h3>
+              </div>
+              <span class="chip" id="ihc-sim-chip" data-status="ok">Pattern Reattivo</span>
+            </div>
+
+            <div class="marker-strip">
+              <div class="marker-tile">
+                <span class="marker-name">CK20</span>
+                <span id="tile-ck20" style="font-size: 0.8125rem; color: var(--on-surface-variant);">Solo ombrello</span>
+              </div>
+              <div class="marker-tile">
+                <span class="marker-name">p53</span>
+                <span id="tile-p53" style="font-size: 0.8125rem; color: var(--on-surface-variant);">Wild-type</span>
+              </div>
+              <div class="marker-tile">
+                <span class="marker-name">CD44</span>
+                <span id="tile-cd44" style="font-size: 0.8125rem; color: var(--on-surface-variant);">Full-thickness</span>
+              </div>
+            </div>
+
+            <p id="ihc-sim-explanation" style="margin: 0; font-size: 0.9375rem;"></p>
+            <div class="callout" data-status="warn" id="ihc-sim-caveat" style="font-size: 0.875rem;"></div>
+          </div>
+        </div>
+
+        <!-- Marcatori di linea, staging e TPS -->
+        <div class="card-grid">
+          <div class="status-card" data-status="info" style="display: grid; gap: var(--space-sm);">
+            <h3 class="step-title">Marcatori di linea uroteliale (ISUP)</h3>
+            <ul class="detail-list">
+              <li><strong>GATA3, p63, HMWCK (34&beta;E12) o CK5/6:</strong> pannello di prima linea per confermare la differenziazione uroteliale in sedi metastatiche o morfologie insolite (GATA3 positivo nell&rsquo;86&ndash;90%+ dei casi; p63 specificità elevatissima vs prostata).</li>
+              <li><strong>CK7 / CK20:</strong> frequentemente coespressi, ma utilità limitata nella DD con carcinoma prostatico o adenocarcinoma enterico (CDX2/CK20 positivi in entrambi).</li>
+              <li><strong>Uroplakina III:</strong> alta specificità ma sensibilità moderata (fino al 40% nell&rsquo;alto grado); <em>Uroplakina II</em> e <em>S100P</em> in validazione aggiuntiva.</li>
+            </ul>
+          </div>
+
+          <div class="status-card" data-status="info" style="display: grid; gap: var(--space-sm);">
+            <h3 class="step-title">IHC nello staging pT1 / pT2 e membrana basale</h3>
+            <ul class="detail-list">
+              <li><strong>Pancheratina (AE1/AE3):</strong> evidenzia invasione precoce oscurata dalla flogosi o colonizzazione di fasci muscolari da <em>floaters</em>.</li>
+              <li><strong>Desmina:</strong> distingue i fasci di muscolo liscio dalla desmoplasia miofibroblastica e ne delinea i contorni; <strong>ISUP non raccomanda</strong> <em>smoothelin</em> o <em>vimentina</em> di routine per sottoclassificare il muscolo.</li>
+              <li><strong>Collagene IV:</strong> valuta la continuità della membrana basale nei sospetti tagli tangenziali di pTa.</li>
+            </ul>
+          </div>
+
+          <div class="status-card" data-status="warn" style="display: grid; gap: var(--space-sm);">
+            <h3 class="step-title">Correlazione citologica &mdash; The Paris System (TPS)</h3>
+            <ul class="detail-list">
+              <li>Il grading a due livelli (LG vs HG) della WHO 2022 si correla direttamente con <strong>TPS</strong>, focalizzato sull&rsquo;identificazione del carcinoma uroteliale di alto grado (HGUC).</li>
+              <li><strong>Criteri TPS per HGUC:</strong> almeno <strong>5&ndash;10 cellule uroteliali</strong> ben conservate con rapporto <strong>N:C &ge; 0,7</strong>, ipercromasia moderata-severa, cromatina grossolana e membrana nucleare irregolare.</li>
+              <li><strong>Attenzione al tratto superiore:</strong> cellule di pelvi, uretra e collo vescicale hanno fisiologicamente nuclei più ampi e citoplasma meno chiaro.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER FONTI -->
+      <footer class="app-footer">
+        <strong>Riferimenti scientifici e classificativi di base</strong>
+        <span>
+          WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª edizione (IARC, 2022) &middot; Raspollini MR et al., <em>News in the classification of WHO 2022 bladder tumors</em>, Pathologica 2023 &middot; Lopez-Beltran A, Cheng L, <em>Stage T1 bladder carcinoma: diagnostic criteria and pitfalls</em>, Pathology 2021 &middot; Brimo F, Epstein JI, <em>Selected common diagnostic problems in urologic pathology</em>, Arch Pathol Lab Med 2012 &middot; Amin MB et al., <em>ISUP Best Practices Recommendations in Immunohistochemistry</em>, Am J Surg Pathol 2014 &middot; Validazione prospettica sistema ROL pT1 (<em>Rete Oncologica Lombarda</em>, 1,0 mm).
+        </span>
+        <span>
+          Nota metodologica: le linee guida cliniche non sostituiscono né comandano su diagnosi istologica, classificazione nosologica, grading, criteri morfologici o pannelli immunoistochimici diagnostici.
+        </span>
+      </footer>
+
+    </main>
+  </div>
+
+  <api-shim></api-shim>
+  <script id="uro-engine">
+    /* =========================================================================
+       MOTORE DECISIONALE (puro: nessun DOM, nessuno stato globale)
+       Ogni campo ha uno stato "non valutato" (null): un campo vuoto non è "assente".
+       Il verdetto è emesso solo se i campi obbligatori sono compilati e coerenti.
+       ========================================================================= */
+
+    var CASE_FIELDS = {
+      arch: null,
+      polarity: null,
+      grade: null,
+      invasion: null,
+      hgPct: null,
+      pt1Mm: null,
+      pt1Anat: null,
+      inflammation: null,
+      tangential: null,
+      blandSubtype: null,
+      subtypeName: null,
+      subtypePct: null,
+      mp: null,
+      lvi: null,
+      cisAssoc: null,
+      ihcSummary: `none`
+    };
+
+    var ENUMS = {
+      arch: [`piatta`, `papillare`, `invasiva`],
+      grade: [`assente`, `reattivo`, `lieve`, `alto`],
+      invasion: [`integra`, `lamina_propria`, `detrusore`, `indeterminato`],
+      pt1Anat: [`sopra_mm`, `entro_mm`, `oltre_mm`, `non_valutabile`],
+      subtypeName: [`nested`, `large_nested`, `tubulare`, `microcistico`],
+      ihcSummary: [`none`, `reactive`, `cis`, `equivocal`]
+    };
+
+    var POLARITY_IDS = {
+      piatta: [`normale_piatta`, `ispessita_ordinata`, `flogosi_attiva`, `perdita_polarita`],
+      papillare: [`papille_normali`, `punlmp_ordinato`, `lg_lieve_disordine`, `hg_disordine`],
+      invasiva: [`fronte_irregolare`, `pattern_blando`, `tangenziale_sospetto`]
+    };
+
+    var TRI_FIELDS = [`inflammation`, `tangential`, `blandSubtype`, `mp`, `lvi`, `cisAssoc`];
+
+    var GRADE_NAMES = {
+      assente: `Assente (normale)`,
+      reattivo: `Reattivo / Rigenerativo`,
+      lieve: `Lieve / Basso grado`,
+      alto: `Marcato / Alto grado`
+    };
+
+    var SUBTYPE_NAMES = {
+      nested: `nested`,
+      large_nested: `large nested`,
+      tubulare: `tubulare`,
+      microcistico: `microcistico`
+    };
+
+    function normalizeTri(v) {
+      if (v === true) return `presente`;
+      if (v === false) return `assente`;
+      if (v === `presente` || v === `assente`) return v;
+      return null;
+    }
+
+    function normalizeNum(v, min, max) {
+      if (v === null || v === undefined || v === ``) return null;
+      var n = Number(v);
+      if (!isFinite(n)) return null;
+      if (n < min) n = min;
+      if (n > max) n = max;
+      return n;
+    }
+
+    function normalizeEnum(v, list) {
+      return list.indexOf(v) !== -1 ? v : null;
+    }
+
+    /* Converte qualsiasi input (anche salvataggi della versione precedente con booleani) in un caso valido */
+    function normalizeCase(src) {
+      var s = {};
+      var keys = Object.keys(CASE_FIELDS);
+      for (var i = 0; i < keys.length; i++) s[keys[i]] = CASE_FIELDS[keys[i]];
+      if (!src || typeof src !== `object`) return s;
+
+      s.arch = normalizeEnum(src.arch, ENUMS.arch);
+      s.polarity = s.arch && POLARITY_IDS[s.arch].indexOf(src.polarity) !== -1 ? src.polarity : null;
+      s.grade = normalizeEnum(src.grade, ENUMS.grade);
+      s.invasion = normalizeEnum(src.invasion, ENUMS.invasion);
+      s.hgPct = normalizeNum(src.hgPct, 0, 100);
+      if (s.hgPct !== null) s.hgPct = Math.round(s.hgPct);
+      s.pt1Mm = normalizeNum(src.pt1Mm, 0.1, 20);
+      if (s.pt1Mm !== null) s.pt1Mm = Math.round(s.pt1Mm * 10) / 10;
+      s.pt1Anat = normalizeEnum(src.pt1Anat, ENUMS.pt1Anat);
+      for (var t = 0; t < TRI_FIELDS.length; t++) {
+        s[TRI_FIELDS[t]] = normalizeTri(src[TRI_FIELDS[t]]);
+      }
+      s.subtypeName = s.blandSubtype === `presente` ? normalizeEnum(src.subtypeName, ENUMS.subtypeName) : null;
+      s.subtypePct = s.blandSubtype === `presente` ? normalizeNum(src.subtypePct, 1, 100) : null;
+      if (s.subtypePct !== null) s.subtypePct = Math.round(s.subtypePct);
+      s.ihcSummary = normalizeEnum(src.ihcSummary, ENUMS.ihcSummary) || `none`;
+      return s;
+    }
+
+    /* Campi mancanti e contraddizioni: entrambi impediscono il verdetto */
+    function checkCase(s) {
+      var missing = [];
+      var conflicts = [];
+
+      if (!s.arch) missing.push(`Passo 1 — architettura della proliferazione.`);
+      if (!s.polarity) missing.push(`Passo 2 — spessore, polarità e coesione.`);
+      if (!s.grade) missing.push(`Passo 3 — grado citonucleare.`);
+      if (!s.invasion) missing.push(`Passo 4 — membrana basale / invasione.`);
+
+      var invasionClaimed = s.invasion === `lamina_propria` || s.invasion === `detrusore` || s.invasion === `indeterminato`;
+
+      if (s.arch === `invasiva` && s.invasion === `integra`) {
+        conflicts.push(`Architettura “invasiva / infiltrante” con membrana basale “integra”: le due risposte si escludono. Se l’invasione non è dimostrabile, usare “Indeterminato per invasione”.`);
+      }
+      if (invasionClaimed && (s.grade === `assente` || s.grade === `reattivo`)) {
+        conflicts.push(`Invasione accertata o sospetta con grado citonucleare “${GRADE_NAMES[s.grade]}”: un carcinoma invasivo presuppone atipia neoplastica (basso o alto grado). Rivedere il passo 3 o il passo 4.`);
+      }
+      if (s.invasion === `detrusore` && s.mp === `assente`) {
+        conflicts.push(`Invasione del detrusore (pT2) con muscolare propria dichiarata assente nel campione.`);
+      }
+
+      if (s.arch === `piatta`) {
+        if (s.grade === `assente` && s.polarity === `perdita_polarita`) {
+          conflicts.push(`Citologia “assente (normale)” con perdita di polarità / discoesione: combinazione non classificabile. Rivedere il passo 2 o il passo 3.`);
+        }
+        if (s.grade === `assente` && s.polarity === `flogosi_attiva`) {
+          conflicts.push(`Passo 2 “flogosi / contesto post-terapia” con citologia “assente (normale)”: indicare “Reattivo / Rigenerativo” se c’è atipia reattiva, altrimenti descrivere lo spessore al passo 2.`);
+        }
+        if (s.polarity === `flogosi_attiva` && s.inflammation === `assente`) {
+          conflicts.push(`Il passo 2 indica flogosi / contesto post-terapia, ma nel contesto la flogosi è dichiarata assente.`);
+        }
+        if (s.grade === `lieve` && s.invasion === `integra` && !s.inflammation) {
+          missing.push(`Flogosi intraepiteliale o post-terapia (assente / presente): con atipia lieve in lesione piatta distingue displasia da atipia di significato indeterminato.`);
+        }
+      }
+
+      if (s.arch === `papillare`) {
+        if (s.grade === `reattivo`) {
+          conflicts.push(`Grado “Reattivo / Rigenerativo” con architettura papillare: combinazione non prevista dalla checklist (considerare cistite papillare / polipoide).`);
+        }
+        if (s.polarity === `papille_normali` && (s.grade === `lieve` || s.grade === `alto`)) {
+          conflicts.push(`Il passo 2 descrive un rivestimento identico all’urotelio normale, il passo 3 un’atipia (${GRADE_NAMES[s.grade]}): rivedere uno dei due.`);
+        }
+        if (s.polarity === `punlmp_ordinato` && s.grade === `alto`) {
+          conflicts.push(`Il passo 2 descrive ordine stretto e monotono senza variazione citologica significativa, il passo 3 un alto grado: rivedere uno dei due.`);
+        }
+        if (s.grade === `assente` && (s.polarity === `lg_lieve_disordine` || s.polarity === `hg_disordine`)) {
+          conflicts.push(`Disordine architetturale con citologia “assente (normale)”: indicare il grado citonucleare della neoplasia papillare.`);
+        }
+        if (s.hgPct !== null && s.grade === `alto` && s.hgPct < 5) {
+          conflicts.push(`Grado “Marcato / Alto grado” con quota HG dichiarata ${s.hgPct}% (< 5%): se l’alto grado è focale, selezionare il grado lieve e indicare la quota.`);
+        }
+        if (s.hgPct !== null && s.grade === `assente` && s.hgPct > 0) {
+          conflicts.push(`Quota HG ${s.hgPct}% con citologia “assente (normale)”.`);
+        }
+        if (s.grade === `lieve` && s.hgPct === null && (s.invasion === `integra` || s.invasion === `indeterminato`)) {
+          missing.push(`Quota della componente di alto grado (%), anche 0%: decide basso vs alto grado con la soglia del 5%.`);
+        }
+      }
+
+      return { missing: missing, conflicts: conflicts };
+    }
+
+    function triLabel(v, notEvaluated) {
+      if (v === `presente`) return `presente`;
+      if (v === `assente`) return `assente`;
+      return notEvaluated || `non valutato`;
+    }
+
+    function anatDescription(v) {
+      if (v === `sopra_mm`) return `invasione superficiale alla muscularis mucosae`;
+      if (v === `entro_mm`) return `invasione nel contesto della muscularis mucosae`;
+      if (v === `oltre_mm`) return `invasione oltre la muscularis mucosae`;
+      if (v === `non_valutabile`) return `muscularis mucosae non valutabile`;
+      return `livello rispetto alla muscularis mucosae non valutato`;
+    }
+
+    function evaluateDiagnosis(input) {
+      var s = normalizeCase(input);
+      var check = checkCase(s);
+      var alerts = [];
+      var result = {
+        verdictState: `issued`,
+        categoryLabel: `Orientamento morfologico WHO 2022 (non sostituisce la diagnosi)`,
+        title: ``,
+        chip: ``,
+        status: `info`,
+        stage: ``,
+        gradeLabel: ``,
+        icdo: `—`,
+        criteriaTitle: `Criteri morfologici chiave`,
+        criteria: [],
+        dd: [],
+        ihcNote: ``,
+        svgMode: `pending`,
+        schematicCaption: ``,
+        reportLines: [],
+        alerts: alerts,
+        missing: check.missing,
+        conflicts: check.conflicts
+      };
+
+      /* A. Contraddizioni: verdetto sospeso */
+      if (check.conflicts.length > 0) {
+        result.verdictState = `conflict`;
+        result.status = `alert`;
+        result.title = `Verdetto sospeso: combinazione incoerente`;
+        result.chip = `Incoerente`;
+        result.stage = `—`;
+        result.gradeLabel = `—`;
+        result.criteriaTitle = `Contraddizioni da risolvere`;
+        result.criteria = check.conflicts.slice();
+        result.ihcNote = `Correggere i passi indicati: su dati contraddittori non viene emesso alcun verdetto.`;
+        result.schematicCaption = `Nessuno schema: i dati inseriti si contraddicono.`;
+        result.reportLines = [`VERDETTO NON EMESSO — combinazione incoerente:`]
+          .concat(check.conflicts.map(function (c) { return `- ${c}`; }));
+        if (check.missing.length > 0) {
+          result.reportLines.push(`Campi ancora da valutare:`);
+          result.reportLines = result.reportLines.concat(check.missing.map(function (m) { return `- ${m}`; }));
+        }
+        return result;
+      }
+
+      /* B. Campi obbligatori mancanti: verdetto non emesso */
+      if (check.missing.length > 0) {
+        result.verdictState = `incomplete`;
+        result.status = `info`;
+        result.title = `Checklist incompleta: verdetto non emesso`;
+        result.chip = `Incompleta`;
+        result.stage = `—`;
+        result.gradeLabel = `—`;
+        result.criteriaTitle = `Campi da valutare`;
+        result.criteria = check.missing.slice();
+        result.ihcNote = `Un campo non compilato non equivale a “assente”: completare i passi indicati.`;
+        result.schematicCaption = `Nessuno schema finché i passi obbligatori non sono compilati.`;
+        result.reportLines = [`VERDETTO NON EMESSO — campi da valutare:`]
+          .concat(check.missing.map(function (m) { return `- ${m}`; }));
+        return result;
+      }
+
+      /* C. Avvisi di contesto (non cambiano la categoria) */
+      if (s.tangential === `presente`) {
+        alerts.push(`Attenzione ai tagli tangenziali / floaters: verificare l’integrità della membrana basale (Collagene IV), l’assenza di desmoplasia e la presenza di capillari paralleli ai nidi. Se il tessuto è frammentato o termicamente danneggiato, è preferibile dichiarare l’invasione indeterminata.`);
+      }
+      if (s.polarity === `tangenziale_sospetto` && (s.invasion === `lamina_propria` || s.invasion === `detrusore`)) {
+        alerts.push(`Il passo 2 descrive nidi a contorni lisci / frustoli staccati senza risposta stromale, ma l’invasione è indicata come accertata: verificare prima di stadiare.`);
+      }
+      if (s.polarity === `pattern_blando` && s.blandSubtype !== `presente`) {
+        alerts.push(`Il passo 2 descrive un pattern con citologia blanda (nested / large nested / microcistico / tubulare): specificare il sottotipo nel contesto e la relativa percentuale.`);
+      }
+      if (s.blandSubtype === `presente` && s.invasion === `integra`) {
+        alerts.push(`Sottotipo con citologia blanda indicato in lesione con membrana basale integra: i sottotipi elencati si definiscono nel carcinoma invasivo. Verificare il campionamento della base.`);
+      }
+      if ((s.invasion === `lamina_propria` || s.invasion === `detrusore`) && s.arch === `papillare` && s.grade === `lieve` && s.hgPct !== null && s.hgPct >= 5) {
+        alerts.push(`Quota HG ${s.hgPct}% (≥ 5%) con grado prevalente lieve in tumore invasivo: il grado riportato segue il passo 3 (la soglia del 5% è applicata solo ai papillari non invasivi). Verificare il grado da refertare.`);
+      }
+      if (s.ihcSummary === `reactive` && s.grade === `alto` && s.arch === `piatta`) {
+        alerts.push(`Discordanza morfologia-IHC: la citologia appare di alto grado ma il profilo IHC (CK20 solo ombrello, p53 wild-type, CD44 full-thickness) suggerisce reattività. Rivalutare l’entità della flogosi o una pregressa radioterapia/BCG prima di porre diagnosi di CIS.`);
+      }
+      if (s.ihcSummary === `cis` && (s.grade === `assente` || s.grade === `reattivo`)) {
+        alerts.push(`Regola aurea WHO/ISUP: l’IHC non comanda mai sulla morfologia. Una positività aberrante per CK20 o p53 in assenza di criteri citonucleari maligni su E&E non giustifica la diagnosi di CIS.`);
+      }
+
+      var hgPct = s.hgPct === null ? 0 : s.hgPct;
+
+      /* 1. INVASIVE PATHWAY (pT1 / pT2 / Indeterminato) */
+      if (s.invasion === `detrusore`) {
+        result.status = `alert`;
+        result.stage = `pT2`;
+        result.icdo = `8120/3`;
+        result.chip = `pT2 Muscolo-invasivo`;
+        result.gradeLabel = s.grade === `lieve` ? `Basso grado (raro)` : `Alto grado (HG)`;
+        if (s.blandSubtype === `presente`) result.gradeLabel = `Alto grado (o sottotipo blando)`;
+        result.title = s.blandSubtype === `presente`
+          ? `Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)`
+          : `Carcinoma uroteliale invasivo della muscolare propria (pT2)`;
+        result.svgMode = `invasive_pt2`;
+        result.schematicCaption = `Invasione dei grossi fasci muscolari lisci compatti del detrusore (pT2).`;
+        result.criteria = [
+          `Infiltrazione di nidi, cordoni o singole cellule entro fasci spessi e compatti di muscolo liscio del detrusore.`,
+          `Spesso associato a risposta desmoplastica, eosinofilia citoplasmatica al fronte e perdita di polarità.`,
+          `Nei sottotipi nested/large nested/microcistico/tubulare, la citologia può apparire ingannevolmente blanda anche in profondità.`
+        ];
+        result.dd = [
+          `Infiltrazione della sola muscularis mucosae iperplastica (pT1 vs pT2).`,
+          `Fibre miofibroblastica reattiva da desmoplasia (utilizzare Desmina).`,
+          `Colonizzazione di muscolo resecato da parte di floaters tumorali.`
+        ];
+        result.ihcNote = `Desmina per confermare la natura muscolare liscia dei fasci infiltrati; GATA3, p63, HMWCK se morfologia poco differenziata. TERT utile se sottotipo nested puro.`;
+      } else if (s.invasion === `lamina_propria`) {
+        var measured = s.pt1Mm !== null;
+        var mmText = measured ? `${s.pt1Mm.toFixed(1)} mm` : `non misurata`;
+        var rolClass = measured ? (s.pt1Mm >= 1.0 ? `ROL2` : `ROL1`) : null;
+        var vanRhijn = measured ? (s.pt1Mm >= 0.5 ? `T1e` : `T1m`) : null;
+        var anatText = anatDescription(s.pt1Anat);
+
+        result.status = `alert`;
+        result.stage = measured ? `pT1 (${rolClass})` : `pT1`;
+        result.icdo = `8120/3`;
+        result.chip = measured ? `pT1 · ${rolClass} (${mmText})` : `pT1 · estensione non misurata`;
+        result.gradeLabel = s.grade === `lieve` ? `Basso grado (LG)` : `Alto grado (HG)`;
+        result.title = s.arch === `piatta`
+          ? `CIS uroteliale con microinvasione / invasione lamina propria (pT1)`
+          : `Carcinoma uroteliale invasivo della lamina propria (pT1)`;
+        result.svgMode = `invasive_pt1`;
+        result.schematicCaption = measured
+          ? `Superamento della membrana basale in lamina propria (${mmText} → ${rolClass} / ${vanRhijn}); detrusore indenne.`
+          : `Superamento della membrana basale in lamina propria (estensione non misurata); detrusore indenne.`;
+        result.criteria = [
+          `Superamento focale o esteso della membrana basale nel tessuto connettivo subepiteliale (lamina propria).`,
+          measured
+            ? `Substaging micrometrico: ${mmText} → ${rolClass} (soglia ROL 1,0 mm) / ${vanRhijn} (soglia 0,5 mm).`
+            : `Substaging micrometrico: estensione non misurata (nessuna classe ROL / T1m-T1e calcolata).`,
+          `Valutazione anatomica: ${anatText}. La presenza di ROL2 (≥ 1,0 mm) si associa a un rischio significativamente aumentato di progressione.`
+        ];
+        result.dd = [
+          `Taglio tangenziale di carcinoma papillare non invasivo (pTa): contorni lisci, Collagene IV continuo, capillari paralleli.`,
+          `Crescita invertita a margini espansivi (pushing) senza distruzione stromale.`,
+          `Iperplasia dei nidi di von Brunn, cistite cistica o iperplasia pseudocarcinomatosa post-attinica.`
+        ];
+        result.ihcNote = `Pancheratina (AE1/AE3) per evidenziare microinvasione mascherata da flogosi; Collagene IV se dubbio sul superamento della membrana basale.`;
+      } else if (s.invasion === `indeterminato`) {
+        var indetHg = s.grade === `alto` || (s.arch === `papillare` && hgPct >= 5);
+        result.status = `warn`;
+        result.stage = `Indeterminato (pTa vs pT1)`;
+        result.icdo = `8130/2?`;
+        result.chip = `Invasione non escludibile`;
+        result.gradeLabel = indetHg ? `Alto grado (HG)` : `Basso grado (LG)`;
+        result.title = `Proliferazione uroteliale con invasione stromale indeterminata`;
+        result.svgMode = `tangential`;
+        result.schematicCaption = `Contorni dubbi per artefatto termico, orientamento subottimale o sospetto taglio tangenziale.`;
+        result.criteria = [
+          `Frammentazione TURBT, artefatti da cauterizzazione o orientamento obliquo impediscono di confermare o escludere l’invasione.`,
+          `Dichiarare l’impossibilità di definire pT1 è una pratica raccomandata quando i criteri morfologici rigorosi non sono soddisfatti.`
+        ];
+        result.dd = [
+          `Taglio tangenziale di pTa vs microinvasione pT1 iniziale.`,
+          `Nidi di von Brunn reattivi in biopsia superficiale vs carcinoma nested.`,
+          `Floaters adesi a fasci muscolari.`
+        ];
+        result.ihcNote = `Eseguire livelli seriati più profondi prima dell’IHC; Collagene IV per membrana basale e Pancheratina per piccoli nidi/floaters. Consigliare re-TURBT se indicato clinicamente.`;
+      }
+
+      /* 2. NON-INVASIVE FLAT PATHWAY */
+      else if (s.arch === `piatta`) {
+        if (s.grade === `alto`) {
+          result.status = `alert`;
+          result.stage = `pTis`;
+          result.icdo = `8120/2`;
+          result.chip = `CIS (pTis)`;
+          result.gradeLabel = `Alto grado (HG)`;
+          result.title = `Carcinoma uroteliale in situ (CIS / pTis)`;
+          result.svgMode = `flat_cis`;
+          result.schematicCaption = `Proliferazione piatta di cellule maligne di alto grado con perdita di polarità, discoesione e membrana basale integra.`;
+          result.criteria = [
+            `Riconoscibile già al 10× per nuclei ingranditi e ipercromatici (5–6× la dimensione di un linfocita nella lamina propria).`,
+            `Spessore variabile (ispessito, normale, assottigliato o quasi denudato/clinging) con discoesione superficiale.`,
+            `Cromatina grossolana, membrane nucleari irregolari, mitosi frequenti anche in assenza di flogosi intraepiteliale.`
+          ];
+          result.dd = [
+            `Atipia uroteliale reattiva severa (in presenza di flogosi acuta/BCG/RT/MMC).`,
+            `Cellule normali di pelvi renale, uretra o collo vescicale (nuclei fisiologicamente più ampi).`,
+            `Cellule ad ombrello dislocate (basso N/C, citoplasma eosinofilo abbondante, multinucleazione).`
+          ];
+          result.ihcNote = `Se necessaria conferma: CK20 aberrante full-thickness + p53 aberrante (diffuso/intenso o null) + CD44 ridotto/basale. L’IHC è negativa o parziale in una minoranza di CIS: non esclude la diagnosi se la morfologia è tipica.`;
+          if (s.inflammation === `presente`) {
+            alerts.push(`In presenza di flogosi intraepiteliale severa (specie neutrofila) o recente BCG/RT, verificare che il grado di atipia sia nettamente sproporzionato rispetto alla flogosi prima di confermare il CIS.`);
+          } else if (s.inflammation === null) {
+            alerts.push(`Flogosi intraepiteliale / post-terapia non valutata: va esclusa una atipia reattiva severa prima di confermare il CIS.`);
+          }
+        } else if (s.grade === `lieve`) {
+          if (s.inflammation === `presente`) {
+            result.status = `warn`;
+            result.stage = `Indeterminato`;
+            result.icdo = `—`;
+            result.chip = `Atipia significato indeterminato`;
+            result.gradeLabel = `Non conclusivo`;
+            result.title = `Atipia uroteliale di significato indeterminato (CIS non escludibile)`;
+            result.svgMode = `flat_reactive`;
+            result.schematicCaption = `Atipia citologica su sfondo di flogosi intraepiteliale marcata: categoria rara da riservare ai casi non dirimibili.`;
+            result.criteria = [
+              `Presenza di flogosi intraepiteliale significativa associata ad atipia lievemente sproporzionata rispetto all’infiltrato.`,
+              `Criteri insufficienti per diagnosi definitiva di CIS.`
+            ];
+            result.dd = [
+              `Atipia uroteliale reattiva florida vs CIS con flogosi secondaria.`,
+              `Displasia uroteliale.`
+            ];
+            result.ihcNote = `Usare questa categoria con estrema parsimonia (non come cestino diagnostico) e consigliare biopsia di controllo dopo risoluzione della flogosi.`;
+          } else {
+            result.status = `warn`;
+            result.stage = `Preneoplastico`;
+            result.icdo = `—`;
+            result.chip = `Displasia uroteliale`;
+            result.gradeLabel = `Pre-CIS (basso/intermedio)`;
+            result.title = `Displasia uroteliale`;
+            result.svgMode = `flat_dysplasia`;
+            result.schematicCaption = `Lesione piatta preneoplastica con atipia citologica che non raggiunge la soglia diagnostica del CIS.`;
+            result.criteria = [
+              `Alterazioni citologiche e architetturali considerate neoplastiche ma inferiori per gravità al CIS (WHO 2022).`,
+              `Lieve-moderato disordine della polarità, assenza di marcato pleomorfismo o ipercromasia franca.`
+            ];
+            result.dd = [
+              `Atipia uroteliale reattiva (verificare l’assenza di flogosi e anamnesi terapeutica).`,
+              `Carcinoma in situ (CIS) iniziale o variante a grandi cellule monotone.`
+            ];
+            result.ihcNote = `Nella WHO 2022 la displasia non ha più un capitolo autonomo ed è riconosciuta come categoria a bassa riproducibilità inter-osservatore. CK20/p53/CD44 spesso intermedi o non dirimenti.`;
+          }
+        } else if (s.grade === `reattivo`) {
+          result.status = `warn`;
+          result.stage = `Non neoplastico`;
+          result.icdo = `—`;
+          result.chip = `Atipia reattiva`;
+          result.gradeLabel = `Reattivo`;
+          result.title = `Atipia uroteliale reattiva`;
+          result.svgMode = `flat_reactive`;
+          result.schematicCaption = `Ingrandimento nucleare uniforme con nucleoli centrali prominenti, cromatina fine e coesione mantenuta.`;
+          result.criteria = [
+            `Ingrandimento nucleare uniforme con cromatina fine o chiarificata (non ipercromasia maligna).`,
+            `Nucleoli centrali singoli e prominenti; polarità sostanzialmente conservata e assenza di discoesione.`,
+            `Presenza di neutrofili/linfociti intraepiteliali o modificazioni tipiche post-RT/MMC (N/C conservato, cromatina smudged, vacuolizzazione).`
+          ];
+          result.dd = [
+            `Carcinoma in situ (CIS), in particolare la forma a grandi cellule senza marcato pleomorfismo.`,
+            `Displasia uroteliale.`
+          ];
+          result.ihcNote = `Se richiesta conferma: atteso profilo CK20 limitato alle cellule ad ombrello, p53 wild-type e CD44 espresso a tutto spessore.`;
+        } else if (s.polarity === `ispessita_ordinata`) {
+          result.status = `ok`;
+          result.stage = `Non neoplastico`;
+          result.icdo = `—`;
+          result.chip = `Iperplasia piatta`;
+          result.gradeLabel = `Assente`;
+          result.title = `Iperplasia uroteliale piatta (senza atipia)`;
+          result.svgMode = `flat_hyperplasia`;
+          result.schematicCaption = `Aumento dello spessore epiteliale (> 7–10 strati) con polarità ordinata e citologia normale.`;
+          result.criteria = [
+            `Aumento marcato del numero di strati cellulari senza formazione di veri assi fibrovascolari.`,
+            `Polarità mantenuta, maturazione verso le cellule ad ombrello preservata, assenza di atipia citologica.`
+          ];
+          result.dd = [
+            `Taglio tangenziale di urotelio normale ispessito.`,
+            `Margine periferico di neoplasia papillare non invasiva di basso grado (ex UPUMP 2016, abolita nella WHO 2022).`
+          ];
+          result.ihcNote = `Non necessaria immunoistochimica.`;
+        } else {
+          result.status = `ok`;
+          result.stage = `Normale`;
+          result.icdo = `—`;
+          result.chip = `Urotelio normale`;
+          result.gradeLabel = `Assente`;
+          result.title = `Urotelio normale`;
+          result.svgMode = `flat_normal`;
+          result.schematicCaption = `Mucosa uroteliale normale (3–7 strati), polarità ordinata, cellule ad ombrello integre e membrana basale continua.`;
+          result.criteria = [
+            `Spessore fisiologico (circa 3–7 strati in base allo stato di distensione).`,
+            `Al 10× nuclei piccoli e regolari (< 3× linfocita); polarità perpendicolare alla lamina propria.`,
+            `Lamina propria con eventuale sparso infiltrato linfocitario fisiologico (non sufficiente a causare atipia reattiva).`
+          ];
+          result.dd = [
+            `Taglio tangenziale (può simulare pseudostratificazione o iperplasia).`,
+            `Urotelio di pelvi/uretra/collo (nuclei leggermente più grandi).`
+          ];
+          result.ihcNote = `Non necessaria (fisiologicamente CK20+ solo sulle cellule ad ombrello, CD44 basale, p53 wild-type).`;
+        }
+      }
+
+      /* 3. NON-INVASIVE PAPILLARY PATHWAY */
+      else if (s.arch === `papillare`) {
+        if (s.grade === `alto` || hgPct >= 5) {
+          var effectivePct = s.grade === `alto` ? (s.hgPct === null ? null : s.hgPct) : hgPct;
+          result.status = `alert`;
+          result.stage = `pTa HG`;
+          result.icdo = `8130/2`;
+          result.chip = effectivePct !== null && effectivePct < 100 ? `pTa HG (comp. HG ${effectivePct}% ≥ 5%)` : `pTa HG`;
+          result.gradeLabel = `Alto grado (HG)`;
+          result.title = `Carcinoma uroteliale papillare non invasivo di alto grado (pTa HG)`;
+          result.svgMode = `papillary_hg`;
+          result.schematicCaption = `Papille fuse con disordine architetturale, citologia di alto grado (≥ 5%) e membrana basale integra.`;
+          result.criteria = [
+            effectivePct !== null
+              ? `Criterio WHO 2022 per tumori eterogenei: una componente di alto grado ≥ 5% classifica l’intera neoplasia come Alto Grado (qui: ${effectivePct}%).`
+              : `Criterio WHO 2022 per tumori eterogenei: una componente di alto grado ≥ 5% classifica l’intera neoplasia come Alto Grado (qui: alto grado prevalente, quota non quantificata).`,
+            `Marcato disordine architetturale, fusione papillare, perdita di polarità e mitosi frequenti anche negli strati superiori.`,
+            `Nuclei pleomorfi, ipercromatici, nucleoli evidenti; valida anche l’eventuale architettura invertita di alto grado.`
+          ];
+          result.dd = [
+            `Carcinoma papillare di basso grado con componente HG < 5%.`,
+            `Carcinoma uroteliale invasivo della lamina propria (pT1) nello stalk papillare o alla base.`,
+            `Artefatti da taglio tangenziale alla base delle papille.`
+          ];
+          result.ihcNote = `Non necessaria per il grading; utile solo Collagene IV/Pancheratina se vi è sospetto di microinvasione nello stalk o alla base.`;
+        } else if (s.grade === `lieve`) {
+          var hasMinorHg = hgPct > 0 && hgPct < 5;
+          result.status = `warn`;
+          result.stage = `pTa LG`;
+          result.icdo = `8130/2`;
+          result.chip = hasMinorHg ? `pTa LG (+ HG ${hgPct}% < 5%)` : `pTa LG`;
+          result.gradeLabel = hasMinorHg ? `Basso grado (+ focale HG < 5%)` : `Basso grado (LG)`;
+          result.title = hasMinorHg
+            ? `Carcinoma uroteliale papillare non invasivo di basso grado con componente HG < 5%`
+            : `Carcinoma uroteliale papillare non invasivo di basso grado (pTa LG)`;
+          result.svgMode = `papillary_lg`;
+          result.schematicCaption = hasMinorHg
+            ? `Architettura papillare LG predominante con focolaio di alto grado < 5% (WHO 2022) e membrana basale integra.`
+            : `Architettura papillare ordinata con lieve variazione nucleare, rare mitosi basali e membrana basale integra.`;
+          result.criteria = [
+            `Architettura papillare (esofitica o invertita) con ordine complessivo preservato ma lieve variazione di polarità e spaziatura nucleare.`,
+            `Nuclei con lieve variazione di forma/dimensione, cromatina granulare fine, mitosi scarse e prevalentemente basali.`,
+            hasMinorHg
+              ? `Regola WHO 2022: poiché la componente HG è < 5% (${hgPct}%), il tumore va classificato come Basso Grado segnalando la quota focale < 5%.`
+              : `Assenza di componente di alto grado (0%).`
+          ];
+          result.dd = [
+            `PUNLMP (se manca del tutto la variazione citonucleare e l’ordine architetturale è stretto e monotono).`,
+            `Carcinoma papillare di alto grado (se la componente HG raggiunge o supera il 5%).`,
+            `Papilloma invertito vs carcinoma LG a crescita invertita (valutare spessore e atipia).`
+          ];
+          result.ihcNote = `Non richiesta di routine. In caso di pattern invertito, verificare l’assenza di infiltrazione stromale distruttiva.`;
+        } else if (s.polarity === `punlmp_ordinato`) {
+          result.status = `warn`;
+          result.stage = `PUNLMP`;
+          result.icdo = `8130/1`;
+          result.chip = `PUNLMP`;
+          result.gradeLabel = `Assente / Minima`;
+          result.title = `Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)`;
+          result.svgMode = `papillary_punlmp`;
+          result.schematicCaption = `Papille rivestite da urotelio ispessito (> 7 strati) con architettura strettamente ordinata e assenza di atipia.`;
+          result.criteria = [
+            `Papille sottili e non fuse (o nidi invertiti ben circoscritti) rivestite da urotelio ispessito (> 7 strati).`,
+            `Polarità strettamente ordinata, assenza di atipia citologica o variazione nucleare minima uniforme.`,
+            `Mitosi assenti o rare e confinate allo strato basale; tassi di recidiva e progressione inferiori al pTa LG.`
+          ];
+          result.dd = [
+            `Papilloma uroteliale (rivestimento di spessore normale ≤ 7 strati).`,
+            `Carcinoma uroteliale papillare di basso grado (pTa LG: presenza di lieve disordine e atipia nucleare riconoscibile).`
+          ];
+          result.ihcNote = `Diagnosi esclusivamente morfologica; l’IHC non distingue in modo affidabile PUNLMP da pTa LG.`;
+        } else {
+          result.status = `ok`;
+          result.stage = `Benigno`;
+          result.icdo = `8120/0`;
+          result.chip = `Papilloma uroteliale`;
+          result.gradeLabel = `Assente`;
+          result.title = `Papilloma uroteliale (esofitico o invertito)`;
+          result.svgMode = `papillary_papilloma`;
+          result.schematicCaption = `Assi fibrovascolari delicati (o trabecole invertite) rivestiti da urotelio di spessore e citologia normali (≤ 7 strati).`;
+          result.criteria = [
+            `Papille semplici con assi fibrovascolari delicati non fusi o cordoni invertiti sottili anastomizzati.`,
+            `Rivestimento uroteliale di spessore fisiologico (≤ 7 strati) con cellule ad ombrello preservate.`,
+            `Citologia completamente normale; mitosi assenti.`
+          ];
+          result.dd = [
+            `PUNLMP (spessore aumentato > 7 strati).`,
+            `Cistite papillare / polipoide reattiva (assi edematosi con flogosi).`,
+            `Nidi di von Brunn floridi (nel papilloma invertito).`
+          ];
+          result.ihcNote = `Non necessaria (CK20 limitata alle cellule ad ombrello).`;
+        }
+      }
+
+      /* Build structured report */
+      var lines = [];
+      var invasive = s.invasion === `lamina_propria` || s.invasion === `detrusore`;
+      lines.push(`DIAGNOSI ISTOLOGICA (WHO 2022, 5ª ed.): ${result.title}`);
+      lines.push(`- Categoria / Stadio patologico: ${result.stage} (ICD-O: ${result.icdo})`);
+      lines.push(`- Grado istologico: ${result.gradeLabel}`);
+      if (s.arch === `papillare`) {
+        lines.push(s.hgPct !== null
+          ? `- Quota componente ad alto grado: ${s.hgPct}% (soglia WHO 2022: 5%)`
+          : `- Quota componente ad alto grado: non quantificata`);
+      }
+      if (s.invasion === `lamina_propria`) {
+        if (s.pt1Mm !== null) {
+          var rClass = s.pt1Mm >= 1.0 ? `ROL2 (≥ 1,0 mm)` : `ROL1 (< 1,0 mm)`;
+          var vClass = s.pt1Mm >= 0.5 ? `T1e (≥ 0,5 mm)` : `T1m (< 0,5 mm)`;
+          lines.push(`- Substaging pT1 (lamina propria): ${s.pt1Mm.toFixed(1)} mm → ${rClass} / ${vClass}`);
+        } else {
+          lines.push(`- Substaging pT1 (lamina propria): estensione non misurata`);
+        }
+        lines.push(`- Livello istoanatomico: ${anatDescription(s.pt1Anat)}`);
+      }
+      if (s.blandSubtype === `presente`) {
+        if (s.subtypeName || s.subtypePct !== null) {
+          var sName = s.subtypeName ? SUBTYPE_NAMES[s.subtypeName] : `sottotipo da specificare`;
+          var sPct = s.subtypePct !== null ? `${s.subtypePct}%` : `percentuale da specificare`;
+          lines.push(`- Sottotipo istologico: ${sName} (${sPct})`);
+        } else {
+          lines.push(`- Sottotipo istologico / differenziazione divergente: specificare sottotipo (es. nested, large nested, tubulare, microcistico) e relativa percentuale (%).`);
+        }
+      }
+      if (invasive || s.invasion === `indeterminato`) {
+        lines.push(`- Invasione linfovascolare: ${triLabel(s.lvi, `non valutata`)}`);
+      }
+      if (s.arch === `papillare` || (s.arch === `invasiva`)) {
+        lines.push(`- CIS associato: ${triLabel(s.cisAssoc)}`);
+      }
+      if (s.mp !== null || invasive || s.invasion === `indeterminato`) {
+        lines.push(`- Muscolare propria (detrusore) nel campione: ${triLabel(s.mp, `non valutata`)}`);
+      }
+      if (s.ihcSummary !== `none`) {
+        var ihcMap = {
+          reactive: `CK20 solo ombrello, p53 wild-type, CD44 full-thickness (a supporto di reattività)`,
+          cis: `CK20 full-thickness, p53 aberrante/null, CD44 basale/assente (a supporto di CIS)`,
+          equivocal: `profilo IHC non conclusivo; prevale il giudizio morfologico`
+        };
+        lines.push(`- Immunoistochimica di supporto: ${ihcMap[s.ihcSummary] || ``}`);
+      }
+
+      result.reportLines = lines;
+      return result;
+    }
+
+    if (typeof module !== `undefined` && module.exports) {
+      module.exports = { evaluateDiagnosis: evaluateDiagnosis, normalizeCase: normalizeCase, checkCase: checkCase, CASE_FIELDS: CASE_FIELDS };
+    }
+  </script>
+  <script>
+    /* =========================================================================
+       DATA CATALOGS (backtick template literals for apostrophe safety)
+       ========================================================================= */
+
+    var POLARITY_BY_ARCH = {
+      piatta: [
+        {
+          id: `normale_piatta`,
+          title: `Spessore normale (3\u20137 strati), polarità conservata`,
+          desc: `Cellule ad ombrello superficiali integre, maturazione ordinata dalla base alla superficie.`
+        },
+        {
+          id: `ispessita_ordinata`,
+          title: `Ispessimento (> 7\u201310 strati), polarità conservata`,
+          desc: `Aumento degli strati cellulari senza disordine architetturale né perdita di maturazione.`
+        },
+        {
+          id: `flogosi_attiva`,
+          title: `Spessore variabile con flogosi / contesto post-terapia`,
+          desc: `Infiltrato neutrofilo o linfocitario intraepiteliale, edema o storia di BCG/RT/MMC; coesione mantenuta.`
+        },
+        {
+          id: `perdita_polarita`,
+          title: `Spessore variabile o denudato, perdita di polarità`,
+          desc: `Discoesione superficiale, mucosa assottigliata (clinging) o ispessita, affollamento disordinato.`
+        }
+      ],
+      papillare: [
+        {
+          id: `papille_normali`,
+          title: `Papille semplici o cordoni invertiti sottili (\u2264 7 strati)`,
+          desc: `Rivestimento identico all\u2019urotelio normale, assi fibrovascolari delicati non fusi.`
+        },
+        {
+          id: `punlmp_ordinato`,
+          title: `Ispessimento papillare (> 7 strati), ordine stretto e monotonia`,
+          desc: `Polarità conservata, assenza di variazione citologica significativa, rare mitosi basali.`
+        },
+        {
+          id: `lg_lieve_disordine`,
+          title: `Lieve disordine architetturale, fusione focale`,
+          desc: `Polarità globalmente mantenuta con lieve variabilità della spaziatura nucleare; crescita esofitica o invertita.`
+        },
+        {
+          id: `hg_disordine`,
+          title: `Marcato disordine architetturale, perdita di polarità`,
+          desc: `Papille frequentemente fuse, affollamento caotico, discoesione e mitosi a tutto spessore.`
+        }
+      ],
+      invasiva: [
+        {
+          id: `fronte_irregolare`,
+          title: `Nidi irregolari, cordoni o singole cellule infiltranti`,
+          desc: `Perdita di polarizzazione, eosinofilia paradossa al fronte, desmoplasia o retrazione stromale.`
+        },
+        {
+          id: `pattern_blando`,
+          title: `Nidi confluenti o tubuli/cisti con citologia blanda`,
+          desc: `Base irregolare infiltrante tipica dei sottotipi nested, large nested, microcistico o tubulare.`
+        },
+        {
+          id: `tangenziale_sospetto`,
+          title: `Nidi rotondeggianti a contorni lisci / frustoli staccati`,
+          desc: `Assenza di risposta stromale desmoplastica, capillari paralleli o sospetti floaters.`
+        }
+      ]
+    };
+
+    var ENTITIES_MATRIX = [
+      {
+        id: `normale`,
+        category: `piatta`,
+        name: `Urotelio normale`,
+        icdo: `\u2014`,
+        stage: `Benigno`,
+        status: `ok`,
+        arch: `Mucosa piatta; 3\u20137 strati (variabile con la distensione vescicale).`,
+        polarity: `Polarità ordinata perpendicolare alla superficie; cellule ad ombrello preservate.`,
+        cytology: `Nuclei piccoli e uniformi (< 3\u00d7 linfocita); al 10\u00d7 appaiono come piccoli punti scuri.`,
+        bm: `Integra.`,
+        ihc: `CK20 limitata alle cellule ad ombrello; p53 wild-type; CD44 basale/parabasale.`,
+        preset: { arch: `piatta`, polarity: `normale_piatta`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `iperplasia_piatta`,
+        category: `piatta`,
+        name: `Iperplasia uroteliale piatta`,
+        icdo: `\u2014`,
+        stage: `Benigno / Reattivo`,
+        status: `ok`,
+        arch: `Mucosa piatta ispessita (> 7\u201310 strati) senza veri assi fibrovascolari.`,
+        polarity: `Polarità e maturazione verso la superficie conservate; nessuna discoesione.`,
+        cytology: `Atipia citonucleare assente o minima; mitosi assenti o strettamente basali.`,
+        bm: `Integra.`,
+        ihc: `Pattern normale/reattivo. Nota WHO 2022: UPUMP/AUP (ondulante) abolita come entità autonoma (considerata pTa LG precoce o margine).`,
+        preset: { arch: `piatta`, polarity: `ispessita_ordinata`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `atipia_reattiva`,
+        category: `piatta`,
+        name: `Atipia uroteliale reattiva`,
+        icdo: `\u2014`,
+        stage: `Reattivo`,
+        status: `warn`,
+        arch: `Mucosa piatta di spessore variabile su fondo di flogosi acuta/cronica, calcoli, catetere o post-BCG/RT/MMC.`,
+        polarity: `Architettura generalmente ordinata; non denudata né discoesiva.`,
+        cytology: `Ingrandimento nucleare uniforme, cromatina fine/chiara (no ipercromasia maligna), nucleoli centrali prominenti; mitosi proporzionate alla flogosi.`,
+        bm: `Integra.`,
+        ihc: `CK20 solo ombrello; p53 wild-type; CD44 marcato a tutto spessore. Se atipia sproporzionata: \u201catipia di significato indeterminato\u201d.`,
+        preset: { arch: `piatta`, polarity: `flogosi_attiva`, grade: `reattivo`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: true, tangential: false, blandSubtype: false, ihcSummary: `reactive` }
+      },
+      {
+        id: `displasia`,
+        category: `piatta`,
+        name: `Displasia uroteliale`,
+        icdo: `\u2014`,
+        stage: `Preneoplastico`,
+        status: `warn`,
+        arch: `Lesione piatta preneoplastica, non papillare, di spessore normale o lievemente ridotto/aumentato.`,
+        polarity: `Lieve-moderata alterazione della polarità; coesione generalmente mantenuta.`,
+        cytology: `Atipia citologica definita ma che \u201ccitologicamente non raggiunge i criteri del CIS\u201d (nuclei lievemente irregolari, assenza di anaplasia franca).`,
+        bm: `Integra.`,
+        ihc: `WHO 2022: categoria poco riproducibile, ridotta a breve sottosezione nel capitolo del CIS. Non equivale al CIS.`,
+        preset: { arch: `piatta`, polarity: `perdita_polarita`, grade: `lieve`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `cis`,
+        category: `piatta`,
+        name: `Carcinoma in situ (CIS / pTis)`,
+        icdo: `8120/2`,
+        stage: `pTis`,
+        status: `alert`,
+        arch: `Proliferazione piatta di spessore variabile (ispessito, normale, sottile o quasi denudato / clinging) senza papille.`,
+        polarity: `Perdita di polarità (talora mantenuta o pagetoide); marcata discoesione superficiale con esfoliazione urinaria.`,
+        cytology: `Alto grado: nuclei 5\u20136\u00d7 linfocita, riconoscibili già al 10\u00d7, pleomorfi o monotoni a grandi cellule, ipercromasia, cromatina grossolana, mitosi anche senza flogosi.`,
+        bm: `Integra (se superata focale: CIS con microinvasione pT1).`,
+        ihc: `CK20 aberrante full-thickness, p53 aberrante (diffuso/intenso o null), CD44 basale/assente. L\u2019IHC supporta ma non sostituisce la morfologia.`,
+        preset: { arch: `piatta`, polarity: `perdita_polarita`, grade: `alto`, hgPct: 100, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `cis` }
+      },
+      {
+        id: `papilloma`,
+        category: `papillare`,
+        name: `Papilloma uroteliale (esofitico e invertito)`,
+        icdo: `8120/0`,
+        stage: `Benigno`,
+        status: `ok`,
+        arch: `Papille semplici delicate non fuse, o cordoni endofitici sottili anastomizzati (invertito) con rivestimento \u2264 7 strati.`,
+        polarity: `Polarità conservata, cellule ad ombrello integre in superficie (o al centro delle trabecole nell\u2019invertito).`,
+        cytology: `Citologia blanda identica all\u2019urotelio normale; mitosi assenti o rarissime basali.`,
+        bm: `Integra; margine liscio espansivo nell\u2019invertito.`,
+        ihc: `CK20 solo ombrello; profilo wild-type. Uniche lesioni benigne con sezioni autonome dedicate nella WHO 2022.`,
+        preset: { arch: `papillare`, polarity: `papille_normali`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `punlmp`,
+        category: `papillare`,
+        name: `PUNLMP (incluso pattern invertito)`,
+        icdo: `8130/1`,
+        stage: `Basso potenziale`,
+        status: `warn`,
+        arch: `Papille sottili prevalentemente non fuse con spessore aumentato (> 7 strati); variante invertita inclusa nello stesso capitolo WHO 2022.`,
+        polarity: `Polarità strettamente ordinata e monotona; maturazione preservata.`,
+        cytology: `Atipia assente o minima uniforme; nuclei piccoli regolari; rare mitosi limitate allo strato basale.`,
+        bm: `Integra.`,
+        ihc: `Tassi di recidiva e progressione significativamente inferiori al pTa LG; categoria clinicamente rilevante mantenuta nella WHO 2022.`,
+        preset: { arch: `papillare`, polarity: `punlmp_ordinato`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `pta_lg`,
+        category: `papillare`,
+        name: `Carcinoma papillare non invasivo di basso grado (pTa LG)`,
+        icdo: `8130/2`,
+        stage: `pTa LG`,
+        status: `warn`,
+        arch: `Papille con fusione focale e ramificazioni (o crescita invertita a margini espansivi); spessore aumentato.`,
+        polarity: `Ordine architetturale globalmente riconoscibile ma con lieve variazione di polarità e spaziatura nucleare.`,
+        cytology: `Lieve variazione delle dimensioni/forma nucleare, cromatina lievemente granulare; componente HG assente o < 5% (WHO 2022).`,
+        bm: `Integra (attenzione a tagli tangenziali nello stalk o alla base).`,
+        ihc: `WHO 2022: se componente HG < 5%, refertare come \u201cbasso grado con componente di alto grado < 5%\u201d.`,
+        preset: { arch: `papillare`, polarity: `lg_lieve_disordine`, grade: `lieve`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `pta_hg`,
+        category: `papillare`,
+        name: `Carcinoma papillare non invasivo di alto grado (pTa HG)`,
+        icdo: `8130/2`,
+        stage: `pTa HG`,
+        status: `alert`,
+        arch: `Papille frequentemente fuse o masse solide (o crescita invertita di alto grado); spessore irregolare.`,
+        polarity: `Marcato disordine architetturale, perdita di polarità, discoesione.`,
+        cytology: `Nuclei pleomorfi/ipercromatici, nucleoli evidenti, mitosi frequenti anche negli strati alti e atipiche; oppure componente HG \u2265 5% in tumore misto.`,
+        bm: `Integra (ricerca attiva di eventuali foci di microinvasione pT1 alla base o nello stalk).`,
+        ihc: `WHO 2022: cut-off \u2265 5% di componente HG definisce l\u2019intero tumore papillare come Alto Grado. Correlabile a citologia TPS HGUC.`,
+        preset: { arch: `papillare`, polarity: `hg_disordine`, grade: `alto`, hgPct: 85, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      },
+      {
+        id: `invasivo`,
+        category: `invasiva`,
+        name: `Carcinoma uroteliale invasivo (pT1 / pT2)`,
+        icdo: `8120/3`,
+        stage: `pT1 / pT2`,
+        status: `alert`,
+        arch: `Nidi irregolari, cordoni o singole cellule infiltranti; nei sottotipi nested/large nested/tubulare/microcistico nidi blandi confluenti in profondità.`,
+        polarity: `Perdita di polarizzazione al fronte; eosinofilia citoplasmatica (\u201cdifferenziazione paradossa\u201d), desmoplasia, mixoide o retrazione.`,
+        cytology: `Prevalentemente alto grado (esistono rari pT1 LG e sottotipi blandi come nested, large nested, microcistico, tubulare).`,
+        bm: `Superata: lamina propria (pT1, substaging ROL1 < 1,0 mm vs ROL2 \u2265 1,0 mm) o muscolare propria/detrusore (pT2).`,
+        ihc: `GATA3, p63, HMWCK per linea; Desmina per detrusore vs desmoplasia; TERT promoter mutation utile per DD nested vs von Brunn. Riportare % sottotipi.`,
+        preset: { arch: `invasiva`, polarity: `fronte_irregolare`, grade: `alto`, hgPct: 100, invasion: `lamina_propria`, pt1Mm: 1.4, pt1Anat: `oltre_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+      }
+    ];
+
+    var PITFALLS_DATA = [
+      {
+        title: `Tagli tangenziali di pTa vs Microinvasione (pT1)`,
+        badge: `Pseudoinvasione pTa`,
+        status: `warn`,
+        benignTitle: `Taglio tangenziale (pTa)`,
+        benignItems: [
+          `Nidi rotondeggianti con contorni esterni lisci e regolari.`,
+          `Membrana basale continua e conservata (evidenziabile con Collagene IV).`,
+          `Capillari a parete sottile disposti parallelamente attorno ai nidi.`,
+          `Assenza di desmoplasia, di eosinofilia paradossa e di retrazione stromale.`
+        ],
+        malignantTitle: `Vera invasione lamina propria (pT1)`,
+        malignantItems: [
+          `Nidi angolati, cordoni irregolari, singole cellule isolate o tentacoli infiltranti.`,
+          `Eosinofilia citoplasmatica al fronte invasivo (\u201cdifferenziazione paradossa\u201d).`,
+          `Stroma desmoplastico ipercellulare, modificazioni mixoidi o artefatto da retrazione.`,
+          `Discontinuità o perdita della membrana basale.`
+        ],
+        tip: `Eseguire livelli seriati profondi e, in caso di dubbio con artefatto termico o frustoli non orientati, esplicitare l\u2019indeterminatezza anziché sovrastadiare a pT1.`
+      },
+      {
+        title: `Flogosi, BCG, Radioterapia e Mitomicina C vs CIS`,
+        badge: `Atipia Reattiva / Post-terapia`,
+        status: `warn`,
+        benignTitle: `Atipia reattiva / Post-terapia`,
+        malignantTitle: `Carcinoma in situ (CIS / pTis)`,
+        benignItems: [
+          `Atipia proporzionata al grado di flogosi intraepiteliale (specie neutrofili).`,
+          `Radioterapia/MMC: N/C conservato, multinucleazione, cromatina sfumata (smudged), vacuolizzazione citoplasmatica.`,
+          `Iperplasia pseudocarcinomatosa post-RT: sfondo di edema, emorragia, vasi ectasici/trombizzati, fibroblasti reattivi.`,
+          `BCG: granulomi non caseificanti, edema, rigenerazione con nucleoli centrali e cromatina fine.`
+        ],
+        malignantItems: [
+          `Atipia marcata anche in totale assenza di flogosi intraepiteliale (una moderata flogosi nella sola lamina propria è normale).`,
+          `Nuclei 5\u20136\u00d7 linfocita con ipercromasia reale, cromatina grossolana e membrane irregolari.`,
+          `Perdita di polarità, discoesione superficiale e mitosi atipiche/alte.`,
+          `Se atipia sproporzionata ma flogosi severa: usare \u201catipia uroteliale di significato indeterminato\u201d e ripetere biopsia post-terapia.`
+        ],
+        tip: `Le alterazioni da radioterapia possono persistere fino a 1 anno nell\u2019urotelio e ancora più a lungo nei nidi di von Brunn.`
+      },
+      {
+        title: `Nidi di von Brunn vs Sottotipi Nested, Large Nested e Microcistico`,
+        badge: `Citologia ingannevolmente blanda`,
+        status: `alert`,
+        benignTitle: `Nidi di von Brunn / Cistite cistica`,
+        malignantTitle: `Carcinoma Nested / Large Nested / Microcistico`,
+        benignItems: [
+          `Distribuzione ordinata e lineare parallela alla superficie (base piatta uniforme).`,
+          `Nidi ben delimitati, non confluenti, senza invasione dei fasci muscolari profondi.`,
+          `Citologia uniforme senza incremento dell\u2019atipia in profondità.`,
+          `Assenza di mutazioni del promotore di TERT.`
+        ],
+        malignantItems: [
+          `Confluenza di nidi multipli, architettura disordinata e base irregolare infiltrante.`,
+          `Spesso raggiunge la muscolare propria nonostante la citologia blanda superficiale.`,
+          `Incremento dell\u2019atipia citologica nelle porzioni più profonde della lesione.`,
+          `Ricerca della mutazione del promotore TERT utile su biopsie TURBT superficiali.`
+        ],
+        tip: `Anche il nuovo sottotipo \u201ccarcinoma uroteliale tubulare\u201d (WHO 2022) mostra cellule blande in strutture tubulari e va distinto dalla cistite ghiandolare e dall\u2019adenoma nefrogenico.`
+      },
+      {
+        title: `Sedi anatomiche, Cellule ad Ombrello, Floaters e Muscularis Mucosae`,
+        badge: `Errori di sede e campionamento`,
+        status: `info`,
+        benignTitle: `Sede / Artefatto benigno`,
+        malignantTitle: `Rischio di sovradiagnosi`,
+        benignItems: [
+          `Pelvi renale, uretra e collo vescicale: nuclei fisiologicamente più grandi e citoplasma meno chiaro.`,
+          `Cellule ad ombrello dislocate: citoplasma eosinofilo abbondante, basso N/C, multinucleazione, no ipercromasia.`,
+          `Floaters: frustoli tumorali staccati che colonizzano passivamente frammenti di muscolo resecati alla base.`,
+          `Muscularis mucosae (MM) iperplastica: fasci sottili e discontinui associati a grandi vasi nella lamina propria.`
+        ],
+        malignantItems: [
+          `Una sovradiagnosi di CIS nell\u2019alta via escretrice può condurre a nefroureterectomia non necessaria.`,
+          `Confondere cellule ad ombrello dislocate o artefatti da mancata coesione in pTa con CIS o sottotipo plasmacitoide.`,
+          `Scambiare floaters adesi al muscolo per invasione pT1/pT2 (verificare i rapporti anatomici con pancheratina).`,
+          `Confondere MM iperplastica infiltrata (pT1) con il detrusore (pT2, fasci spessi e compatti).`
+        ],
+        tip: `Quando i due campioni (superficie e base) vengono inviati separatamente in TURBT, valutare sempre con cautela i frammenti tumorali isolati adesi al muscolo liscio.`
+      }
+    ];
+
+    var SUBTYPES_WHO_2022 = [
+      { name: `Nested & Large Nested`, note: `Distinti in due sottotipi; citologia ingannevolmente blanda ma comportamento aggressivo.` },
+      { name: `Carcinoma uroteliale tubulare (nuovo 2022)`, note: `Forma pura con cellule blande disposte in strutture tubulari; DD con lesioni ghiandolari benigne.` },
+      { name: `Clear cell (glycogen-rich) (rinominato 2022)`, note: `Aggiunto \u201cglycogen-rich\u201d per distinguerlo dall\u2019adenocarcinoma a cellule chiare mülleriano.` },
+      { name: `Plasmacitoide`, note: `Rimosso il qualificatore \u201csignet ring/diffuse\u201d; infiltrazione discoesiva nel grasso perivescicale.` },
+      { name: `Microcistico`, note: `Strutture cistiche infiltranti uno stroma spesso non reattivo; mimicker della cistite cistica.` },
+      { name: `Micropapillare`, note: `Nidi in lacune di retrazione; prognosi sfavorevole, segnalare sempre la % esatta.` },
+      { name: `Linfoepitelioma-like`, note: `Foglietti sinciziali di cellule CK7+ immersi in denso infiltrato linfoide.` },
+      { name: `Lipido-ricco & Sarcomatoide`, note: `Cellule lipoblasto-simili (lipido-ricco) o componente fusata/eterologa di alto grado (sarcomatoide).` }
+    ];
+
+    /* =========================================================================
+       APPLICATION STATE
+       ========================================================================= */
+
+    /* Il caso corrente parte sempre vuoto (tutti i campi "non valutato") */
+    var appState = Object.assign(normalizeCase({}), {
+      activePreset: ``,
+      matrixFilter: `all`,
+      matrixSearch: ``,
+      simCk20: `ombrello`,
+      simP53: `wildtype`,
+      simCd44: `full`,
+      savedCases: []
+    });
+
+    function caseSnapshot() {
+      var snap = {};
+      var keys = Object.keys(CASE_FIELDS);
+      for (var i = 0; i < keys.length; i++) snap[keys[i]] = appState[keys[i]];
+      return snap;
+    }
+
+    function applyCase(src) {
+      var c = normalizeCase(src);
+      var keys = Object.keys(c);
+      for (var i = 0; i < keys.length; i++) appState[keys[i]] = c[keys[i]];
+    }
+
+    function escapeHtml(v) {
+      return String(v).replace(/[&<>"']/g, function (ch) {
+        return { '&': `&amp;`, '<': `&lt;`, '>': `&gt;`, '"': `&quot;`, "'": `&#39;` }[ch];
+      });
+    }
+
+    /* =========================================================================
+       PERSISTENZA: solo archivio casi e preferenze, mai il caso in corso
+       (riaprire la pagina non deve riproporre i reperti del caso precedente).
+       Host notebookAppApi se presente, altrimenti localStorage del browser.
+       ========================================================================= */
+
+    var STORAGE_KEY = `uro-who2022-checklist-v2`;
+    var PERSISTED_KEYS = [`savedCases`, `matrixFilter`, `simCk20`, `simP53`, `simCd44`];
+
+    function persistedSubset() {
+      var out = {};
+      for (var i = 0; i < PERSISTED_KEYS.length; i++) out[PERSISTED_KEYS[i]] = appState[PERSISTED_KEYS[i]];
+      return out;
+    }
+
+    async function persistState() {
+      var data = persistedSubset();
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+          await window.notebookAppApi.setAppState(data);
+          return;
+        }
+      } catch (e) { /* fallback sotto */ }
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) { /* storage non disponibile: nessuna persistenza */ }
+    }
+
+    async function loadInitialState() {
+      var saved = null;
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+          saved = await window.notebookAppApi.getAppState();
+        }
+      } catch (e) { saved = null; }
+      if (!saved) {
+        try {
+          var raw = window.localStorage.getItem(STORAGE_KEY);
+          saved = raw ? JSON.parse(raw) : null;
+        } catch (e) { saved = null; }
+      }
+      if (!saved || typeof saved !== `object`) return;
+
+      if (Array.isArray(saved.savedCases)) {
+        appState.savedCases = saved.savedCases.filter(function (c) {
+          return c && typeof c === `object` && isFinite(Number(c.id)) && c.snapshot;
+        }).slice(0, 12).map(function (c) {
+          return {
+            id: Number(c.id),
+            time: String(c.time || ``),
+            snapshot: normalizeCase(c.snapshot)
+          };
+        });
+      }
+      if ([`all`, `piatta`, `papillare`, `invasiva`].indexOf(saved.matrixFilter) !== -1) appState.matrixFilter = saved.matrixFilter;
+      if ([`ombrello`, `full`, `negativo`].indexOf(saved.simCk20) !== -1) appState.simCk20 = saved.simCk20;
+      if ([`wildtype`, `over`, `null`].indexOf(saved.simP53) !== -1) appState.simP53 = saved.simP53;
+      if ([`full`, `basale`].indexOf(saved.simCd44) !== -1) appState.simCd44 = saved.simCd44;
+    }
+
+    /* =========================================================================
+       DYNAMIC SVG HISTOLOGY SCHEMATIC
+       ========================================================================= */
+
+    function renderHistologySvg(mode) {
+      var svg = document.getElementById(`histology-svg`);
+      if (!svg) return;
+
+      /* Color tokens via CSS variables */
+      var cBg = `var(--background)`;
+      var cUro = `var(--surface-container)`;
+      var cStroke = `var(--outline)`;
+      var cPrimary = `var(--primary)`;
+      var cGreen = `var(--tertiary)`;
+      var cWarn = `var(--data-3)`;
+      var cError = `var(--error)`;
+      var cText = `var(--on-surface)`;
+      var cMuted = `var(--on-surface-variant)`;
+
+      /* Base layers: Lamina propria (y 115..168), Muscularis mucosae (y 142), Detrusor (y 172..212) */
+      var baseLayers = `
+        <rect x="0" y="0" width="540" height="220" rx="8" fill="${cBg}" />
+        <text x="14" y="18" font-family="sans-serif" font-size="11" font-weight="700" fill="${cMuted}">LUME VESCICALE</text>
+        <rect x="12" y="122" width="516" height="48" fill="${cUro}" opacity="0.45" />
+        <text x="415" y="138" font-family="sans-serif" font-size="10" font-weight="600" fill="${cMuted}">LAMINA PROPRIA</text>
+        <!-- Muscularis mucosae (discontinuous thin bundles) -->
+        <g stroke="${cStroke}" stroke-width="2" stroke-dasharray="14 8" opacity="0.65">
+          <line x1="20" y1="148" x2="520" y2="148" />
+        </g>
+        <text x="380" y="162" font-family="sans-serif" font-size="9" fill="${cMuted}">Muscularis mucosae (discontinua)</text>
+        <!-- Detrusor muscle (thick bundles) -->
+        <rect x="12" y="174" width="516" height="36" rx="4" fill="${cUro}" stroke="${cStroke}" stroke-width="1" />
+        <g fill="${cMuted}" opacity="0.35">
+          <rect x="24" y="180" width="90" height="10" rx="5" />
+          <rect x="126" y="180" width="110" height="10" rx="5" />
+          <rect x="248" y="180" width="95" height="10" rx="5" />
+          <rect x="355" y="180" width="145" height="10" rx="5" />
+          <rect x="52" y="194" width="120" height="10" rx="5" />
+          <rect x="188" y="194" width="135" height="10" rx="5" />
+          <rect x="336" y="194" width="125" height="10" rx="5" />
+        </g>
+        <text x="24" y="204" font-family="sans-serif" font-size="10" font-weight="700" fill="${cText}">MUSCOLARE PROPRIA (DETRUSORE)</text>
+      `;
+
+      var topLayer = ``;
+      var bmLine = `<line x1="12" y1="120" x2="528" y2="120" stroke="${cGreen}" stroke-width="3" />`;
+
+      if (mode === `pending`) {
+        bmLine = `<line x1="12" y1="120" x2="528" y2="120" stroke="${cMuted}" stroke-width="2" stroke-dasharray="3 6" />`;
+        topLayer = `<text x="18" y="70" font-family="sans-serif" font-size="11" font-weight="700" fill="${cMuted}">Verdetto non emesso: nessuno schema</text>`;
+      } else if (mode === `flat_normal`) {
+        topLayer = `
+          <rect x="12" y="84" width="516" height="36" fill="${cGreen}" opacity="0.16" />
+          <g fill="${cText}" opacity="0.7">
+            <circle cx="48" cy="108" r="2.2"/><circle cx="88" cy="108" r="2.2"/><circle cx="128" cy="108" r="2.2"/>
+            <circle cx="168" cy="108" r="2.2"/><circle cx="208" cy="108" r="2.2"/><circle cx="248" cy="108" r="2.2"/>
+            <circle cx="288" cy="108" r="2.2"/><circle cx="328" cy="108" r="2.2"/><circle cx="368" cy="108" r="2.2"/>
+            <circle cx="408" cy="108" r="2.2"/><circle cx="448" cy="108" r="2.2"/><circle cx="488" cy="108" r="2.2"/>
+          </g>
+          <path d="M12 84 Q 55 78, 98 84 T 184 84 T 270 84 T 356 84 T 442 84 T 528 84" fill="none" stroke="${cGreen}" stroke-width="2.5" />
+          <text x="18" y="74" font-family="sans-serif" font-size="10" font-weight="600" fill="${cGreen}">Cellule ad ombrello integre &middot; 3\u20137 strati ordinati</text>
+        `;
+      } else if (mode === `flat_hyperplasia`) {
+        topLayer = `
+          <rect x="12" y="62" width="516" height="58" fill="${cGreen}" opacity="0.18" />
+          <g fill="${cText}" opacity="0.7">
+            <circle cx="55" cy="108" r="2.2"/><circle cx="95" cy="96" r="2.2"/><circle cx="135" cy="84" r="2.2"/>
+            <circle cx="175" cy="108" r="2.2"/><circle cx="215" cy="94" r="2.2"/><circle cx="255" cy="82" r="2.2"/>
+            <circle cx="295" cy="108" r="2.2"/><circle cx="335" cy="95" r="2.2"/><circle cx="375" cy="83" r="2.2"/>
+            <circle cx="415" cy="108" r="2.2"/><circle cx="455" cy="94" r="2.2"/><circle cx="495" cy="82" r="2.2"/>
+          </g>
+          <text x="18" y="54" font-family="sans-serif" font-size="10" font-weight="600" fill="${cGreen}">Ispessimento (&gt; 7\u201310 strati), polarità conservata</text>
+        `;
+      } else if (mode === `flat_reactive` || mode === `flat_dysplasia`) {
+        var col = mode === `flat_reactive` ? cPrimary : cWarn;
+        var lbl = mode === `flat_reactive`
+          ? `Flogosi / reattivo: nuclei uniformi con nucleolo centrale`
+          : `Displasia: atipia citologica sub-CIS, membrana basale integra`;
+        topLayer = `
+          <rect x="12" y="76" width="516" height="44" fill="${col}" opacity="0.16" />
+          <g fill="${col}">
+            <circle cx="52" cy="104" r="4"/><circle cx="96" cy="96" r="4"/><circle cx="144" cy="105" r="4"/>
+            <circle cx="192" cy="95" r="4"/><circle cx="240" cy="102" r="4"/><circle cx="288" cy="96" r="4"/>
+            <circle cx="336" cy="104" r="4"/><circle cx="384" cy="95" r="4"/><circle cx="432" cy="102" r="4"/>
+          </g>
+          <text x="18" y="68" font-family="sans-serif" font-size="10" font-weight="600" fill="${col}">${lbl}</text>
+        `;
+      } else if (mode === `flat_cis`) {
+        topLayer = `
+          <path d="M12 86 L 140 86 L 165 110 L 290 110 L 315 84 L 528 84 L 528 120 L 12 120 Z" fill="${cError}" opacity="0.18" />
+          <g fill="${cError}">
+            <ellipse cx="45" cy="102" rx="6" ry="7"/><ellipse cx="78" cy="98" rx="7" ry="6"/>
+            <ellipse cx="115" cy="105" rx="6.5" ry="7.5"/><ellipse cx="205" cy="113" rx="6" ry="5"/>
+            <ellipse cx="255" cy="113" rx="7" ry="5"/><ellipse cx="345" cy="102" rx="7" ry="7"/>
+            <ellipse cx="388" cy="97" rx="6.5" ry="8"/><ellipse cx="435" cy="105" rx="7.5" ry="6.5"/>
+            <ellipse cx="482" cy="99" rx="6" ry="7"/>
+          </g>
+          <circle cx="215" cy="65" r="5" fill="${cError}" opacity="0.7" />
+          <circle cx="242" cy="58" r="5.5" fill="${cError}" opacity="0.7" />
+          <text x="18" y="48" font-family="sans-serif" font-size="10" font-weight="700" fill="${cError}">CIS (pTis): nuclei 5\u20136\u00d7, perdita di polarità, discoesione e aree denudate</text>
+        `;
+      } else if (mode === `papillary_papilloma` || mode === `papillary_punlmp` || mode === `papillary_lg` || mode === `papillary_hg`) {
+        var pCol = mode === `papillary_hg` ? cError : (mode === `papillary_papilloma` ? cGreen : cWarn);
+        var pText = mode === `papillary_hg`
+          ? `Papille fuse, disordine e nuclei HG (\u2265 5%); membrana basale integra`
+          : mode === `papillary_lg`
+          ? `Papille ramificate pTa LG; membrana basale integra`
+          : mode === `papillary_punlmp`
+          ? `Papille ispessite ordinate e monotone (PUNLMP)`
+          : `Papille delicate (\u2264 7 strati) con citologia normale`;
+        topLayer = `
+          <path d="M40 120 C 45 65, 85 28, 120 28 C 155 28, 185 75, 200 105 C 215 65, 255 24, 290 24 C 325 24, 355 75, 370 105 C 385 68, 425 32, 460 32 C 495 32, 515 80, 520 120 Z" fill="${pCol}" opacity="0.18" stroke="${pCol}" stroke-width="2" />
+          <!-- Fibrovascular cores -->
+          <path d="M120 120 L 120 48 M290 120 L 290 42 M460 120 L 460 50" stroke="${cPrimary}" stroke-width="3" stroke-linecap="round" opacity="0.75" />
+          <text x="18" y="18" font-family="sans-serif" font-size="10" font-weight="700" fill="${pCol}"></text>
+          <text x="145" y="18" font-family="sans-serif" font-size="10" font-weight="700" fill="${pCol}">${pText}</text>
+        `;
+      } else if (mode === `tangential`) {
+        bmLine = `<line x1="12" y1="120" x2="528" y2="120" stroke="${cWarn}" stroke-width="2.5" stroke-dasharray="6 4" />`;
+        topLayer = `
+          <rect x="12" y="80" width="516" height="40" fill="${cWarn}" opacity="0.14" />
+          <ellipse cx="160" cy="138" rx="34" ry="12" fill="${cWarn}" opacity="0.22" stroke="${cGreen}" stroke-width="2" />
+          <ellipse cx="290" cy="140" rx="40" ry="13" fill="${cWarn}" opacity="0.22" stroke="${cGreen}" stroke-width="2" />
+          <text x="18" y="68" font-family="sans-serif" font-size="10" font-weight="700" fill="${cWarn}">Sospetto taglio tangenziale: nidi a contorni lisci con membrana basale continua</text>
+        `;
+      } else if (mode === `invasive_pt1`) {
+        bmLine = `
+          <line x1="12" y1="120" x2="175" y2="120" stroke="${cError}" stroke-width="3" />
+          <line x1="185" y1="120" x2="345" y2="120" stroke="${cError}" stroke-width="3" stroke-dasharray="4 6" />
+          <line x1="355" y1="120" x2="528" y2="120" stroke="${cError}" stroke-width="3" />
+        `;
+        topLayer = `
+          <rect x="12" y="72" width="516" height="48" fill="${cError}" opacity="0.16" />
+          <!-- Irregular infiltrating nests into lamina propria -->
+          <polygon points="195,120 225,144 210,156 185,140" fill="${cError}" opacity="0.5" stroke="${cError}" stroke-width="1.5" />
+          <polygon points="265,120 310,154 285,164 250,142" fill="${cError}" opacity="0.5" stroke="${cError}" stroke-width="1.5" />
+          <circle cx="330" cy="145" r="5" fill="${cError}" />
+          <text x="18" y="60" font-family="sans-serif" font-size="10" font-weight="700" fill="${cError}">pT1: nidi irregolari nella lamina propria; detrusore (in basso) indenne</text>
+        `;
+      } else if (mode === `invasive_pt2`) {
+        bmLine = `<line x1="12" y1="120" x2="528" y2="120" stroke="${cError}" stroke-width="3" stroke-dasharray="5 6" />`;
+        topLayer = `
+          <rect x="12" y="72" width="516" height="48" fill="${cError}" opacity="0.18" />
+          <polygon points="180,120 245,162 270,198 220,202 175,155" fill="${cError}" opacity="0.5" stroke="${cError}" stroke-width="2" />
+          <polygon points="300,120 365,168 380,204 330,202 290,152" fill="${cError}" opacity="0.5" stroke="${cError}" stroke-width="2" />
+          <text x="18" y="60" font-family="sans-serif" font-size="10" font-weight="700" fill="${cError}">pT2: infiltrazione franca tra i fasci spessi della muscolare propria (detrusore)</text>
+        `;
+      }
+
+      svg.innerHTML = baseLayers + topLayer + bmLine;
+    }
+
+    /* =========================================================================
+       UI RENDERING & INTERACTION HANDLERS (ALL HOISTED FUNCTION DECLARATIONS)
+       ========================================================================= */
+
+    function renderPolarityOptions() {
+      var container = document.getElementById(`polarity-options`);
+      if (!container) return;
+      if (!appState.arch) {
+        container.innerHTML = `<p class="section-subtitle" style="margin: 0;">Seleziona prima l’architettura (passo 1): le opzioni dipendono da essa.</p>`;
+        return;
+      }
+      var list = POLARITY_BY_ARCH[appState.arch];
+
+      /* Nessuna selezione automatica: una polarità non coerente con l'architettura torna "non valutata" */
+      var valid = false;
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].id === appState.polarity) { valid = true; break; }
+      }
+      if (!valid) appState.polarity = null;
+
+      var html = ``;
+      for (var j = 0; j < list.length; j++) {
+        var opt = list[j];
+        var pressed = opt.id === appState.polarity ? `true` : `false`;
+        html += `<button type="button" class="option-btn" data-pol="${opt.id}" aria-pressed="${pressed}" onclick="setPolarity('${opt.id}')">`;
+        html += `<span class="option-btn-title">${opt.title}</span>`;
+        html += `<span class="option-btn-desc">${opt.desc}</span>`;
+        html += `</button>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function syncControlsToState() {
+      /* Step 1 Arch buttons */
+      var archBtns = document.querySelectorAll(`#arch-options .option-btn`);
+      for (var i = 0; i < archBtns.length; i++) {
+        var b = archBtns[i];
+        b.setAttribute(`aria-pressed`, b.getAttribute(`data-arch`) === appState.arch ? `true` : `false`);
+      }
+
+      /* Step 2 Polarity */
+      renderPolarityOptions();
+
+      /* Step 3 Grade buttons */
+      var gradeBtns = document.querySelectorAll(`#grade-options .option-btn`);
+      for (var g = 0; g < gradeBtns.length; g++) {
+        var gb = gradeBtns[g];
+        gb.setAttribute(`aria-pressed`, gb.getAttribute(`data-grade`) === appState.grade ? `true` : `false`);
+      }
+
+      /* 5% threshold visibility & values */
+      var hgBox = document.getElementById(`hg-percent-box`);
+      if (hgBox) {
+        if (appState.arch === `papillare`) {
+          hgBox.classList.remove(`hidden`);
+        } else {
+          hgBox.classList.add(`hidden`);
+        }
+      }
+
+      var sliderHg = document.getElementById(`slider-hg-pct`);
+      var numHg = document.getElementById(`num-hg-pct`);
+      var fillHg = document.getElementById(`hg-meter-fill`);
+      var readHg = document.getElementById(`hg-threshold-readout`);
+      var hgKnown = appState.hgPct !== null;
+      if (sliderHg) sliderHg.value = String(hgKnown ? appState.hgPct : 0);
+      if (numHg && document.activeElement !== numHg) numHg.value = hgKnown ? String(appState.hgPct) : ``;
+      if (fillHg) fillHg.style.width = `${hgKnown ? Math.min(100, Math.max(0, appState.hgPct)) : 0}%`;
+      if (readHg) {
+        var pct = Number(appState.hgPct);
+        if (!hgKnown) {
+          readHg.textContent = `Quota HG non valutata: necessaria se il grado prevalente è basso (anche 0%).`;
+        } else if (pct === 0) {
+          readHg.textContent = `Nessuna componente ad alto grado (0%): segue il grado prevalente.`;
+        } else if (pct < 5) {
+          readHg.textContent = `Componente HG pari al ${pct}% (< 5%): secondo WHO 2022 resta Basso Grado con segnalazione della quota < 5%.`;
+        } else {
+          readHg.textContent = `Componente HG pari al ${pct}% (\u2265 5%): supera il cut-off WHO 2022 \u2192 classificare come Alto Grado (HG).`;
+        }
+      }
+
+      /* Step 4 Invasion buttons */
+      var invBtns = document.querySelectorAll(`#invasion-options .option-btn`);
+      for (var v = 0; v < invBtns.length; v++) {
+        var vb = invBtns[v];
+        vb.setAttribute(`aria-pressed`, vb.getAttribute(`data-inv`) === appState.invasion ? `true` : `false`);
+      }
+
+      /* pT1 substaging box */
+      var pt1Box = document.getElementById(`pt1-substaging-box`);
+      if (pt1Box) {
+        if (appState.invasion === `lamina_propria`) {
+          pt1Box.classList.remove(`hidden`);
+        } else {
+          pt1Box.classList.add(`hidden`);
+        }
+      }
+      var sPt1 = document.getElementById(`slider-pt1-mm`);
+      var nPt1 = document.getElementById(`num-pt1-mm`);
+      var fPt1 = document.getElementById(`pt1-meter-fill`);
+      var rolChip = document.getElementById(`rol-chip`);
+      var selAnat = document.getElementById(`select-pt1-anat`);
+      var mmKnown = appState.pt1Mm !== null;
+      if (sPt1) sPt1.value = String(mmKnown ? Math.min(5.0, appState.pt1Mm) : 0.1);
+      if (nPt1 && document.activeElement !== nPt1) nPt1.value = mmKnown ? String(appState.pt1Mm) : ``;
+      if (fPt1) fPt1.style.width = `${mmKnown ? Math.min(100, (appState.pt1Mm / 5.0) * 100) : 0}%`;
+      if (rolChip) {
+        if (!mmKnown) {
+          rolChip.textContent = `Estensione non misurata`;
+          rolChip.setAttribute(`data-status`, `info`);
+        } else if (appState.pt1Mm >= 1.0) {
+          rolChip.textContent = `ROL2 (\u2265 1,0 mm) \u00b7 Alto rischio`;
+          rolChip.setAttribute(`data-status`, `alert`);
+        } else {
+          rolChip.textContent = `ROL1 (< 1,0 mm)`;
+          rolChip.setAttribute(`data-status`, `info`);
+        }
+      }
+      if (selAnat) selAnat.value = appState.pt1Anat || ``;
+
+      /* Selettori a tre stati (non valutato / assente / presente) e IHC */
+      var triSelects = document.querySelectorAll(`select[data-tri]`);
+      for (var t = 0; t < triSelects.length; t++) {
+        triSelects[t].value = appState[triSelects[t].getAttribute(`data-tri`)] || ``;
+      }
+      var subBox = document.getElementById(`subtype-detail-box`);
+      if (subBox) subBox.classList.toggle(`hidden`, appState.blandSubtype !== `presente`);
+      var selSubName = document.getElementById(`sel-subtype-name`);
+      var numSubPct = document.getElementById(`num-subtype-pct`);
+      if (selSubName) selSubName.value = appState.subtypeName || ``;
+      if (numSubPct && document.activeElement !== numSubPct) numSubPct.value = appState.subtypePct === null ? `` : String(appState.subtypePct);
+      var selIhc = document.getElementById(`select-ihc-summary`);
+      if (selIhc) selIhc.value = appState.ihcSummary;
+
+      /* Preset active styling */
+      var pBtns = document.querySelectorAll(`#preset-row .preset-btn`);
+      for (var p = 0; p < pBtns.length; p++) {
+        var pb = pBtns[p];
+        if (pb.getAttribute(`data-preset`) === appState.activePreset) {
+          pb.classList.add(`is-active`);
+        } else {
+          pb.classList.remove(`is-active`);
+        }
+      }
+    }
+
+    function updateVerdict() {
+      syncControlsToState();
+      var res = evaluateDiagnosis(appState);
+
+      var card = document.getElementById(`verdict-card`);
+      var catEl = document.getElementById(`verdict-category-label`);
+      var titleEl = document.getElementById(`verdict-title`);
+      var chipEl = document.getElementById(`verdict-chip`);
+      var stEl = document.getElementById(`kpi-stage`);
+      var grEl = document.getElementById(`kpi-grade`);
+      var icEl = document.getElementById(`kpi-icdo`);
+      var capEl = document.getElementById(`schematic-caption`);
+      var alertEl = document.getElementById(`verdict-alert-box`);
+      var critTitleEl = document.getElementById(`verdict-criteria-title`);
+      var critEl = document.getElementById(`verdict-criteria`);
+      var ddEl = document.getElementById(`verdict-dd`);
+      var ihcEl = document.getElementById(`verdict-ihc`);
+      var repEl = document.getElementById(`report-preview`);
+
+      if (card) {
+        card.setAttribute(`data-status`, res.status);
+        card.setAttribute(`data-verdict`, res.verdictState);
+      }
+      if (catEl) catEl.textContent = res.categoryLabel;
+      if (titleEl) titleEl.textContent = res.title;
+      if (chipEl) {
+        chipEl.textContent = res.chip;
+        chipEl.setAttribute(`data-status`, res.status);
+      }
+      if (stEl) stEl.textContent = res.stage;
+      if (grEl) grEl.textContent = res.gradeLabel;
+      if (icEl) icEl.textContent = res.icdo;
+      if (capEl) capEl.textContent = res.schematicCaption;
+
+      if (alertEl) {
+        if (res.alerts.length > 0) {
+          alertEl.classList.remove(`hidden`);
+          alertEl.innerHTML = `<strong>Avviso morfologico:</strong> ` + res.alerts.map(escapeHtml).join(`<br>`);
+        } else {
+          alertEl.classList.add(`hidden`);
+          alertEl.innerHTML = ``;
+        }
+      }
+
+      if (critTitleEl) critTitleEl.textContent = res.criteriaTitle;
+      if (critEl) {
+        critEl.innerHTML = res.criteria.map(function (c) { return `<li>${escapeHtml(c)}</li>`; }).join(``);
+      }
+      if (ddEl) {
+        ddEl.innerHTML = res.dd.length > 0
+          ? res.dd.map(function (d) { return `<li>${escapeHtml(d)}</li>`; }).join(``)
+          : `<li>—</li>`;
+      }
+      if (ihcEl) ihcEl.textContent = res.ihcNote;
+      if (repEl) repEl.textContent = res.reportLines.join(`\n`);
+
+      renderHistologySvg(res.svgMode);
+    }
+
+    /* Ogni modifica del caso corrente: nessun campo ne modifica un altro di nascosto */
+    function caseEdited() {
+      appState.activePreset = ``;
+      updateVerdict();
+    }
+
+    function setArchitecture(val) {
+      if (appState.arch !== val) {
+        appState.arch = val;
+        appState.polarity = null; /* le opzioni del passo 2 dipendono dall'architettura */
+      }
+      caseEdited();
+    }
+
+    function setPolarity(val) {
+      appState.polarity = val;
+      caseEdited();
+    }
+
+    function setGrade(val) {
+      appState.grade = val;
+      caseEdited();
+    }
+
+    function parseIntOrNull(val, min, max) {
+      if (val === `` || val === null || val === undefined) return null;
+      var n = parseInt(val, 10);
+      if (!isFinite(n)) return null;
+      return Math.min(max, Math.max(min, n));
+    }
+
+    function parseFloatOrNull(val, min, max) {
+      if (val === `` || val === null || val === undefined) return null;
+      var n = parseFloat(String(val).replace(`,`, `.`));
+      if (!isFinite(n)) return null;
+      return Math.round(Math.min(max, Math.max(min, n)) * 10) / 10;
+    }
+
+    function syncHgFromSlider(val) {
+      appState.hgPct = parseIntOrNull(val, 0, 100);
+      var numInput = document.getElementById(`num-hg-pct`);
+      if (numInput) numInput.value = appState.hgPct === null ? `` : String(appState.hgPct);
+      caseEdited();
+    }
+
+    function syncHgFromNumber(val) {
+      appState.hgPct = parseIntOrNull(val, 0, 100);
+      caseEdited();
+    }
+
+    function clearHgPct() {
+      appState.hgPct = null;
+      var numInput = document.getElementById(`num-hg-pct`);
+      if (numInput) numInput.value = ``;
+      caseEdited();
+    }
+
+    function setInvasion(val) {
+      appState.invasion = val;
+      caseEdited();
+    }
+
+    function syncPt1FromSlider(val) {
+      appState.pt1Mm = parseFloatOrNull(val, 0.1, 20);
+      var numInput = document.getElementById(`num-pt1-mm`);
+      if (numInput) numInput.value = appState.pt1Mm === null ? `` : String(appState.pt1Mm);
+      caseEdited();
+    }
+
+    function syncPt1FromNumber(val) {
+      appState.pt1Mm = parseFloatOrNull(val, 0.1, 20);
+      caseEdited();
+    }
+
+    function clearPt1Mm() {
+      appState.pt1Mm = null;
+      var numInput = document.getElementById(`num-pt1-mm`);
+      if (numInput) numInput.value = ``;
+      caseEdited();
+    }
+
+    function setPt1Anat(val) {
+      appState.pt1Anat = val === `` ? null : val;
+      caseEdited();
+    }
+
+    function setTri(field, val) {
+      appState[field] = val === `presente` || val === `assente` ? val : null;
+      if (field === `blandSubtype` && appState.blandSubtype !== `presente`) {
+        appState.subtypeName = null;
+        appState.subtypePct = null;
+      }
+      caseEdited();
+    }
+
+    function setSubtypeName(val) {
+      appState.subtypeName = val === `` ? null : val;
+      caseEdited();
+    }
+
+    function setSubtypePct(val) {
+      appState.subtypePct = parseIntOrNull(val, 1, 100);
+      caseEdited();
+    }
+
+    function setIhcSummary(val) {
+      appState.ihcSummary = val;
+      caseEdited();
+    }
+
+    /* Scenari di riferimento: i campi non elencati restano "non valutato" */
+    var REFERENCE_PRESETS = {
+      pTa_LG: { arch: `papillare`, polarity: `lg_lieve_disordine`, grade: `lieve`, hgPct: 0, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
+      pTa_HG_5: { arch: `papillare`, polarity: `hg_disordine`, grade: `lieve`, hgPct: 8, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
+      pTa_LG_minorHG: { arch: `papillare`, polarity: `lg_lieve_disordine`, grade: `lieve`, hgPct: 3, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
+      CIS_denudato: { arch: `piatta`, polarity: `perdita_polarita`, grade: `alto`, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `cis` },
+      reattiva_BCG: { arch: `piatta`, polarity: `flogosi_attiva`, grade: `reattivo`, invasion: `integra`, inflammation: true, tangential: false, blandSubtype: false, ihcSummary: `reactive` },
+      pT1_ROL2: { arch: `invasiva`, polarity: `fronte_irregolare`, grade: `alto`, invasion: `lamina_propria`, pt1Mm: 1.4, pt1Anat: `oltre_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
+      tangenziale: { arch: `invasiva`, polarity: `tangenziale_sospetto`, grade: `lieve`, invasion: `indeterminato`, inflammation: false, tangential: true, blandSubtype: false, ihcSummary: `none` }
+    };
+
+    function applyPreset(key) {
+      var p = REFERENCE_PRESETS[key];
+      if (!p) return;
+      applyCase(p);
+      appState.activePreset = key;
+      updateVerdict();
+    }
+
+    function handleResetChecklist(btn) {
+      if (!btn) return;
+      if (btn.getAttribute(`data-armed`) !== `true`) {
+        btn.setAttribute(`data-armed`, `true`);
+        var span = btn.querySelector(`span`);
+        if (span) span.textContent = `Clicca ancora per azzerare`;
+        setTimeout(function () {
+          if (btn.getAttribute(`data-armed`) === `true`) {
+            btn.setAttribute(`data-armed`, `false`);
+            var s2 = btn.querySelector(`span`);
+            if (s2) s2.textContent = `Ripristina checklist`;
+          }
+        }, 3500);
+        return;
+      }
+      btn.setAttribute(`data-armed`, `false`);
+      var s3 = btn.querySelector(`span`);
+      if (s3) s3.textContent = `Ripristina checklist`;
+      applyCase({});
+      appState.activePreset = ``;
+      updateVerdict();
+      var fb = document.getElementById(`copy-feedback`);
+      if (fb) fb.textContent = `Checklist azzerata: tutti i campi sono “non valutato”.`;
+    }
+
+    function copyReportText() {
+      var repEl = document.getElementById(`report-preview`);
+      var fb = document.getElementById(`copy-feedback`);
+      if (!repEl) return;
+      var text = repEl.textContent || ``;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          if (fb) fb.textContent = `Referto copiato negli appunti.`;
+        }, function () {
+          if (fb) fb.textContent = `Seleziona il testo nel riquadro o usa \u201cEsporta referto (.txt)\u201d.`;
+        });
+      } else {
+        if (fb) fb.textContent = `Usa il pulsante \u201cEsporta referto (.txt)\u201d in alto per scaricare il testo.`;
+      }
+    }
+
+    function exportCurrentReport() {
+      var repEl = document.getElementById(`report-preview`);
+      var fb = document.getElementById(`copy-feedback`);
+      var content = repEl ? repEl.textContent : ``;
+      if (!content) return;
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content: content,
+          contentType: `text/plain`,
+          encoding: `UTF-8`,
+          filename: `referto_uroteliale_who2022.txt`
+        });
+        if (fb) fb.textContent = `Esportazione referto avviata (referto_uroteliale_who2022.txt).`;
+      } else {
+        var blob = new Blob([content], { type: `text/plain;charset=utf-8` });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement(`a`);
+        a.href = url;
+        a.download = `referto_uroteliale_who2022.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if (fb) fb.textContent = `File referto_uroteliale_who2022.txt scaricato.`;
+      }
+    }
+
+    /* =========================================================================
+       SAVED CASES SESSION LOG
+       ========================================================================= */
+
+    function saveCaseToLog() {
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2, `0`);
+      var mm = String(now.getMinutes()).padStart(2, `0`);
+      /* Si salvano solo i reperti; titolo ed etichetta si ricalcolano dal motore alla visualizzazione */
+      var entry = {
+        id: Date.now(),
+        time: `${hh}:${mm}`,
+        snapshot: caseSnapshot()
+      };
+      appState.savedCases.unshift(entry);
+      if (appState.savedCases.length > 12) {
+        appState.savedCases = appState.savedCases.slice(0, 12);
+      }
+      renderSavedCases();
+      persistState();
+      var fb = document.getElementById(`copy-feedback`);
+      if (fb) fb.textContent = `Caso salvato nell\u2019archivio di sessione.`;
+    }
+
+    function loadSavedCase(id) {
+      for (var i = 0; i < appState.savedCases.length; i++) {
+        if (appState.savedCases[i].id === id) {
+          applyCase(appState.savedCases[i].snapshot);
+          appState.activePreset = ``;
+          updateVerdict();
+          break;
+        }
+      }
+    }
+
+    function removeSavedCase(id) {
+      appState.savedCases = appState.savedCases.filter(function (item) {
+        return item.id !== id;
+      });
+      renderSavedCases();
+      persistState();
+    }
+
+    function clearCaseLog(btn) {
+      if (!btn) return;
+      if (appState.savedCases.length === 0) return;
+      if (btn.getAttribute(`data-armed`) !== `true`) {
+        btn.setAttribute(`data-armed`, `true`);
+        var span = btn.querySelector(`span`);
+        if (span) span.textContent = `Conferma svuotamento`;
+        setTimeout(function () {
+          if (btn.getAttribute(`data-armed`) === `true`) {
+            btn.setAttribute(`data-armed`, `false`);
+            var s2 = btn.querySelector(`span`);
+            if (s2) s2.textContent = `Svuota elenco`;
+          }
+        }, 3500);
+        return;
+      }
+      btn.setAttribute(`data-armed`, `false`);
+      var s3 = btn.querySelector(`span`);
+      if (s3) s3.textContent = `Svuota elenco`;
+      appState.savedCases = [];
+      renderSavedCases();
+      persistState();
+    }
+
+    function renderSavedCases() {
+      var list = document.getElementById(`saved-cases-list`);
+      if (!list) return;
+      if (!appState.savedCases || appState.savedCases.length === 0) {
+        list.innerHTML = `<div class="saved-item" style="color: var(--on-surface-variant);">Nessun caso ancora salvato. Compila la checklist sopra e clicca &ldquo;Salva caso&rdquo; per conservarlo.</div>`;
+        return;
+      }
+      var html = ``;
+      for (var i = 0; i < appState.savedCases.length; i++) {
+        var c = appState.savedCases[i];
+        var r = evaluateDiagnosis(c.snapshot);
+        html += `<div class="saved-item">`;
+        html += `<div class="saved-item-meta"><strong>${escapeHtml(r.title)}</strong><span style="color: var(--on-surface-variant); font-size: 0.75rem;">${escapeHtml(c.time)} &middot; ${escapeHtml(r.chip)}</span></div>`;
+        html += `<div class="saved-item-actions">`;
+        html += `<button type="button" class="btn btn-ghost" style="min-height: 36px; padding: 4px 10px; font-size: 0.75rem;" onclick="loadSavedCase(${c.id})">Riapri</button>`;
+        html += `<button type="button" class="btn btn-danger-outline" style="min-height: 36px; padding: 4px 10px; font-size: 0.75rem;" onclick="removeSavedCase(${c.id})">Rimuovi</button>`;
+        html += `</div></div>`;
+      }
+      list.innerHTML = html;
+    }
+
+    /* =========================================================================
+       COMPARATIVE MATRIX (10 ENTITIES)
+       ========================================================================= */
+
+    function renderMatrix() {
+      var tbody = document.getElementById(`matrix-tbody`);
+      if (!tbody) return;
+
+      var q = (appState.matrixSearch || ``).trim().toLowerCase();
+      var f = appState.matrixFilter || `all`;
+
+      var rows = ENTITIES_MATRIX.filter(function (item) {
+        if (f !== `all` && item.category !== f) return false;
+        if (!q) return true;
+        var hay = `${item.name} ${item.stage} ${item.arch} ${item.polarity} ${item.cytology} ${item.bm} ${item.ihc}`.toLowerCase();
+        return hay.indexOf(q) !== -1;
+      });
+
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--on-surface-variant); padding: var(--space-xl);">Nessuna entità corrisponde ai filtri selezionati. Prova ad ampliare la ricerca o ripristinare il filtro su &ldquo;Tutte (10)&rdquo;.</td></tr>`;
+        return;
+      }
+
+      var html = ``;
+      for (var i = 0; i < rows.length; i++) {
+        var r = rows[i];
+        html += `<tr>`;
+        html += `<td><strong>${r.name}</strong><div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px;"><span class="chip" data-status="${r.status}">${r.stage}</span></div></td>`;
+        html += `<td>${r.arch}</td>`;
+        html += `<td>${r.polarity}</td>`;
+        html += `<td>${r.cytology}</td>`;
+        html += `<td>${r.bm}</td>`;
+        html += `<td>${r.ihc}</td>`;
+        html += `<td><button type="button" class="btn btn-secondary" style="min-height: 36px; padding: 4px 12px; font-size: 0.8125rem;" onclick="loadEntityIntoChecklist('${r.id}')">Carica</button></td>`;
+        html += `</tr>`;
+      }
+      tbody.innerHTML = html;
+
+      /* Sync filter pills */
+      var pBtns = document.querySelectorAll(`#matrix-filter-pills .preset-btn`);
+      for (var j = 0; j < pBtns.length; j++) {
+        if (pBtns[j].getAttribute(`data-filter`) === f) {
+          pBtns[j].classList.add(`is-active`);
+        } else {
+          pBtns[j].classList.remove(`is-active`);
+        }
+      }
+    }
+
+    function filterMatrix(cat) {
+      appState.matrixFilter = cat;
+      renderMatrix();
+      persistState();
+    }
+
+    function searchMatrix(val) {
+      appState.matrixSearch = val;
+      renderMatrix();
+    }
+
+    function loadEntityIntoChecklist(entityId) {
+      for (var i = 0; i < ENTITIES_MATRIX.length; i++) {
+        if (ENTITIES_MATRIX[i].id === entityId) {
+          /* Le righe della matrice contengono valori segnaposto (mm pT1, % HG) anche dove non pertinenti:
+             si scartano, per non precompilare campi che l'utente non ha valutato */
+          var p = Object.assign({}, ENTITIES_MATRIX[i].preset);
+          if (p.invasion !== `lamina_propria`) { delete p.pt1Mm; delete p.pt1Anat; }
+          if (p.arch !== `papillare`) delete p.hgPct;
+          applyCase(p);
+          appState.activePreset = ``;
+          updateVerdict();
+          var el = document.getElementById(`checklist`);
+          if (el) el.scrollIntoView({ behavior: `smooth` });
+          break;
+        }
+      }
+    }
+
+    /* =========================================================================
+       PITFALLS & SUBTYPES RENDERING
+       ========================================================================= */
+
+    function renderPitfallsAndSubtypes() {
+      var grid = document.getElementById(`pitfalls-grid`);
+      if (grid) {
+        var html = ``;
+        for (var i = 0; i < PITFALLS_DATA.length; i++) {
+          var pf = PITFALLS_DATA[i];
+          html += `<article class="pitfall-card">`;
+          html += `<div class="step-head"><h3 class="step-title">${pf.title}</h3><span class="chip" data-status="${pf.status}">${pf.badge}</span></div>`;
+          html += `<div class="pitfall-compare">`;
+          html += `<div class="compare-box" data-side="benign"><h4>${pf.benignTitle}</h4><ul class="detail-list" style="padding-left: 1rem;">`;
+          for (var b = 0; b < pf.benignItems.length; b++) {
+            html += `<li>${pf.benignItems[b]}</li>`;
+          }
+          html += `</ul></div>`;
+          html += `<div class="compare-box" data-side="malignant"><h4>${pf.malignantTitle}</h4><ul class="detail-list" style="padding-left: 1rem;">`;
+          for (var m = 0; m < pf.malignantItems.length; m++) {
+            html += `<li>${pf.malignantItems[m]}</li>`;
+          }
+          html += `</ul></div></div>`;
+          html += `<div class="callout" data-status="info" style="font-size: 0.875rem;"><strong>Regola pratica:</strong> ${pf.tip}</div>`;
+          html += `</article>`;
+        }
+        grid.innerHTML = html;
+      }
+
+      var subGrid = document.getElementById(`subtypes-grid`);
+      if (subGrid) {
+        var sHtml = ``;
+        for (var s = 0; s < SUBTYPES_WHO_2022.length; s++) {
+          var sub = SUBTYPES_WHO_2022[s];
+          sHtml += `<div class="subtype-item"><strong>${sub.name}</strong><span>${sub.note}</span></div>`;
+        }
+        subGrid.innerHTML = sHtml;
+      }
+    }
+
+    /* =========================================================================
+       IHC SIMULATOR (CK20 / p53 / CD44)
+       ========================================================================= */
+
+    function updateIhcSimulator() {
+      var sCk = document.getElementById(`sim-ck20`);
+      var sP53 = document.getElementById(`sim-p53`);
+      var sCd = document.getElementById(`sim-cd44`);
+      if (!sCk || !sP53 || !sCd) return;
+
+      var ck = sCk.value;
+      var p53 = sP53.value;
+      var cd = sCd.value;
+
+      appState.simCk20 = ck;
+      appState.simP53 = p53;
+      appState.simCd44 = cd;
+
+      var tCk = document.getElementById(`tile-ck20`);
+      var tP53 = document.getElementById(`tile-p53`);
+      var tCd = document.getElementById(`tile-cd44`);
+      if (tCk) tCk.textContent = ck === `ombrello` ? `Solo ombrello` : (ck === `full` ? `Full-thickness` : `Negativo`);
+      if (tP53) tP53.textContent = p53 === `wildtype` ? `Wild-type` : (p53 === `over` ? `Diffuso > 70%` : `Pattern null (0%)`);
+      if (tCd) tCd.textContent = cd === `full` ? `Full-thickness` : `Basale / assente`;
+
+      var card = document.getElementById(`ihc-sim-result`);
+      var title = document.getElementById(`ihc-sim-title`);
+      var chip = document.getElementById(`ihc-sim-chip`);
+      var exp = document.getElementById(`ihc-sim-explanation`);
+      var cav = document.getElementById(`ihc-sim-caveat`);
+
+      var isReactive = (ck === `ombrello` && p53 === `wildtype` && cd === `full`);
+      var isCisStrong = (ck === `full` && (p53 === `over` || p53 === `null`) && cd === `basale`);
+      var cisScore = (ck === `full` ? 1 : 0) + (p53 !== `wildtype` ? 1 : 0) + (cd === `basale` ? 1 : 0);
+
+      if (isReactive) {
+        if (card) card.setAttribute(`data-status`, `ok`);
+        if (chip) { chip.setAttribute(`data-status`, `ok`); chip.textContent = `Pattern Reattivo`; }
+        if (title) title.textContent = `Profilo coerente con urotelio normale o atipia reattiva`;
+        if (exp) exp.textContent = `La restrizione di CK20 alle cellule ad ombrello, l\u2019espressione wild-type di p53 e la positività a tutto spessore di CD44 supportano un processo reattivo (es. flogosi o rigenerazione post-terapia).`;
+        if (cav) cav.textContent = `Cautela: una minoranza di CIS può mostrare negatività focale o assenza di sovraespressione di p53; se la morfologia su E&E è francamente maligna, non escludere il CIS sulla sola base dell\u2019IHC.`;
+      } else if (isCisStrong) {
+        if (card) card.setAttribute(`data-status`, `alert`);
+        if (chip) { chip.setAttribute(`data-status`, `alert`); chip.textContent = `Pattern CIS`; }
+        if (title) title.textContent = `Profilo altamente suggestivo a supporto di Carcinoma in situ (CIS)`;
+        if (exp) exp.textContent = `La positività aberrante a tutto spessore per CK20, il pattern p53 mutato (diffuso/intenso o null) e la perdita di CD44 negli strati medio-superficiali costituiscono la triade classica di supporto al CIS.`;
+        if (cav) cav.textContent = `Ricordare che l\u2019IHC conferma il sospetto morfologico: in assenza di criteri citonucleari di alto grado su E&E, non formulare diagnosi di CIS sul solo immunofenotipo.`;
+      } else if (cisScore >= 2) {
+        if (card) card.setAttribute(`data-status`, `warn`);
+        if (chip) { chip.setAttribute(`data-status`, `warn`); chip.textContent = `Profilo Intermedio / Parziale`; }
+        if (title) title.textContent = `Profilo immunofenotipico parziale (prevale la morfologia)`;
+        if (exp) exp.textContent = `Sono presenti 2 marcatori su 3 orientati in senso neoplastico (${cisScore}/3), ma il pannello non è completo. Possibile in CIS eterogenei, pagetoidi o in displasia severa.`;
+        if (cav) cav.textContent = `Valutare attentamente il rapporto tra grado di atipia e flogosi intraepiteliale; in caso di flogosi severa e dubbio persistente, preferire una biopsia di controllo post-terapia.`;
+      } else {
+        if (card) card.setAttribute(`data-status`, `warn`);
+        if (chip) { chip.setAttribute(`data-status`, `warn`); chip.textContent = `Profilo Discordante`; }
+        if (title) title.textContent = `Profilo non conclusivo o aspecifico`;
+        if (exp) exp.textContent = `Una singola alterazione isolata (es. CK20 focale o p53 lievemente aumentato in rigenerazione) non è sufficiente a classificare la lesione.`;
+        if (cav) cav.textContent = `Marcatori aggiuntivi meno consolidati (Ki-67, AMACR, CK5/6, p16) possono essere considerati solo in contesti selezionati, mantenendo sempre la E&E come criterio guida.`;
+      }
+      persistState();
+    }
+
+    function setActiveNav(el) {
+      var links = document.querySelectorAll(`.nav-link`);
+      for (var i = 0; i < links.length; i++) {
+        links[i].classList.remove(`is-active`);
+      }
+      if (el) el.classList.add(`is-active`);
+    }
+
+    /* =========================================================================
+       INITIALIZATION
+       ========================================================================= */
+
+    async function initApp() {
+      await loadInitialState();
+
+      var sCk = document.getElementById(`sim-ck20`);
+      var sP53 = document.getElementById(`sim-p53`);
+      var sCd = document.getElementById(`sim-cd44`);
+      if (sCk) sCk.value = appState.simCk20 || `ombrello`;
+      if (sP53) sP53.value = appState.simP53 || `wildtype`;
+      if (sCd) sCd.value = appState.simCd44 || `full`;
+
+      var searchEl = document.getElementById(`matrix-search`);
+      if (searchEl) searchEl.value = appState.matrixSearch || ``;
+
+      renderPitfallsAndSubtypes();
+      renderMatrix();
+      renderSavedCases();
+      updateVerdict();
+      updateIhcSimulator();
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    document.addEventListener(`DOMContentLoaded`, initApp);
+  </script>
+</body>
+</html>
