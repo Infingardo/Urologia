@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.1.0 — 2026-11-26
+## 2.3.0 — 2026-11-26
 
-Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi 80 test).
+Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi test del motore della 2.2.0).
 
 ### Cambiato
 - Quattro schede (Caso, Matrice delle entità, Trappole e sottotipi, IHC e TPS) al posto di un'unica pagina lunga; la scheda è indicata nell'indirizzo (`#matrice`, ecc.). "Carica" dalla matrice torna alla scheda Caso.
@@ -11,6 +11,25 @@ Impaginazione più compatta per la consultazione al PC durante la refertazione. 
 - Pulsanti delle opzioni con la sola etichetta; la descrizione completa è nel suggerimento al passaggio del mouse, oppure sempre visibile con "Mostra le descrizioni delle opzioni" (preferenza ricordata dal browser).
 - Scenari di riferimento e nota UPUMP in riquadri apribili; contesto e IHC in una scheda separata dal passo 4.
 - Intestazione ridotta a una riga.
+
+## 2.2.0 — 2026-11-26
+
+Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Invasive urothelial carcinoma* e *Non-invasive papillary urothelial carcinoma, low-grade / high-grade*, su indicazione di Filippo.
+
+### Cambiato (cambia gli esiti)
+- pT1 e pT2 con sottotipo dichiarato presente: grado sempre "Alto grado (HG) — sottotipo: alto grado per definizione (WHO 2022)". Prima il pT1 con citologia lieve dava "Basso grado (LG)" e il pT2 "Alto grado (o sottotipo blando)". Fonte: "Histological subtypes of urothelial carcinoma and those with divergent differentiation are all considered high-grade tumours". Senza sottotipo il basso grado invasivo resta possibile (raro, riconosciuto dalla fonte).
+- Campo "sottotipo" del referto esteso a tutti gli 11 sottotipi del Blue Book (prima solo nested, large nested, tubulare, microcistico): ora "Sottotipo istologico (WHO 2022)", con tubulare e microcistico in una voce unica (i casi salvati con le due voci separate vengono convertiti). Qualunque sottotipo dichiarato in pT1/pT2 dà alto grado. Il referto riporta nome, percentuale e, solo in pT1/pT2 (non in pTa né in pTis), il codice ICD-O del sottotipo (dal capitolo sul carcinoma invasivo del Blue Book: es. micropapillare 8131/3, plasmacitoide 8122/3); il codice del verdetto resta 8120/3. Riga per sottotipo non specificato: "Sottotipo istologico: specificare il sottotipo e la relativa percentuale (%)" (prima "Sottotipo istologico / differenziazione divergente: specificare sottotipo (es. …)").
+- Titolo pT2 con sottotipo: invariato per i sottotipi blandi; "…(pT2), sottotipo <nome>" per gli altri; "…(pT2), sottotipo da specificare" se il sottotipo non è indicato (prima "sottotipo a citologia blanda").
+- Avviso per sottotipo in lesione con membrana basale integra: generico per tutti i sottotipi; per il micropapillare in lesione papillare (pTa) ricorda che il Blue Book descrive la forma micropapillare non invasiva; nel CIS piatto (pTis) resta l'avviso generico.
+
+### Cambiato (testi di consultazione)
+- Matrice, riga "invasivo": i sottotipi blandi non sono più accostati al basso grado.
+- Sottotipi: aggiunti giant cell e poorly differentiated; tubulare e microcistico riuniti in una voce, come nel Blue Book; nota che tutti i sottotipi sono di alto grado.
+- IHC: frase su CK7/CK20/CDX2 riscritta secondo la fonte (sovrapposizione con l'adenocarcinoma enterico nella differenziazione ghiandolare intestinale; distinzione definitiva non possibile con morfologia e IHC, risolta al meglio su clinica e imaging).
+- Avviso "il grado segue il passo 3" (pT1/pT2 papillare con quota HG ≥ 5%) non mostrato quando è dichiarato un sottotipo, perché il grado è alto per definizione. Segnalato dalla revisione indipendente.
+
+### Confermato senza modifiche
+- Regola del 5%, dicitura per la quota < 5%, codici ICD-O 8130/2 e 8120/3, criteri TPS (N:C ≥ 0,7), uso dell'IHC non necessario per il grado. Regola del 5% mantenuta anche sui papillari con invasione indeterminata, per scelta di Filippo.
 
 ## 2.0.1 — 2026-11-26
 
