@@ -287,6 +287,12 @@ test('avviso sottotipo con membrana basale integra: testo dedicato al micropapil
   const p = { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', invasion: 'integra', blandSubtype: 'presente' };
   assert.ok(ev({ ...p, subtypeName: 'micropapillare' }).alerts.some((a) => /micropapillare non invasivo/.test(a)));
   assert.ok(ev({ ...p, subtypeName: 'nested' }).alerts.some((a) => /si definiscono nel carcinoma invasivo/.test(a)));
+  // pTis (CIS piatto) è distinto dal pTa papillare: niente richiamo alla forma micropapillare papillare non invasiva
+  const cis = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'integra', blandSubtype: 'presente', subtypeName: 'micropapillare' });
+  assert.equal(cis.stage, 'pTis');
+  assert.equal(cis.icdo, '8120/2');
+  assert.ok(!cis.alerts.some((a) => /micropapillare non invasivo/.test(a)));
+  assert.ok(cis.alerts.some((a) => /si definiscono nel carcinoma invasivo/.test(a)));
 });
 
 /* ---------- Soglie sul valore inserito, senza arrotondamenti (v2.0.1) ---------- */

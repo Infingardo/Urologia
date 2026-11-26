@@ -1944,7 +1944,8 @@
         alerts.push(`Il passo 2 descrive un pattern con citologia blanda (nested / large nested / microcistico / tubulare): specificare il sottotipo nel contesto e la relativa percentuale.`);
       }
       if (s.blandSubtype === `presente` && s.invasion === `integra`) {
-        alerts.push(s.subtypeName === `micropapillare`
+        /* La forma micropapillare non invasiva è descritta nel capitolo dei papillari non invasivi (pTa), non per il CIS piatto */
+        alerts.push(s.subtypeName === `micropapillare` && s.arch === `papillare`
           ? `Pattern micropapillare in lesione con membrana basale integra: il Blue Book WHO 2022 descrive il carcinoma uroteliale micropapillare non invasivo. Verificare con particolare cura l\u2019assenza di invasione e il campionamento della base.`
           : `Sottotipo indicato in lesione con membrana basale integra: i sottotipi istologici si definiscono nel carcinoma invasivo. Verificare il campionamento della base.`);
       }
