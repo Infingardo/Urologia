@@ -12,6 +12,8 @@ Strumenti di uropatologia per uso didattico e di supporto alla refertazione. Ogn
 
 Checklist in cinque passi (architettura; spessore e polarità; grado citonucleare con soglia del 5% di alto grado nei papillari non invasivi; membrana basale e invasione con substaging pT1; elementi di referto), con matrice comparativa delle entità, trappole morfologiche, simulatore del pannello CK20/p53/CD44 e correlazione con The Paris System.
 
+La pagina è organizzata in quattro schede: **Caso** (passi a sinistra, verdetto fisso a destra con i campi ancora da valutare; criteri, diagnosi differenziali, IHC, schema e referto in riquadri apribili), **Matrice delle entità**, **Trappole e sottotipi**, **IHC e TPS**. Le descrizioni delle opzioni compaiono al passaggio del mouse o sempre, se attivate.
+
 L'esito è un **orientamento morfologico**: non sostituisce la diagnosi, che resta del patologo.
 
 ### Come ragiona

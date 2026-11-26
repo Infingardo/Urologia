@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.0 — 2026-11-26
+
+Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi 80 test).
+
+### Cambiato
+- Quattro schede (Caso, Matrice delle entità, Trappole e sottotipi, IHC e TPS) al posto di un'unica pagina lunga; la scheda è indicata nell'indirizzo (`#matrice`, ecc.). "Carica" dalla matrice torna alla scheda Caso.
+- Verdetto fisso a destra durante lo scorrimento. In alto: titolo, stadio, grado, ICD-O; finché il verdetto non è emesso, l'elenco dei campi da valutare o delle contraddizioni resta in vista.
+- Criteri e diagnosi differenziali, indicazione IHC, schema istologico, bozza del referto e casi salvati in riquadri apribili; "Copia referto" e "Salva caso" sempre visibili.
+- Pulsanti delle opzioni con la sola etichetta; la descrizione completa è nel suggerimento al passaggio del mouse, oppure sempre visibile con "Mostra le descrizioni delle opzioni" (preferenza ricordata dal browser).
+- Scenari di riferimento e nota UPUMP in riquadri apribili; contesto e IHC in una scheda separata dal passo 4.
+- Intestazione ridotta a una riga.
+
 ## 2.0.1 — 2026-11-26
 
 Correzioni dalla revisione indipendente della 2.0.0. Contenuto diagnostico invariato.
