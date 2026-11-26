@@ -231,6 +231,16 @@ test('quota HG 4,5% e 4,99%: basso grado (prima 4,5 arrotondato a 5 → alto gra
   assert.equal(ev({ ...p, hgPct: 5 }).stage, 'pTa HG');
 });
 
+test('misura nel referto mostrata come inserita, coerente con la classe (0,499 e 0,999 mm)', () => {
+  const a = report(pt1(0.499));
+  assert.match(a, /0\.499 mm → ROL1 .* T1m/);
+  assert.doesNotMatch(a, /0\.5 mm/);
+  const b = pt1(0.999);
+  assert.match(report(b), /0\.999 mm → ROL1/);
+  assert.match(b.chip, /0\.999 mm/);
+  assert.match(b.schematicCaption, /0\.999 mm/);
+});
+
 /* ---------- Migrazione dei casi salvati dalla v1 ---------- */
 const { migrateV1Snapshot } = ctx.module.exports;
 test('v1: casella non spuntata = non valutato, spuntata = presente', () => {

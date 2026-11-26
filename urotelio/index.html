@@ -1757,9 +1757,10 @@
       return out;
     }
 
-    /* Misure: fino a 2 decimali, senza arrotondare il valore usato per le soglie */
+    /* Misure mostrate come inserite: un arrotondamento in visualizzazione contraddirebbe la classe
+       (0,499 mostrato "0,5" accanto a T1m < 0,5 mm) */
     function formatNum(n) {
-      return String(Math.round(n * 100) / 100);
+      return String(n);
     }
 
     /* Campi mancanti e contraddizioni: entrambi impediscono il verdetto */
