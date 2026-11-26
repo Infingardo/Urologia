@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.2.0 — 2026-11-26
+
+Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Invasive urothelial carcinoma* e *Non-invasive papillary urothelial carcinoma, low-grade / high-grade*, su indicazione di Filippo.
+
+### Cambiato (cambia gli esiti)
+- pT1 e pT2 con sottotipo dichiarato presente: grado sempre "Alto grado (HG) — sottotipo: alto grado per definizione (WHO 2022)". Prima il pT1 con citologia lieve dava "Basso grado (LG)" e il pT2 "Alto grado (o sottotipo blando)". Fonte: "Histological subtypes of urothelial carcinoma and those with divergent differentiation are all considered high-grade tumours". Senza sottotipo il basso grado invasivo resta possibile (raro, riconosciuto dalla fonte).
+
+### Cambiato (testi di consultazione)
+- Matrice, riga "invasivo": i sottotipi blandi non sono più accostati al basso grado.
+- Sottotipi: aggiunti giant cell e poorly differentiated; tubulare e microcistico riuniti in una voce, come nel Blue Book; nota che tutti i sottotipi sono di alto grado.
+- IHC: frase su CK7/CK20/CDX2 riscritta secondo la fonte (sovrapposizione con l'adenocarcinoma enterico nella differenziazione ghiandolare intestinale; distinzione su clinica e imaging).
+
+### Confermato senza modifiche
+- Regola del 5%, dicitura per la quota < 5%, codici ICD-O 8130/2 e 8120/3, criteri TPS (N:C ≥ 0,7), uso dell'IHC non necessario per il grado. Regola del 5% mantenuta anche sui papillari con invasione indeterminata, per scelta di Filippo.
+
 ## 2.0.1 — 2026-11-26
 
 Correzioni dalla revisione indipendente della 2.0.0. Contenuto diagnostico invariato.

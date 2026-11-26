@@ -209,6 +209,41 @@ test('pT1 papillare LG con HG >= 5%: avviso, grado non cambiato in silenzio', ()
   assert.ok(r.alerts.some((a) => /solo ai papillari non invasivi/.test(a)));
 });
 
+/* ---------- Sottotipi = alto grado (WHO 2022, Invasive urothelial carcinoma, Grading) ---------- */
+const HG_SUB = 'Alto grado (HG) — sottotipo: alto grado per definizione (WHO 2022)';
+test('pT1 con sottotipo presente e citologia lieve: alto grado (prima "Basso grado (LG)")', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'lamina_propria', pt1Mm: 0.8, blandSubtype: 'presente', subtypeName: 'nested', subtypePct: 100 });
+  issued(r);
+  assert.equal(r.gradeLabel, HG_SUB);
+  assert.match(report(r), /Grado istologico: Alto grado \(HG\) — sottotipo/);
+});
+test('pT1 con sottotipo presente e citologia alta: alto grado con la stessa nota', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', blandSubtype: 'presente' });
+  assert.equal(r.gradeLabel, HG_SUB);
+});
+test('pT2 con sottotipo presente: alto grado (prima "Alto grado (o sottotipo blando)")', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente' });
+  issued(r);
+  assert.equal(r.gradeLabel, HG_SUB);
+  assert.equal(r.title, 'Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)');
+});
+test('pT1 e pT2 senza sottotipo: il grado segue ancora il passo 3 (LG raro ammesso)', () => {
+  const p = { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'lieve' };
+  assert.equal(ev({ ...p, invasion: 'lamina_propria' }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, invasion: 'detrusore' }).gradeLabel, 'Basso grado (raro)');
+  assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: 'assente' }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: null }).gradeLabel, 'Basso grado (LG)');
+});
+test('invasione indeterminata con sottotipo: grado invariato (regola applicata solo a pT1/pT2)', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'indeterminato', blandSubtype: 'presente' });
+  assert.equal(r.gradeLabel, 'Basso grado (LG)');
+});
+test('regola del 5% mantenuta sui papillari con invasione indeterminata (scelta confermata da Filippo)', () => {
+  const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'indeterminato' };
+  assert.equal(ev({ ...p, hgPct: 4.9 }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, hgPct: 5 }).gradeLabel, 'Alto grado (HG)');
+});
+
 /* ---------- Soglie sul valore inserito, senza arrotondamenti (v2.0.1) ---------- */
 const pt1 = (mm) => ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: mm });
 test('pT1 0,45 mm: T1m e ROL1 (prima arrotondato a 0,5 → T1e)', () => {
