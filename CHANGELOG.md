@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.1 — 2026-11-26
+
+Correzioni dalla revisione indipendente della 2.0.0. Contenuto diagnostico invariato.
+
+### Corretto (cambia gli esiti)
+- Estensione pT1: non più arrotondata a 0,1 mm prima del confronto con le soglie. 0,45–0,49 mm torna T1m (la 2.0.0 dava T1e); 0,95–0,99 mm torna ROL1 (la 2.0.0 dava ROL2), come nella v1. La misura è mostrata con fino a 2 decimali.
+- Quota HG: nessun arrotondamento nel motore e nessun troncamento nell'interfaccia; 4,5% resta basso grado in entrambi i percorsi (la 2.0.0 dava alto grado dal motore e basso grado dall'interfaccia).
+- Casi salvati dalla v1: una casella non spuntata diventa "non valutato" (la 2.0.0 la leggeva come "assente"); % HG e mm pT1 conservati solo dove la v1 li mostrava (papillare; pT1).
+
+### Corretto (non cambia gli esiti)
+- Orario dei casi salvati accettato solo nel formato HH:MM.
+- I casi salvati non conservano valori nascosti non pertinenti (mm pT1 su un caso non pT1, % HG su un caso non papillare).
+- Cursori sbiaditi quando il valore è "non valutato"; un valore fuori intervallo viene riscritto subito nel campo.
+
 ## 2.0.0 — 2026-11-25
 
 Prima versione nel repository. Parte dalla versione 1 della checklist urotelio (file HTML singolo) e ne corregge la logica; il contenuto diagnostico (testi dei rami, soglie, codici ICD-O, matrice, trappole, simulatore IHC) è invariato.

@@ -22,11 +22,12 @@ L'esito è un **orientamento morfologico**: non sostituisce la diagnosi, che res
 - **Nessun campo ne modifica un altro di nascosto.**
 - **Nessuna falsa precisione**: senza misura dell'estensione in lamina propria non si calcola alcuna classe ROL o T1m/T1e; senza quota di alto grado non si scrive 100%.
 - **Regola del 5%** applicata solo ai papillari non invasivi (pTa). Nel pT1 il grado segue il passo 3; se la quota di alto grado è ≥ 5% compare un avviso.
+- **Soglie sul valore inserito**: 5% di alto grado, 0,5 mm e 1,0 mm si confrontano sul numero digitato, senza arrotondamenti.
 - **Substaging pT1** riportato in parallelo con i sistemi in uso: micrometrico T1m/T1e (soglia 0,5 mm), ROL (soglia 1,0 mm) e livello rispetto alla muscularis mucosae, in forma descrittiva.
 
 ### Persistenza
 
-Si salvano solo l'archivio dei casi (al massimo 12, nel browser) e le preferenze. Il caso in corso non viene salvato: riaprendo la pagina si riparte da zero. Nell'archivio si salvano solo i reperti selezionati, nessun dato del paziente.
+Si salvano solo l'archivio dei casi (al massimo 12, nel browser) e le preferenze. Il caso in corso non viene salvato: riaprendo la pagina si riparte da zero. Nell'archivio si salvano solo i reperti selezionati, nessun dato del paziente. I casi salvati con la v1 vengono convertiti: una casella non spuntata diventa "non valutato".
 
 ### Test
 

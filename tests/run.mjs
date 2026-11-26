@@ -209,6 +209,56 @@ test('pT1 papillare LG con HG >= 5%: avviso, grado non cambiato in silenzio', ()
   assert.ok(r.alerts.some((a) => /solo ai papillari non invasivi/.test(a)));
 });
 
+/* ---------- Soglie sul valore inserito, senza arrotondamenti (v2.0.1) ---------- */
+const pt1 = (mm) => ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: mm });
+test('pT1 0,45 mm: T1m e ROL1 (prima arrotondato a 0,5 → T1e)', () => {
+  const t = report(pt1(0.45));
+  assert.match(t, /0\.45 mm → ROL1 .* T1m/);
+});
+test('pT1 0,49 mm: T1m; 0,5 mm: T1e', () => {
+  assert.match(report(pt1(0.49)), /T1m/);
+  assert.match(report(pt1(0.5)), /T1e/);
+});
+test('pT1 0,95 e 0,99 mm: ROL1 (prima arrotondati a 1,0 → ROL2); 1,0 mm: ROL2', () => {
+  assert.equal(pt1(0.95).stage, 'pT1 (ROL1)');
+  assert.equal(pt1(0.99).stage, 'pT1 (ROL1)');
+  assert.equal(pt1(1.0).stage, 'pT1 (ROL2)');
+});
+test('quota HG 4,5% e 4,99%: basso grado (prima 4,5 arrotondato a 5 → alto grado)', () => {
+  const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra' };
+  assert.equal(ev({ ...p, hgPct: 4.5 }).stage, 'pTa LG');
+  assert.equal(ev({ ...p, hgPct: 4.99 }).stage, 'pTa LG');
+  assert.equal(ev({ ...p, hgPct: 5 }).stage, 'pTa HG');
+});
+
+/* ---------- Migrazione dei casi salvati dalla v1 ---------- */
+const { migrateV1Snapshot } = ctx.module.exports;
+test('v1: casella non spuntata = non valutato, spuntata = presente', () => {
+  const m = migrateV1Snapshot({ arch: 'piatta', inflammation: false, tangential: true, blandSubtype: false, hgPct: 0, pt1Mm: 0.6, pt1Anat: 'sopra_mm', invasion: 'integra' });
+  const c = normalizeCase(m);
+  assert.equal(c.inflammation, null);
+  assert.equal(c.tangential, 'presente');
+  assert.equal(c.blandSubtype, null);
+  assert.equal(c.hgPct, null, '% HG non mostrata nella v1 per lesioni piatte');
+  assert.equal(c.pt1Mm, null, 'mm pT1 non mostrati nella v1 se non pT1');
+  assert.equal(c.pt1Anat, null);
+});
+test('v1: piatta, lieve, flogosi non spuntata → incompleto (non più "Displasia")', () => {
+  const v1 = { arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', hgPct: 0, invasion: 'integra', pt1Mm: 0.6, pt1Anat: 'sopra_mm', inflammation: false, tangential: false, blandSubtype: false, ihcSummary: 'none' };
+  incomplete(evaluateDiagnosis(migrateV1Snapshot(v1)));
+});
+test('v1: papillare conserva la % HG; pT1 conserva mm e livello', () => {
+  const a = normalizeCase(migrateV1Snapshot({ arch: 'papillare', hgPct: 3, invasion: 'integra', inflammation: false }));
+  assert.equal(a.hgPct, 3);
+  const b = normalizeCase(migrateV1Snapshot({ arch: 'invasiva', invasion: 'lamina_propria', pt1Mm: 1.4, pt1Anat: 'oltre_mm', inflammation: false }));
+  assert.equal(b.pt1Mm, 1.4);
+  assert.equal(b.pt1Anat, 'oltre_mm');
+});
+test('salvataggi v2 (tre stati) non toccati dalla migrazione', () => {
+  const v2 = { arch: 'piatta', inflammation: 'assente', hgPct: 7 };
+  assert.deepEqual(migrateV1Snapshot(v2), v2);
+});
+
 /* ---------- Compatibilità e regressione ---------- */
 test('salvataggi della versione precedente (booleani) normalizzati', () => {
   const c = normalizeCase({ inflammation: true, tangential: false, blandSubtype: false, arch: 'xx' });

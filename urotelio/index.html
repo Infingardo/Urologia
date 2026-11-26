@@ -642,6 +642,7 @@
       align-items: center;
       gap: var(--space-sm);
     }
+    input[type="range"][data-unset="true"] { opacity: 0.35; }
     .btn-mini {
       min-height: 32px;
       padding: 2px 10px;
@@ -1178,7 +1179,7 @@
                   </div>
                   <div class="num-wrap">
                     <label class="control-label" for="num-hg-pct">% HG</label>
-                    <input type="number" id="num-hg-pct" min="0" max="100" step="1" value="" placeholder="&mdash;" oninput="syncHgFromNumber(this.value)">
+                    <input type="number" id="num-hg-pct" min="0" max="100" step="any" value="" placeholder="&mdash;" oninput="syncHgFromNumber(this.value)">
                   </div>
                 </div>
                 <div class="inline-row">
@@ -1240,7 +1241,7 @@
                   </div>
                   <div class="num-wrap">
                     <label class="control-label" for="num-pt1-mm">Misura (mm)</label>
-                    <input type="number" id="num-pt1-mm" min="0.1" max="20.0" step="0.1" value="" placeholder="&mdash;" oninput="syncPt1FromNumber(this.value)">
+                    <input type="number" id="num-pt1-mm" min="0.01" max="20.0" step="any" value="" placeholder="&mdash;" oninput="syncPt1FromNumber(this.value)">
                   </div>
                 </div>
                 <div class="inline-row">
@@ -1723,10 +1724,9 @@
       s.polarity = s.arch && POLARITY_IDS[s.arch].indexOf(src.polarity) !== -1 ? src.polarity : null;
       s.grade = normalizeEnum(src.grade, ENUMS.grade);
       s.invasion = normalizeEnum(src.invasion, ENUMS.invasion);
+      /* Nessun arrotondamento: le soglie (5%, 0,5 mm, 1,0 mm) si confrontano sul valore inserito */
       s.hgPct = normalizeNum(src.hgPct, 0, 100);
-      if (s.hgPct !== null) s.hgPct = Math.round(s.hgPct);
-      s.pt1Mm = normalizeNum(src.pt1Mm, 0.1, 20);
-      if (s.pt1Mm !== null) s.pt1Mm = Math.round(s.pt1Mm * 10) / 10;
+      s.pt1Mm = normalizeNum(src.pt1Mm, 0.01, 20);
       s.pt1Anat = normalizeEnum(src.pt1Anat, ENUMS.pt1Anat);
       for (var t = 0; t < TRI_FIELDS.length; t++) {
         s[TRI_FIELDS[t]] = normalizeTri(src[TRI_FIELDS[t]]);
@@ -1736,6 +1736,30 @@
       if (s.subtypePct !== null) s.subtypePct = Math.round(s.subtypePct);
       s.ihcSummary = normalizeEnum(src.ihcSummary, ENUMS.ihcSummary) || `none`;
       return s;
+    }
+
+    /* Salvataggi della v1: le caselle erano booleane e "non spuntata" (false) non significava "assente";
+       % HG e mm pT1 avevano sempre un valore di default anche se non mostrati */
+    function migrateV1Snapshot(src) {
+      if (!src || typeof src !== `object`) return src;
+      var legacy = false;
+      var flags = [`inflammation`, `tangential`, `blandSubtype`];
+      for (var i = 0; i < flags.length; i++) {
+        if (typeof src[flags[i]] === `boolean`) legacy = true;
+      }
+      if (!legacy) return src;
+      var out = Object.assign({}, src);
+      for (var j = 0; j < flags.length; j++) {
+        if (out[flags[j]] === false) out[flags[j]] = null;
+      }
+      if (out.arch !== `papillare`) out.hgPct = null;
+      if (out.invasion !== `lamina_propria`) { out.pt1Mm = null; out.pt1Anat = null; }
+      return out;
+    }
+
+    /* Misure: fino a 2 decimali, senza arrotondare il valore usato per le soglie */
+    function formatNum(n) {
+      return String(Math.round(n * 100) / 100);
     }
 
     /* Campi mancanti e contraddizioni: entrambi impediscono il verdetto */
@@ -1930,7 +1954,7 @@
         result.ihcNote = `Desmina per confermare la natura muscolare liscia dei fasci infiltrati; GATA3, p63, HMWCK se morfologia poco differenziata. TERT utile se sottotipo nested puro.`;
       } else if (s.invasion === `lamina_propria`) {
         var measured = s.pt1Mm !== null;
-        var mmText = measured ? `${s.pt1Mm.toFixed(1)} mm` : `non misurata`;
+        var mmText = measured ? `${formatNum(s.pt1Mm)} mm` : `non misurata`;
         var rolClass = measured ? (s.pt1Mm >= 1.0 ? `ROL2` : `ROL1`) : null;
         var vanRhijn = measured ? (s.pt1Mm >= 0.5 ? `T1e` : `T1m`) : null;
         var anatText = anatDescription(s.pt1Anat);
@@ -2215,7 +2239,7 @@
         if (s.pt1Mm !== null) {
           var rClass = s.pt1Mm >= 1.0 ? `ROL2 (≥ 1,0 mm)` : `ROL1 (< 1,0 mm)`;
           var vClass = s.pt1Mm >= 0.5 ? `T1e (≥ 0,5 mm)` : `T1m (< 0,5 mm)`;
-          lines.push(`- Substaging pT1 (lamina propria): ${s.pt1Mm.toFixed(1)} mm → ${rClass} / ${vClass}`);
+          lines.push(`- Substaging pT1 (lamina propria): ${formatNum(s.pt1Mm)} mm → ${rClass} / ${vClass}`);
         } else {
           lines.push(`- Substaging pT1 (lamina propria): estensione non misurata`);
         }
@@ -2253,7 +2277,7 @@
     }
 
     if (typeof module !== `undefined` && module.exports) {
-      module.exports = { evaluateDiagnosis: evaluateDiagnosis, normalizeCase: normalizeCase, checkCase: checkCase, CASE_FIELDS: CASE_FIELDS };
+      module.exports = { evaluateDiagnosis: evaluateDiagnosis, normalizeCase: normalizeCase, checkCase: checkCase, migrateV1Snapshot: migrateV1Snapshot, CASE_FIELDS: CASE_FIELDS };
     }
   </script>
   <script>
@@ -2581,6 +2605,9 @@
       var snap = {};
       var keys = Object.keys(CASE_FIELDS);
       for (var i = 0; i < keys.length; i++) snap[keys[i]] = appState[keys[i]];
+      /* Non conservare valori nascosti non pertinenti al caso salvato */
+      if (snap.invasion !== `lamina_propria`) { snap.pt1Mm = null; snap.pt1Anat = null; }
+      if (snap.arch !== `papillare`) snap.hgPct = null;
       return snap;
     }
 
@@ -2645,8 +2672,8 @@
         }).slice(0, 12).map(function (c) {
           return {
             id: Number(c.id),
-            time: String(c.time || ``),
-            snapshot: normalizeCase(c.snapshot)
+            time: /^\d{2}:\d{2}$/.test(String(c.time)) ? String(c.time) : ``,
+            snapshot: normalizeCase(migrateV1Snapshot(c.snapshot))
           };
         });
       }
@@ -2873,7 +2900,10 @@
       var fillHg = document.getElementById(`hg-meter-fill`);
       var readHg = document.getElementById(`hg-threshold-readout`);
       var hgKnown = appState.hgPct !== null;
-      if (sliderHg) sliderHg.value = String(hgKnown ? appState.hgPct : 0);
+      if (sliderHg) {
+        sliderHg.value = String(hgKnown ? appState.hgPct : 0);
+        sliderHg.setAttribute(`data-unset`, hgKnown ? `false` : `true`);
+      }
       if (numHg && document.activeElement !== numHg) numHg.value = hgKnown ? String(appState.hgPct) : ``;
       if (fillHg) fillHg.style.width = `${hgKnown ? Math.min(100, Math.max(0, appState.hgPct)) : 0}%`;
       if (readHg) {
@@ -2911,7 +2941,10 @@
       var rolChip = document.getElementById(`rol-chip`);
       var selAnat = document.getElementById(`select-pt1-anat`);
       var mmKnown = appState.pt1Mm !== null;
-      if (sPt1) sPt1.value = String(mmKnown ? Math.min(5.0, appState.pt1Mm) : 0.1);
+      if (sPt1) {
+        sPt1.value = String(mmKnown ? Math.min(5.0, appState.pt1Mm) : 0.1);
+        sPt1.setAttribute(`data-unset`, mmKnown ? `false` : `true`);
+      }
       if (nPt1 && document.activeElement !== nPt1) nPt1.value = mmKnown ? String(appState.pt1Mm) : ``;
       if (fPt1) fPt1.style.width = `${mmKnown ? Math.min(100, (appState.pt1Mm / 5.0) * 100) : 0}%`;
       if (rolChip) {
@@ -3044,22 +3077,32 @@
       return Math.min(max, Math.max(min, n));
     }
 
-    function parseFloatOrNull(val, min, max) {
+    /* Nessun arrotondamento né troncamento: il motore confronta le soglie sul valore inserito */
+    function parseNumOrNull(val, min, max) {
       if (val === `` || val === null || val === undefined) return null;
       var n = parseFloat(String(val).replace(`,`, `.`));
       if (!isFinite(n)) return null;
-      return Math.round(Math.min(max, Math.max(min, n)) * 10) / 10;
+      return Math.min(max, Math.max(min, n));
+    }
+
+    /* Se il valore è stato riportato nell'intervallo, il campo mostra quello effettivamente usato */
+    function reflectClamped(inputId, raw, used) {
+      var el = document.getElementById(inputId);
+      if (!el || used === null) return;
+      var typed = parseFloat(String(raw).replace(`,`, `.`));
+      if (typed !== used) el.value = String(used);
     }
 
     function syncHgFromSlider(val) {
-      appState.hgPct = parseIntOrNull(val, 0, 100);
+      appState.hgPct = parseNumOrNull(val, 0, 100);
       var numInput = document.getElementById(`num-hg-pct`);
       if (numInput) numInput.value = appState.hgPct === null ? `` : String(appState.hgPct);
       caseEdited();
     }
 
     function syncHgFromNumber(val) {
-      appState.hgPct = parseIntOrNull(val, 0, 100);
+      appState.hgPct = parseNumOrNull(val, 0, 100);
+      reflectClamped(`num-hg-pct`, val, appState.hgPct);
       caseEdited();
     }
 
@@ -3076,14 +3119,15 @@
     }
 
     function syncPt1FromSlider(val) {
-      appState.pt1Mm = parseFloatOrNull(val, 0.1, 20);
+      appState.pt1Mm = parseNumOrNull(val, 0.01, 20);
       var numInput = document.getElementById(`num-pt1-mm`);
       if (numInput) numInput.value = appState.pt1Mm === null ? `` : String(appState.pt1Mm);
       caseEdited();
     }
 
     function syncPt1FromNumber(val) {
-      appState.pt1Mm = parseFloatOrNull(val, 0.1, 20);
+      appState.pt1Mm = parseNumOrNull(val, 0.01, 20);
+      reflectClamped(`num-pt1-mm`, val, appState.pt1Mm);
       caseEdited();
     }
 
