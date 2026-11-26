@@ -2289,8 +2289,11 @@
       }
       if (s.blandSubtype === `presente`) {
         if (s.subtypeName || s.subtypePct !== null) {
+          /* I codici ICD-O dei sottotipi sono quelli del capitolo sul carcinoma invasivo: solo per pT1/pT2 */
           var sName = s.subtypeName
-            ? `${SUBTYPES[s.subtypeName].label} [ICD-O ${SUBTYPES[s.subtypeName].icdo}]`
+            ? (invasive
+              ? `${SUBTYPES[s.subtypeName].label} [ICD-O ${SUBTYPES[s.subtypeName].icdo}]`
+              : SUBTYPES[s.subtypeName].label)
             : `sottotipo da specificare`;
           var sPct = s.subtypePct !== null ? `${s.subtypePct}%` : `percentuale da specificare`;
           lines.push(`- Sottotipo istologico: ${sName} (${sPct})`);

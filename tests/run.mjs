@@ -269,6 +269,15 @@ for (const [name, code] of Object.entries(SUB_ICDO)) {
     assert.ok(report(r).includes(`[ICD-O ${code}] (30%)`), report(r));
   });
 }
+test('ICD-O del sottotipo solo nell\u2019invasivo (pTa e indeterminato: nome senza codice /3)', () => {
+  const p = { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', hgPct: 80, blandSubtype: 'presente', subtypeName: 'micropapillare', subtypePct: 30 };
+  for (const inv of ['integra', 'indeterminato']) {
+    const t = report(ev({ ...p, invasion: inv }));
+    assert.match(t, /Sottotipo istologico: micropapillare \(30%\)/);
+    assert.doesNotMatch(t, /8131\/3/);
+  }
+  assert.match(report(ev({ ...p, invasion: 'lamina_propria' })), /micropapillare \[ICD-O 8131\/3\] \(30%\)/);
+});
 test('casi salvati prima della 2.2.0: tubulare e microcistico → voce unica', () => {
   assert.equal(normalizeCase({ blandSubtype: 'presente', subtypeName: 'tubulare' }).subtypeName, 'tubulare_microcistico');
   assert.equal(normalizeCase({ blandSubtype: 'presente', subtypeName: 'microcistico' }).subtypeName, 'tubulare_microcistico');
