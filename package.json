@@ -1,6 +1,6 @@
 {
   "name": "urologia",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "private": true,
   "description": "Strumenti di uropatologia: checklist delle proliferazioni e neoplasie uroteliali (WHO 2022)",
   "scripts": {

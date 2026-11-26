@@ -112,7 +112,9 @@ const cases = [
   ['pT1 non misurato', { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', invasion: 'lamina_propria' }, 'Carcinoma uroteliale invasivo della lamina propria (pT1)', 'pT1'],
   ['CIS + pT1', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'lamina_propria', pt1Mm: 0.4 }, 'CIS uroteliale con microinvasione / invasione lamina propria (pT1)', 'pT1 (ROL1)'],
   ['pT2', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'detrusore', mp: 'presente' }, 'Carcinoma uroteliale invasivo della muscolare propria (pT2)', 'pT2'],
-  ['pT2 sottotipo blando', { arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente' }, 'Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)', 'pT2'],
+  ['pT2 sottotipo blando (nested)', { arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'nested' }, 'Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)', 'pT2'],
+  ['pT2 sottotipo non blando (micropapillare)', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'micropapillare' }, 'Carcinoma uroteliale invasivo della muscolare propria (pT2), sottotipo micropapillare', 'pT2'],
+  ['pT2 sottotipo non specificato', { arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente' }, 'Carcinoma uroteliale invasivo della muscolare propria (pT2), sottotipo da specificare', 'pT2'],
   ['indeterminato', { arch: 'invasiva', polarity: 'tangenziale_sospetto', grade: 'lieve', invasion: 'indeterminato' }, 'Proliferazione uroteliale con invasione stromale indeterminata', 'Indeterminato (pTa vs pT1)'],
 ];
 for (const [name, input, title, stage] of cases) {
@@ -179,11 +181,11 @@ test('lesione piatta non invasiva: niente righe LVI / CIS associato', () => {
 });
 test('sottotipo con nome e %', () => {
   const t = report(ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'large_nested', subtypePct: 40 }));
-  assert.match(t, /Sottotipo istologico: large nested \(40%\)/);
+  assert.match(t, /Sottotipo istologico: large nested \[ICD-O 8120\/3\] \(40%\)/);
 });
 test('sottotipo presente ma non specificato: richiesta esplicita', () => {
   const t = report(ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente' }));
-  assert.match(t, /specificare sottotipo/);
+  assert.match(t, /Sottotipo istologico: specificare il sottotipo e la relativa percentuale/);
 });
 
 /* ---------- Avvisi ---------- */
@@ -207,6 +209,90 @@ test('pT1 papillare LG con HG >= 5%: avviso, grado non cambiato in silenzio', ()
   issued(r);
   assert.equal(r.gradeLabel, 'Basso grado (LG)');
   assert.ok(r.alerts.some((a) => /solo ai papillari non invasivi/.test(a)));
+});
+
+/* ---------- Sottotipi = alto grado (WHO 2022, Invasive urothelial carcinoma, Grading) ---------- */
+const HG_SUB = 'Alto grado (HG) — sottotipo: alto grado per definizione (WHO 2022)';
+test('pT1 con sottotipo presente e citologia lieve: alto grado (prima "Basso grado (LG)")', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'lamina_propria', pt1Mm: 0.8, blandSubtype: 'presente', subtypeName: 'nested', subtypePct: 100 });
+  issued(r);
+  assert.equal(r.gradeLabel, HG_SUB);
+  assert.match(report(r), /Grado istologico: Alto grado \(HG\) — sottotipo/);
+});
+test('pT1 con sottotipo presente e citologia alta: alto grado con la stessa nota', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', blandSubtype: 'presente' });
+  assert.equal(r.gradeLabel, HG_SUB);
+});
+test('pT2 con sottotipo presente: alto grado (prima "Alto grado (o sottotipo blando)")', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'large_nested' });
+  issued(r);
+  assert.equal(r.gradeLabel, HG_SUB);
+  assert.equal(r.title, 'Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)');
+});
+test('pT1 e pT2 senza sottotipo: il grado segue ancora il passo 3 (LG raro ammesso)', () => {
+  const p = { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'lieve' };
+  assert.equal(ev({ ...p, invasion: 'lamina_propria' }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, invasion: 'detrusore' }).gradeLabel, 'Basso grado (raro)');
+  assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: 'assente' }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: null }).gradeLabel, 'Basso grado (LG)');
+});
+test('pT1 papillare con sottotipo e quota HG >= 5%: nessun avviso "il grado segue il passo 3" (contraddirebbe il grado alto)', () => {
+  const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'lamina_propria', hgPct: 5 };
+  const conSottotipo = ev({ ...p, blandSubtype: 'presente' });
+  assert.equal(conSottotipo.gradeLabel, HG_SUB);
+  assert.ok(!conSottotipo.alerts.some((a) => /segue il passo 3/.test(a)));
+  const senza = ev(p);
+  assert.ok(senza.alerts.some((a) => /segue il passo 3/.test(a)), 'senza sottotipo l’avviso resta');
+});
+test('invasione indeterminata con sottotipo: grado invariato (regola applicata solo a pT1/pT2)', () => {
+  const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'indeterminato', blandSubtype: 'presente' });
+  assert.equal(r.gradeLabel, 'Basso grado (LG)');
+});
+test('regola del 5% mantenuta sui papillari con invasione indeterminata (scelta confermata da Filippo)', () => {
+  const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'indeterminato' };
+  assert.equal(ev({ ...p, hgPct: 4.9 }).gradeLabel, 'Basso grado (LG)');
+  assert.equal(ev({ ...p, hgPct: 5 }).gradeLabel, 'Alto grado (HG)');
+});
+
+/* ---------- Campo sottotipo esteso a tutti gli 11 sottotipi WHO 2022 ---------- */
+const SUB_ICDO = {
+  nested: '8120/3', large_nested: '8120/3', tubulare_microcistico: '8120/3', micropapillare: '8131/3',
+  linfoepitelioma_like: '8082/3', plasmacitoide: '8122/3', giant_cell: '8031/3', lipid_rich: '8120/3',
+  clear_cell: '8120/3', sarcomatoide: '8120/3', poorly_differentiated: '8020/3',
+};
+for (const [name, code] of Object.entries(SUB_ICDO)) {
+  test(`sottotipo ${name}: alto grado in pT1, ICD-O ${code} nel referto, codice del verdetto 8120/3`, () => {
+    const r = ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'lieve', invasion: 'lamina_propria', blandSubtype: 'presente', subtypeName: name, subtypePct: 30 });
+    issued(r);
+    assert.equal(r.gradeLabel, HG_SUB);
+    assert.equal(r.icdo, '8120/3');
+    assert.ok(report(r).includes(`[ICD-O ${code}] (30%)`), report(r));
+  });
+}
+test('ICD-O del sottotipo solo nell\u2019invasivo (pTa e indeterminato: nome senza codice /3)', () => {
+  const p = { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', hgPct: 80, blandSubtype: 'presente', subtypeName: 'micropapillare', subtypePct: 30 };
+  for (const inv of ['integra', 'indeterminato']) {
+    const t = report(ev({ ...p, invasion: inv }));
+    assert.match(t, /Sottotipo istologico: micropapillare \(30%\)/);
+    assert.doesNotMatch(t, /8131\/3/);
+  }
+  assert.match(report(ev({ ...p, invasion: 'lamina_propria' })), /micropapillare \[ICD-O 8131\/3\] \(30%\)/);
+});
+test('casi salvati prima della 2.2.0: tubulare e microcistico → voce unica', () => {
+  assert.equal(normalizeCase({ blandSubtype: 'presente', subtypeName: 'tubulare' }).subtypeName, 'tubulare_microcistico');
+  assert.equal(normalizeCase({ blandSubtype: 'presente', subtypeName: 'microcistico' }).subtypeName, 'tubulare_microcistico');
+  assert.equal(normalizeCase({ blandSubtype: 'presente', subtypeName: 'inesistente' }).subtypeName, null);
+});
+test('avviso sottotipo con membrana basale integra: testo dedicato al micropapillare non invasivo', () => {
+  const p = { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', invasion: 'integra', blandSubtype: 'presente' };
+  assert.ok(ev({ ...p, subtypeName: 'micropapillare' }).alerts.some((a) => /micropapillare non invasivo/.test(a)));
+  assert.ok(ev({ ...p, subtypeName: 'nested' }).alerts.some((a) => /si definiscono nel carcinoma invasivo/.test(a)));
+  // pTis (CIS piatto) è distinto dal pTa papillare: niente richiamo alla forma micropapillare papillare non invasiva
+  const cis = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'integra', blandSubtype: 'presente', subtypeName: 'micropapillare' });
+  assert.equal(cis.stage, 'pTis');
+  assert.equal(cis.icdo, '8120/2');
+  assert.ok(!cis.alerts.some((a) => /micropapillare non invasivo/.test(a)));
+  assert.ok(cis.alerts.some((a) => /si definiscono nel carcinoma invasivo/.test(a)));
 });
 
 /* ---------- Soglie sul valore inserito, senza arrotondamenti (v2.0.1) ---------- */
