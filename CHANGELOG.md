@@ -10,7 +10,8 @@ Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Invasive urothelial carc
 ### Cambiato (testi di consultazione)
 - Matrice, riga "invasivo": i sottotipi blandi non sono più accostati al basso grado.
 - Sottotipi: aggiunti giant cell e poorly differentiated; tubulare e microcistico riuniti in una voce, come nel Blue Book; nota che tutti i sottotipi sono di alto grado.
-- IHC: frase su CK7/CK20/CDX2 riscritta secondo la fonte (sovrapposizione con l'adenocarcinoma enterico nella differenziazione ghiandolare intestinale; distinzione su clinica e imaging).
+- IHC: frase su CK7/CK20/CDX2 riscritta secondo la fonte (sovrapposizione con l'adenocarcinoma enterico nella differenziazione ghiandolare intestinale; distinzione definitiva non possibile con morfologia e IHC, risolta al meglio su clinica e imaging).
+- Avviso "il grado segue il passo 3" (pT1/pT2 papillare con quota HG ≥ 5%) non mostrato quando è dichiarato un sottotipo, perché il grado è alto per definizione. Segnalato dalla revisione indipendente.
 
 ### Confermato senza modifiche
 - Regola del 5%, dicitura per la quota < 5%, codici ICD-O 8130/2 e 8120/3, criteri TPS (N:C ≥ 0,7), uso dell'IHC non necessario per il grado. Regola del 5% mantenuta anche sui papillari con invasione indeterminata, per scelta di Filippo.

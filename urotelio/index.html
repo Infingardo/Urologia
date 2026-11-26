@@ -1596,7 +1596,7 @@
             <h3 class="step-title">Marcatori di linea uroteliale (ISUP)</h3>
             <ul class="detail-list">
               <li><strong>GATA3, p63, HMWCK (34&beta;E12) o CK5/6:</strong> pannello di prima linea per confermare la differenziazione uroteliale in sedi metastatiche o morfologie insolite (GATA3 positivo nell&rsquo;86&ndash;90%+ dei casi; p63 specificità elevatissima vs prostata).</li>
-              <li><strong>CK7 / CK20:</strong> frequentemente coespressi, ma non sempre. Nella differenziazione ghiandolare di tipo intestinale la sovrapposizione con l&rsquo;adenocarcinoma enterico primitivo è sostanziale (entrambi possono essere CDX2 e/o CK20 positivi): la distinzione si basa su clinica e imaging.</li>
+              <li><strong>CK7 / CK20:</strong> frequentemente coespressi, ma non sempre. Nella differenziazione ghiandolare di tipo intestinale la sovrapposizione con l&rsquo;adenocarcinoma enterico primitivo è sostanziale (entrambi possono essere CDX2 e/o CK20 positivi): morfologia e IHC non consentono una distinzione definitiva, che si risolve al meglio su base clinica e con l&rsquo;imaging.</li>
               <li><strong>Uroplakina III:</strong> alta specificità ma sensibilità moderata (fino al 40% nell&rsquo;alto grado); <em>Uroplakina II</em> e <em>S100P</em> in validazione aggiuntiva.</li>
             </ul>
           </div>
@@ -1921,7 +1921,8 @@
       if (s.blandSubtype === `presente` && s.invasion === `integra`) {
         alerts.push(`Sottotipo con citologia blanda indicato in lesione con membrana basale integra: i sottotipi elencati si definiscono nel carcinoma invasivo. Verificare il campionamento della base.`);
       }
-      if ((s.invasion === `lamina_propria` || s.invasion === `detrusore`) && s.arch === `papillare` && s.grade === `lieve` && s.hgPct !== null && s.hgPct >= 5) {
+      /* Con sottotipo dichiarato il grado è alto per definizione: l'avviso sul grado del passo 3 non si applica */
+      if ((s.invasion === `lamina_propria` || s.invasion === `detrusore`) && s.arch === `papillare` && s.grade === `lieve` && s.hgPct !== null && s.hgPct >= 5 && s.blandSubtype !== `presente`) {
         alerts.push(`Quota HG ${s.hgPct}% (≥ 5%) con grado prevalente lieve in tumore invasivo: il grado riportato segue il passo 3 (la soglia del 5% è applicata solo ai papillari non invasivi). Verificare il grado da refertare.`);
       }
       if (s.ihcSummary === `reactive` && s.grade === `alto` && s.arch === `piatta`) {
@@ -2585,7 +2586,7 @@
 
     var SUBTYPES_WHO_2022 = [
       { name: `Nested & Large Nested`, note: `Distinti in due sottotipi; citologia ingannevolmente blanda ma comportamento aggressivo.` },
-      { name: `Tubulare e microcistico (tubulare nuovo 2022)`, note: `Voce unica nella WHO 2022, affine al nested: cellule blande in piccole strutture tubulari o microcistiche; l\u2019infiltrazione profonda irregolare, anche della muscolare propria, lo distingue dalla cistite cistica; DD con lesioni ghiandolari benigne.` },
+      { name: `Tubulare e microcistico (tubulare nuovo 2022)`, note: `Voce unica nella WHO 2022, affine al nested: cellule blande in piccole strutture tubulari o microcistiche; l\u2019infiltrazione profonda irregolare, anche della muscolare propria, indica la natura maligna e aiuta a distinguerlo dalla cistite cistica; DD con lesioni ghiandolari benigne.` },
       { name: `Clear cell (glycogen-rich) (rinominato 2022)`, note: `Aggiunto \u201cglycogen-rich\u201d per distinguerlo dall\u2019adenocarcinoma a cellule chiare mülleriano.` },
       { name: `Plasmacitoide`, note: `Rimosso il qualificatore \u201csignet ring/diffuse\u201d; infiltrazione discoesiva nel grasso perivescicale.` },
       { name: `Micropapillare`, note: `Nidi in lacune di retrazione; prognosi sfavorevole, segnalare sempre la % esatta.` },

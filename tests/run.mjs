@@ -234,6 +234,14 @@ test('pT1 e pT2 senza sottotipo: il grado segue ancora il passo 3 (LG raro ammes
   assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: 'assente' }).gradeLabel, 'Basso grado (LG)');
   assert.equal(ev({ ...p, invasion: 'lamina_propria', blandSubtype: null }).gradeLabel, 'Basso grado (LG)');
 });
+test('pT1 papillare con sottotipo e quota HG >= 5%: nessun avviso "il grado segue il passo 3" (contraddirebbe il grado alto)', () => {
+  const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'lamina_propria', hgPct: 5 };
+  const conSottotipo = ev({ ...p, blandSubtype: 'presente' });
+  assert.equal(conSottotipo.gradeLabel, HG_SUB);
+  assert.ok(!conSottotipo.alerts.some((a) => /segue il passo 3/.test(a)));
+  const senza = ev(p);
+  assert.ok(senza.alerts.some((a) => /segue il passo 3/.test(a)), 'senza sottotipo l’avviso resta');
+});
 test('invasione indeterminata con sottotipo: grado invariato (regola applicata solo a pT1/pT2)', () => {
   const r = ev({ arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'indeterminato', blandSubtype: 'presente' });
   assert.equal(r.gradeLabel, 'Basso grado (LG)');
