@@ -22,7 +22,7 @@ L'esito è un **orientamento morfologico**: non sostituisce la diagnosi, che res
 - **Nessun campo ne modifica un altro di nascosto.**
 - **Nessuna falsa precisione**: senza misura dell'estensione in lamina propria non si calcola alcuna classe ROL o T1m/T1e; senza quota di alto grado non si scrive 100%.
 - **Regola del 5%** applicata ai papillari non invasivi (pTa), come nel Blue Book, e per scelta del curatore anche ai papillari con invasione indeterminata (estensione non scritta nella fonte). Nel pT1/pT2 il grado segue il passo 3; se la quota di alto grado è ≥ 5% compare un avviso.
-- **Grado nell'invasivo**: ogni carcinoma invasivo va graduato; il basso grado invasivo è raro ma riconosciuto (WHO 2022). Se è dichiarato un sottotipo, il grado è sempre alto: "i sottotipi e le differenziazioni divergenti sono tutti considerati di alto grado" (WHO 2022).
+- **Grado nell'invasivo**: ogni carcinoma invasivo va graduato; il basso grado invasivo è raro ma riconosciuto (WHO 2022). Il campo "sottotipo istologico" prevede tutti gli 11 sottotipi del Blue Book, con il loro codice ICD-O nel referto. Se è dichiarato un sottotipo, il grado è sempre alto: "i sottotipi e le differenziazioni divergenti sono tutti considerati di alto grado" (WHO 2022).
 - **Soglie sul valore inserito**: 5% di alto grado, 0,5 mm e 1,0 mm si confrontano sul numero digitato, senza arrotondamenti.
 - **Substaging pT1** riportato in parallelo con i sistemi in uso: micrometrico T1m/T1e (soglia 0,5 mm), ROL (soglia 1,0 mm) e livello rispetto alla muscularis mucosae, in forma descrittiva.
 

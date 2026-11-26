@@ -1280,7 +1280,7 @@
                     </select>
                   </div>
                   <div class="field-group">
-                    <label class="control-label" for="sel-bland-subtype">Sottotipo con citologia blanda (<em>nested / large nested / tubulare / microcistico</em>)</label>
+                    <label class="control-label" for="sel-bland-subtype">Sottotipo istologico (WHO 2022)</label>
                     <select id="sel-bland-subtype" data-tri="blandSubtype" onchange="setTri('blandSubtype', this.value)">
                       <option value="">&mdash; Non valutato &mdash;</option>
                       <option value="assente">Assente</option>
@@ -1294,10 +1294,21 @@
                       <label class="control-label" for="sel-subtype-name">Sottotipo</label>
                       <select id="sel-subtype-name" onchange="setSubtypeName(this.value)">
                         <option value="">&mdash; Da specificare &mdash;</option>
-                        <option value="nested">Nested</option>
-                        <option value="large_nested">Large nested</option>
-                        <option value="tubulare">Tubulare</option>
-                        <option value="microcistico">Microcistico</option>
+                        <optgroup label="A citologia ingannevolmente blanda">
+                          <option value="nested">Nested</option>
+                          <option value="large_nested">Large nested</option>
+                          <option value="tubulare_microcistico">Tubulare e microcistico</option>
+                        </optgroup>
+                        <optgroup label="Altri sottotipi">
+                          <option value="micropapillare">Micropapillare</option>
+                          <option value="linfoepitelioma_like">Linfoepitelioma-like</option>
+                          <option value="plasmacitoide">Plasmacitoide</option>
+                          <option value="giant_cell">A cellule giganti (giant cell)</option>
+                          <option value="lipid_rich">Lipid-rich</option>
+                          <option value="clear_cell">Clear cell (glycogen-rich)</option>
+                          <option value="sarcomatoide">Sarcomatoide</option>
+                          <option value="poorly_differentiated">Scarsamente differenziato</option>
+                        </optgroup>
                       </select>
                     </div>
                     <div class="field-group">
@@ -1667,7 +1678,7 @@
       grade: [`assente`, `reattivo`, `lieve`, `alto`],
       invasion: [`integra`, `lamina_propria`, `detrusore`, `indeterminato`],
       pt1Anat: [`sopra_mm`, `entro_mm`, `oltre_mm`, `non_valutabile`],
-      subtypeName: [`nested`, `large_nested`, `tubulare`, `microcistico`],
+      subtypeName: [`nested`, `large_nested`, `tubulare_microcistico`, `micropapillare`, `linfoepitelioma_like`, `plasmacitoide`, `giant_cell`, `lipid_rich`, `clear_cell`, `sarcomatoide`, `poorly_differentiated`],
       ihcSummary: [`none`, `reactive`, `cis`, `equivocal`]
     };
 
@@ -1690,12 +1701,24 @@
        carcinoma and those with divergent differentiation are all considered high-grade tumours." */
     var GRADE_SUBTYPE_HG = `Alto grado (HG) \u2014 sottotipo: alto grado per definizione (WHO 2022)`;
 
-    var SUBTYPE_NAMES = {
-      nested: `nested`,
-      large_nested: `large nested`,
-      tubulare: `tubulare`,
-      microcistico: `microcistico`
+    /* Sottotipi istologici e codici ICD-O: WHO 2022 (5ª ed.), Invasive urothelial carcinoma, ICD-O coding.
+       bland = a citologia ingannevolmente blanda. Nota: il campo del caso si chiama ancora blandSubtype
+       per compatibilità con i casi salvati, ma indica qualunque sottotipo. */
+    var SUBTYPES = {
+      nested: { label: `nested`, icdo: `8120/3`, bland: true },
+      large_nested: { label: `large nested`, icdo: `8120/3`, bland: true },
+      tubulare_microcistico: { label: `tubulare e microcistico`, icdo: `8120/3`, bland: true },
+      micropapillare: { label: `micropapillare`, icdo: `8131/3`, bland: false },
+      linfoepitelioma_like: { label: `linfoepitelioma-like`, icdo: `8082/3`, bland: false },
+      plasmacitoide: { label: `plasmacitoide`, icdo: `8122/3`, bland: false },
+      giant_cell: { label: `a cellule giganti (giant cell)`, icdo: `8031/3`, bland: false },
+      lipid_rich: { label: `lipid-rich`, icdo: `8120/3`, bland: false },
+      clear_cell: { label: `clear cell (glycogen-rich)`, icdo: `8120/3`, bland: false },
+      sarcomatoide: { label: `sarcomatoide`, icdo: `8120/3`, bland: false },
+      poorly_differentiated: { label: `scarsamente differenziato (poorly differentiated)`, icdo: `8020/3`, bland: false }
     };
+    /* Casi salvati prima della 2.2.0: tubulare e microcistico erano voci separate */
+    var LEGACY_SUBTYPE = { tubulare: `tubulare_microcistico`, microcistico: `tubulare_microcistico` };
 
     function normalizeTri(v) {
       if (v === true) return `presente`;
@@ -1735,7 +1758,9 @@
       for (var t = 0; t < TRI_FIELDS.length; t++) {
         s[TRI_FIELDS[t]] = normalizeTri(src[TRI_FIELDS[t]]);
       }
-      s.subtypeName = s.blandSubtype === `presente` ? normalizeEnum(src.subtypeName, ENUMS.subtypeName) : null;
+      s.subtypeName = s.blandSubtype === `presente`
+        ? normalizeEnum(LEGACY_SUBTYPE[src.subtypeName] || src.subtypeName, ENUMS.subtypeName)
+        : null;
       s.subtypePct = s.blandSubtype === `presente` ? normalizeNum(src.subtypePct, 1, 100) : null;
       if (s.subtypePct !== null) s.subtypePct = Math.round(s.subtypePct);
       s.ihcSummary = normalizeEnum(src.ihcSummary, ENUMS.ihcSummary) || `none`;
@@ -1919,7 +1944,9 @@
         alerts.push(`Il passo 2 descrive un pattern con citologia blanda (nested / large nested / microcistico / tubulare): specificare il sottotipo nel contesto e la relativa percentuale.`);
       }
       if (s.blandSubtype === `presente` && s.invasion === `integra`) {
-        alerts.push(`Sottotipo con citologia blanda indicato in lesione con membrana basale integra: i sottotipi elencati si definiscono nel carcinoma invasivo. Verificare il campionamento della base.`);
+        alerts.push(s.subtypeName === `micropapillare`
+          ? `Pattern micropapillare in lesione con membrana basale integra: il Blue Book WHO 2022 descrive il carcinoma uroteliale micropapillare non invasivo. Verificare con particolare cura l\u2019assenza di invasione e il campionamento della base.`
+          : `Sottotipo indicato in lesione con membrana basale integra: i sottotipi istologici si definiscono nel carcinoma invasivo. Verificare il campionamento della base.`);
       }
       /* Con sottotipo dichiarato il grado è alto per definizione: l'avviso sul grado del passo 3 non si applica */
       if ((s.invasion === `lamina_propria` || s.invasion === `detrusore`) && s.arch === `papillare` && s.grade === `lieve` && s.hgPct !== null && s.hgPct >= 5 && s.blandSubtype !== `presente`) {
@@ -1943,9 +1970,15 @@
         result.gradeLabel = s.blandSubtype === `presente`
           ? GRADE_SUBTYPE_HG
           : (s.grade === `lieve` ? `Basso grado (raro)` : `Alto grado (HG)`);
-        result.title = s.blandSubtype === `presente`
-          ? `Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)`
-          : `Carcinoma uroteliale invasivo della muscolare propria (pT2)`;
+        if (s.blandSubtype !== `presente`) {
+          result.title = `Carcinoma uroteliale invasivo della muscolare propria (pT2)`;
+        } else if (s.subtypeName && SUBTYPES[s.subtypeName].bland) {
+          result.title = `Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)`;
+        } else if (s.subtypeName) {
+          result.title = `Carcinoma uroteliale invasivo della muscolare propria (pT2), sottotipo ${SUBTYPES[s.subtypeName].label}`;
+        } else {
+          result.title = `Carcinoma uroteliale invasivo della muscolare propria (pT2), sottotipo da specificare`;
+        }
         result.svgMode = `invasive_pt2`;
         result.schematicCaption = `Invasione dei grossi fasci muscolari lisci compatti del detrusore (pT2).`;
         result.criteria = [
@@ -2256,11 +2289,13 @@
       }
       if (s.blandSubtype === `presente`) {
         if (s.subtypeName || s.subtypePct !== null) {
-          var sName = s.subtypeName ? SUBTYPE_NAMES[s.subtypeName] : `sottotipo da specificare`;
+          var sName = s.subtypeName
+            ? `${SUBTYPES[s.subtypeName].label} [ICD-O ${SUBTYPES[s.subtypeName].icdo}]`
+            : `sottotipo da specificare`;
           var sPct = s.subtypePct !== null ? `${s.subtypePct}%` : `percentuale da specificare`;
           lines.push(`- Sottotipo istologico: ${sName} (${sPct})`);
         } else {
-          lines.push(`- Sottotipo istologico / differenziazione divergente: specificare sottotipo (es. nested, large nested, tubulare, microcistico) e relativa percentuale (%).`);
+          lines.push(`- Sottotipo istologico: specificare il sottotipo e la relativa percentuale (%).`);
         }
       }
       if (invasive || s.invasion === `indeterminato`) {
