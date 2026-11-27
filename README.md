@@ -42,7 +42,7 @@ npm test
 
 ## Fonti principali
 
-- WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª ed. (IARC, 2022), capitoli *Invasive urothelial carcinoma*, *Non-invasive papillary urothelial carcinoma, low-grade* e *high-grade*, *Urothelial papilloma*, *Inverted urothelial papilloma*, *Papillary urothelial neoplasm of low malignant potential* (consultati da Filippo, novembre 2026).
+- WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª ed. (IARC, 2022), capitoli *Invasive urothelial carcinoma*, *Non-invasive papillary urothelial carcinoma, low-grade* e *high-grade*, *Urothelial papilloma*, *Inverted urothelial papilloma*, *Papillary urothelial neoplasm of low malignant potential*, *Urothelial carcinoma in situ* (consultati da Filippo, novembre 2026).
 - Raspollini MR et al. News in the classification of WHO 2022 bladder tumors. Pathologica 2023;115:32-40. doi:10.32074/1591-951X-838
 - van Rhijn BWG et al. A new and highly prognostic system to discern T1 bladder cancer substage. Eur Urol 2012;61:378-84. doi:10.1016/j.eururo.2011.10.026
 - Fransen van de Putte EE et al. Metric substage according to micro and extensive lamina propria invasion improves prognostics in T1 bladder cancer. Urol Oncol 2018;36:361.e7-361.e13. doi:10.1016/j.urolonc.2018.05.007
@@ -54,6 +54,8 @@ Le altre fonti sono citate nel piè di pagina della checklist.
 ## Punti di contenuto ancora da verificare sulla fonte
 
 - Definizione originale di T1m (singolo focus entro un campo a forte ingrandimento?): il motore applica solo la soglia di 0,5 mm. Il Blue Book parla solo di "microscopic vs extensive invasion".
-- Displasia e categoria "atipia di significato indeterminato" (capitolo CIS del Blue Book) e iperplasia uroteliale.
+- Iperplasia uroteliale.
 
-Verificati sulla fonte (novembre 2026): UPUMP non più entità autonoma; elenco e nomenclatura dei sottotipi; frase su CK7/CK20/CDX2; regola del 5% e dicitura "basso grado con componente di alto grado < 5%"; codici ICD-O 8130/2 dei papillari non invasivi e 8120/3 dell'invasivo; criteri TPS (N:C ≥ 0,7; il capitolo sull'invasivo scrive "> 0.7", incoerenza interna del Blue Book: si mantiene ≥ 0,7 come nella TPS); papilloma esofitico 8120/0 e invertito 8121/0; PUNLMP 8130/1, stadio pTa, atipia lieve e monotona, criterio essenziale "nessuna storia di carcinoma uroteliale".
+Contenuto del curatore, non tratto dal Blue Book: nuclei del CIS "di solito 5–6× un linfocita" (non nel pattern a piccole cellule); p53 aberrante "nella pratica spesso > 70–80% dei nuclei" nel simulatore IHC (il Blue Book dice "diffuse and strong"); distinzione tra displasia e atipia di significato indeterminato in base alla flogosi (il Blue Book segnala che mancano criteri riproducibili).
+
+Verificati sulla fonte (novembre 2026): UPUMP non più entità autonoma; elenco e nomenclatura dei sottotipi; frase su CK7/CK20/CDX2; regola del 5% e dicitura "basso grado con componente di alto grado < 5%"; codici ICD-O 8130/2 dei papillari non invasivi e 8120/3 dell'invasivo; criteri TPS (N:C ≥ 0,7; il capitolo sull'invasivo scrive "> 0.7", incoerenza interna del Blue Book: si mantiene ≥ 0,7 come nella TPS); papilloma esofitico 8120/0 e invertito 8121/0; PUNLMP 8130/1, stadio pTa, atipia lieve e monotona, criterio essenziale "nessuna storia di carcinoma uroteliale"; CIS 8120/2, pTis, mitosi non necessarie, diffusione pagetoide sufficiente, pattern morfologici senza significato prognostico, IHC non necessaria di routine; displasia poco riproducibile e non graduata ("displasia di basso / alto grado" non raccomandati).

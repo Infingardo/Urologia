@@ -1166,7 +1166,7 @@
                 </button>
                 <button type="button" class="option-btn" data-grade="alto" aria-pressed="false" onclick="setGrade('alto')">
                   <span class="option-btn-title">Marcato / Alto grado (HG)</span>
-                  <span class="option-btn-desc">Nuclei 5&ndash;6&times; linfocita, ipercromasia, cromatina grossolana, membrane irregolari, mitosi alte/atipiche.</span>
+                  <span class="option-btn-desc">Nuclei di solito 5&ndash;6&times; un linfocita (non nel pattern a piccole cellule del CIS), ipercromasia, cromatina grossolana, membrane irregolari, mitosi alte/atipiche.</span>
                 </button>
               </div>
 
@@ -1579,7 +1579,7 @@
               <label class="control-label" for="sim-p53">p53</label>
               <select id="sim-p53" onchange="updateIhcSimulator()">
                 <option value="wildtype">Wild-type (debole, focale/eterogeneo)</option>
-                <option value="over">Aberrante: diffuso e intenso (&gt; 70&ndash;80%)</option>
+                <option value="over">Aberrante: diffuso e intenso (nella pratica spesso &gt; 70&ndash;80% dei nuclei)</option>
                 <option value="null">Aberrante: completamente negativo (pattern null)</option>
               </select>
             </div>
@@ -1855,7 +1855,7 @@
           conflicts.push(`Il passo 2 indica flogosi / contesto post-terapia, ma nel contesto la flogosi è dichiarata assente.`);
         }
         if (s.grade === `lieve` && s.invasion === `integra` && !s.inflammation) {
-          missing.push(`Flogosi intraepiteliale o post-terapia (assente / presente): con atipia lieve in lesione piatta distingue displasia da atipia di significato indeterminato.`);
+          missing.push(`Flogosi intraepiteliale o post-terapia (assente / presente): con atipia lieve in lesione piatta la checklist distingue così displasia e atipia di significato indeterminato (criterio della checklist: il Blue Book non indica criteri riproducibili).`);
         }
       }
 
@@ -2110,16 +2110,17 @@
           result.svgMode = `flat_cis`;
           result.schematicCaption = `Proliferazione piatta di cellule maligne di alto grado con perdita di polarità, discoesione e membrana basale integra.`;
           result.criteria = [
-            `Riconoscibile già al 10× per nuclei ingranditi e ipercromatici (5–6× la dimensione di un linfocita nella lamina propria).`,
-            `Spessore variabile (ispessito, normale, assottigliato o quasi denudato/clinging) con discoesione superficiale.`,
-            `Cromatina grossolana, membrane nucleari irregolari, mitosi frequenti anche in assenza di flogosi intraepiteliale.`
+            `Nuclei di solito grandi e pleomorfi (circa 5\u20136\u00d7 un linfocita della lamina propria), ipercromatici, con cromatina e profilo irregolari, riconoscibili a piccolo-medio ingrandimento; nel pattern a piccole cellule i nuclei sono più piccoli e contano pleomorfismo e ipercromasia.`,
+            `Spessore variabile (ispessito, normale, assottigliato o quasi denudato/clinging) con discoesione superficiale; le cellule neoplastiche non devono occupare tutto lo spessore: diffusione pagetoide o cellule che sottominano l\u2019urotelio benigno sono sufficienti.`,
+            `Perdita di polarità e affollamento irregolare frequenti; mitosi spesso presenti, anche atipiche, ma non necessarie per la diagnosi.`,
+            `Pattern morfologici (a grandi cellule, a piccole cellule, plasmacitoide, denudante/clinging): utili a riconoscere il CIS, senza significato prognostico noto (WHO 2022).`
           ];
           result.dd = [
             `Atipia uroteliale reattiva severa (in presenza di flogosi acuta/BCG/RT/MMC).`,
             `Cellule normali di pelvi renale, uretra o collo vescicale (nuclei fisiologicamente più ampi).`,
             `Cellule ad ombrello dislocate (basso N/C, citoplasma eosinofilo abbondante, multinucleazione).`
           ];
-          result.ihcNote = `Se necessaria conferma: CK20 aberrante full-thickness + p53 aberrante (diffuso/intenso o null) + CD44 ridotto/basale. L’IHC è negativa o parziale in una minoranza di CIS: non esclude la diagnosi se la morfologia è tipica.`;
+          result.ihcNote = `Se necessaria conferma: CK20 aberrante full-thickness + p53 aberrante (diffuso/intenso o null) + CD44 ridotto/basale. L’IHC è negativa o parziale in una minoranza di CIS: non esclude la diagnosi se la morfologia è tipica. Nessun marcatore è del tutto sensibile o specifico, soprattutto nelle lesioni dubbie: l\u2019IHC non è necessaria di routine (WHO 2022).`;
           if (s.inflammation === `presente`) {
             alerts.push(`In presenza di flogosi intraepiteliale severa (specie neutrofila) o recente BCG/RT, verificare che il grado di atipia sia nettamente sproporzionato rispetto alla flogosi prima di confermare il CIS.`);
           } else if (s.inflammation === null) {
@@ -2137,7 +2138,8 @@
             result.schematicCaption = `Atipia citologica su sfondo di flogosi intraepiteliale marcata: categoria rara da riservare ai casi non dirimibili.`;
             result.criteria = [
               `Presenza di flogosi intraepiteliale significativa associata ad atipia lievemente sproporzionata rispetto all’infiltrato.`,
-              `Criteri insufficienti per diagnosi definitiva di CIS.`
+              `Criteri insufficienti per diagnosi definitiva di CIS.`,
+              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; mancano criteri riproducibili per distinguerla dall\u2019atipia di significato incerto. I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati. La distinzione in base alla flogosi è un criterio della checklist, non del Blue Book.`
             ];
             result.dd = [
               `Atipia uroteliale reattiva florida vs CIS con flogosi secondaria.`,
@@ -2149,13 +2151,14 @@
             result.stage = `Preneoplastico`;
             result.icdo = `—`;
             result.chip = `Displasia uroteliale`;
-            result.gradeLabel = `Pre-CIS (basso/intermedio)`;
+            result.gradeLabel = `Displasia uroteliale (non graduata)`;
             result.title = `Displasia uroteliale`;
             result.svgMode = `flat_dysplasia`;
             result.schematicCaption = `Lesione piatta preneoplastica con atipia citologica che non raggiunge la soglia diagnostica del CIS.`;
             result.criteria = [
               `Alterazioni citologiche e architetturali considerate neoplastiche ma inferiori per gravità al CIS (WHO 2022).`,
-              `Lieve-moderato disordine della polarità, assenza di marcato pleomorfismo o ipercromasia franca.`
+              `Lieve-moderato disordine della polarità, assenza di marcato pleomorfismo o ipercromasia franca.`,
+              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; mancano criteri riproducibili per distinguerla dall\u2019atipia di significato incerto. I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati.`
             ];
             result.dd = [
               `Atipia uroteliale reattiva (verificare l’assenza di flogosi e anamnesi terapeutica).`,
@@ -2549,8 +2552,8 @@
         stage: `pTis`,
         status: `alert`,
         arch: `Proliferazione piatta di spessore variabile (ispessito, normale, sottile o quasi denudato / clinging) senza papille.`,
-        polarity: `Perdita di polarità (talora mantenuta o pagetoide); marcata discoesione superficiale con esfoliazione urinaria.`,
-        cytology: `Alto grado: nuclei 5\u20136\u00d7 linfocita, riconoscibili già al 10\u00d7, pleomorfi o monotoni a grandi cellule, ipercromasia, cromatina grossolana, mitosi anche senza flogosi.`,
+        polarity: `Perdita di polarità frequente; le cellule neoplastiche non devono occupare tutto lo spessore (diffusione pagetoide sufficiente); discoesione superficiale con esfoliazione urinaria.`,
+        cytology: `Alto grado: nuclei di solito grandi (circa 5\u20136\u00d7 linfocita; non nel pattern a piccole cellule), pleomorfi, ipercromatici, cromatina e profilo irregolari, riconoscibili a piccolo-medio ingrandimento; mitosi spesso presenti ma non necessarie. Pattern: a grandi cellule, a piccole cellule, plasmacitoide, clinging.`,
         bm: `Integra (se superata focale: CIS con microinvasione pT1).`,
         ihc: `CK20 aberrante full-thickness, p53 aberrante (diffuso/intenso o null), CD44 basale/assente. L\u2019IHC supporta ma non sostituisce la morfologia.`,
         preset: { arch: `piatta`, polarity: `perdita_polarita`, grade: `alto`, hgPct: 100, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `cis` }
@@ -3630,7 +3633,7 @@
       var tP53 = document.getElementById(`tile-p53`);
       var tCd = document.getElementById(`tile-cd44`);
       if (tCk) tCk.textContent = ck === `ombrello` ? `Solo ombrello` : (ck === `full` ? `Full-thickness` : `Negativo`);
-      if (tP53) tP53.textContent = p53 === `wildtype` ? `Wild-type` : (p53 === `over` ? `Diffuso > 70%` : `Pattern null (0%)`);
+      if (tP53) tP53.textContent = p53 === `wildtype` ? `Wild-type` : (p53 === `over` ? `Diffuso e intenso` : `Pattern null (0%)`);
       if (tCd) tCd.textContent = cd === `full` ? `Full-thickness` : `Basale / assente`;
 
       var card = document.getElementById(`ihc-sim-result`);
@@ -3659,14 +3662,14 @@
         if (card) card.setAttribute(`data-status`, `warn`);
         if (chip) { chip.setAttribute(`data-status`, `warn`); chip.textContent = `Profilo Intermedio / Parziale`; }
         if (title) title.textContent = `Profilo immunofenotipico parziale (prevale la morfologia)`;
-        if (exp) exp.textContent = `Sono presenti 2 marcatori su 3 orientati in senso neoplastico (${cisScore}/3), ma il pannello non è completo. Possibile in CIS eterogenei, pagetoidi o in displasia severa.`;
+        if (exp) exp.textContent = `Sono presenti 2 marcatori su 3 orientati in senso neoplastico (${cisScore}/3), ma il pannello non è completo. Possibile in CIS eterogenei o pagetoidi, o in lesioni dubbie (displasia).`;
         if (cav) cav.textContent = `Valutare attentamente il rapporto tra grado di atipia e flogosi intraepiteliale; in caso di flogosi severa e dubbio persistente, preferire una biopsia di controllo post-terapia.`;
       } else {
         if (card) card.setAttribute(`data-status`, `warn`);
         if (chip) { chip.setAttribute(`data-status`, `warn`); chip.textContent = `Profilo Discordante`; }
         if (title) title.textContent = `Profilo non conclusivo o aspecifico`;
         if (exp) exp.textContent = `Una singola alterazione isolata (es. CK20 focale o p53 lievemente aumentato in rigenerazione) non è sufficiente a classificare la lesione.`;
-        if (cav) cav.textContent = `Marcatori aggiuntivi meno consolidati (Ki-67, AMACR, CK5/6, p16) possono essere considerati solo in contesti selezionati, mantenendo sempre la E&E come criterio guida.`;
+        if (cav) cav.textContent = `Marcatori aggiuntivi meno consolidati (Ki-67, AMACR, ERBB2, p16, CK5/6, CD138) possono essere considerati solo in contesti selezionati, mantenendo sempre la E&E come criterio guida.`;
       }
       persistState();
     }
