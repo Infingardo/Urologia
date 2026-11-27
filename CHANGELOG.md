@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.6.1 — 2026-11-27
+
+Solo testo dell'interfaccia: lo scenario di riferimento "Papillare con focus HG 3% (< 5%)" si chiama ora "Papillare con focus HG < 5%", perché la categoria comprende qualunque quota di alto grado sotto il 5% (il 3% era solo il valore di esempio, che resta nello scenario). Nessun esito cambia.
+
 ## 2.6.0 — 2026-11-27
 
 Allineamento al capitolo WHO 2022 (Blue Book, 5ª ed.) *Urothelial carcinoma in situ*, consultato da Filippo; modifiche approvate da lui.
