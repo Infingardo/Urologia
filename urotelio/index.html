@@ -1372,7 +1372,7 @@
               <div class="field-group">
                 <div class="check-grid">
                   <div class="field-group">
-                    <label class="control-label" for="sel-history-uc">Storia di carcinoma uroteliale (criterio WHO 2022 per PUNLMP e papilloma)</label>
+                    <label class="control-label" for="sel-history-uc">Storia di carcinoma uroteliale (WHO 2022: criterio per la PUNLMP, cautela per il papilloma)</label>
                     <select id="sel-history-uc" data-tri="historyUC" onchange="setTri('historyUC', this.value)">
                       <option value="">&mdash; Non valutato &mdash;</option>
                       <option value="assente">Assente</option>
@@ -1747,7 +1747,7 @@
             <ul class="detail-list">
               <li>Il grading a due livelli (LG vs HG) della WHO 2022 si correla direttamente con <strong>TPS</strong>, focalizzato sull&rsquo;identificazione del carcinoma uroteliale di alto grado (HGUC).</li>
               <li><strong>Criteri TPS per HGUC:</strong> almeno <strong>5&ndash;10 cellule uroteliali</strong> ben conservate con rapporto <strong>N:C &ge; 0,7</strong>, ipercromasia moderata-severa, cromatina grossolana e membrana nucleare irregolare.</li>
-              <li><strong>Low-grade urothelial neoplasm (LGUN):</strong> categoria TPS che comprende papilloma, PUNLMP e carcinoma uroteliale di basso grado, che la citologia non riconosce in modo affidabile.</li>
+              <li><strong>Low-grade urothelial neoplasm:</strong> categoria TPS che comprende papilloma, PUNLMP e carcinoma uroteliale di basso grado, perché la citologia non riconosce in modo affidabile le neoplasie uroteliali di basso grado.</li>
               <li><strong>Attenzione al tratto superiore:</strong> cellule di pelvi, uretra e collo vescicale hanno fisiologicamente nuclei più ampi e citoplasma meno chiaro.</li>
             </ul>
           </div>
@@ -1984,7 +1984,7 @@
           conflicts.push(`Grado “Marcato / Alto grado” con quota HG dichiarata ${s.hgPct}% (< 5%): se l’alto grado è focale, selezionare il grado lieve e indicare la quota.`);
         }
         if (s.hgPct !== null && (s.grade === `assente` || s.grade === `monotono`) && s.hgPct > 0) {
-          conflicts.push(`Quota HG ${s.hgPct}% con citologia \u201c${GRADE_NAMES[s.grade]}\u201d.`);
+          conflicts.push(`Quota HG ${s.hgPct}% con citologia \u201c${s.grade === `assente` ? `assente (normale)` : GRADE_NAMES[s.grade]}\u201d.`);
         }
         /* WHO 2022, PUNLMP, criterio essenziale: "no history of urothelial carcinoma" */
         if (s.polarity === `punlmp_ordinato` && s.grade === `monotono` && s.invasion === `integra`) {
@@ -2384,7 +2384,7 @@
           result.stage = `pTa (PUNLMP)`;
           result.icdo = `8130/1`;
           result.chip = `PUNLMP`;
-          result.gradeLabel = `PUNLMP: non graduata (atipia lieve e monotona)`;
+          result.gradeLabel = `PUNLMP (atipia lieve e monotona)`;
           result.title = `Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)`;
           result.svgMode = `papillary_punlmp`;
           result.schematicCaption = `Papille rivestite da urotelio ispessito o più cellulato, con architettura strettamente ordinata e atipia lieve e monotona.`;
@@ -2415,14 +2415,14 @@
           ];
           result.dd = [
             `PUNLMP o carcinoma uroteliale con crescita invertita (cordoni spessi o strutture endofitiche nodulari).`,
-            `Carcinoma uroteliale invasivo con crescita invertita (atipia marcata, mitosi atipiche, margine infiltrativo nella lamina propria).`,
+            `Carcinoma uroteliale invasivo con crescita invertita (atipia nucleare severa, mitosi atipiche, margine infiltrativo nella lamina propria).`,
             `Nidi di von Brunn floridi / cistite cistica.`
           ];
-          result.ihcNote = `Non necessaria; se eseguita, il papilloma invertito è CK20 negativo, con espressione di p53 e indice Ki-67 bassi (WHO 2022).`;
+          result.ihcNote = `Se eseguita: il papilloma invertito è CK20 negativo, con espressione di p53 e indice Ki-67 bassi (WHO 2022). Le indagini molecolari non sono necessarie per la diagnosi.`;
           if (s.historyUC === `presente`) {
-            alerts.push(`Storia di carcinoma uroteliale presente: diagnosi di papilloma solo con estrema cautela ed esame dell\u2019intera lesione; il profilo molecolare può distinguere una recidiva da un papilloma clonalmente indipendente (WHO 2022).`);
+            alerts.push(`Storia di carcinoma uroteliale presente: cautela. Per il papilloma uroteliale la WHO 2022 raccomanda estrema cautela ed esame dell\u2019intera lesione in caso di storia di carcinoma uroteliale; il capitolo sul papilloma invertito non tratta questo punto.`);
           } else if (!s.historyUC) {
-            alerts.push(`Storia di carcinoma uroteliale non valutata: se presente, la diagnosi di papilloma richiede estrema cautela ed esame dell\u2019intera lesione (WHO 2022).`);
+            alerts.push(`Storia di carcinoma uroteliale non valutata: per il papilloma uroteliale la WHO 2022 raccomanda estrema cautela se presente; il capitolo sul papilloma invertito non tratta questo punto.`);
           }
         } else {
           /* WHO 2022 (5ª ed.), Urothelial papilloma (esofitico) */
@@ -2435,7 +2435,7 @@
           result.svgMode = `papillary_papilloma`;
           result.schematicCaption = `Assi fibrovascolari delicati rivestiti da urotelio di spessore e citologia normali (\u2264 7 strati).`;
           result.criteria = [
-            `Papille delicate con assi fibrovascolari sottili e crescita esofitica; ramificazioni possibili, senza fusione.`,
+            `Lesione papillare esofitica solitaria: papille delicate con assi fibrovascolari sottili; ramificazioni possibili, senza fusione.`,
             `Rivestimento uroteliale di spessore e cellularità normali (\u2264 7 strati), cellule orientate perpendicolarmente con polarità conservata.`,
             `Citologia normale; mitosi assenti o rare e basali. Criterio essenziale: esame dell\u2019intera lesione.`
           ];
@@ -2445,7 +2445,7 @@
           ];
           result.ihcNote = `Non necessaria (CK20 limitata alle cellule ad ombrello, CD44 basale).`;
           if (s.historyUC === `presente`) {
-            alerts.push(`Storia di carcinoma uroteliale presente: diagnosi di papilloma solo con estrema cautela ed esame dell\u2019intera lesione; il profilo molecolare può distinguere una recidiva da un papilloma clonalmente indipendente (WHO 2022).`);
+            alerts.push(`Storia di carcinoma uroteliale presente: diagnosi di papilloma solo con estrema cautela ed esame dell\u2019intera lesione; il profilo molecolare può aiutare a distinguere una recidiva da un papilloma clonalmente indipendente (WHO 2022).`);
           } else if (!s.historyUC) {
             alerts.push(`Storia di carcinoma uroteliale non valutata: se presente, la diagnosi di papilloma richiede estrema cautela ed esame dell\u2019intera lesione (WHO 2022).`);
           }
@@ -3128,6 +3128,8 @@
       }
 
       /* 5% threshold visibility & values */
+      var monoBtn = document.querySelector(`#grade-options [data-grade="monotono"]`);
+      if (monoBtn) monoBtn.classList.toggle(`hidden`, appState.arch !== `papillare` && appState.grade !== `monotono`);
       var growthBox = document.getElementById(`growth-box`);
       if (growthBox) growthBox.classList.toggle(`hidden`, appState.arch !== `papillare`);
       var selGrowth = document.getElementById(`sel-growth`);

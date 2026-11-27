@@ -259,6 +259,13 @@ test('grado monotono: contraddizione con papille normali, disordine, lesione pia
   conflict(ev({ ...pun, invasion: 'indeterminato', historyUC: 'assente' }));
   conflict(ev({ ...pun, historyUC: 'assente', hgPct: 3 }));
 });
+test('messaggio quota HG con citologia assente: dicitura invariata "assente (normale)"', () => {
+  const r = ev({ arch: 'papillare', polarity: 'papille_normali', grade: 'assente', growth: 'esofitica', invasion: 'integra', hgPct: 5 });
+  assert.ok(r.conflicts.includes('Quota HG 5% con citologia \u201cassente (normale)\u201d.'));
+});
+test('PUNLMP: etichetta del grado senza "non graduata"', () => {
+  assert.equal(ev({ ...pun, historyUC: 'assente' }).gradeLabel, 'PUNLMP (atipia lieve e monotona)');
+});
 test('pattern di crescita: solo per i papillari; negli altri papillari va solo nel referto', () => {
   assert.equal(normalizeCase({ arch: 'piatta', growth: 'invertita' }).growth, null);
   const lg = ev({ arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', hgPct: 0, invasion: 'integra', growth: 'invertita' });
