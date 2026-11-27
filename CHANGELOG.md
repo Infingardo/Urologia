@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.0 — 2026-11-27
+
+Su indicazione di Filippo: il substaging micrometrico del pT1 usa solo T1m/T1e; il sistema ROL non è più usato.
+
+### Cambiato (cambia gli esiti)
+- Stadio e riquadro del verdetto del pT1: "pT1 (T1m)" / "pT1 (T1e)" e "pT1 · T1e (1.4 mm)" (prima "pT1 (ROL1/ROL2)").
+- Referto: "Substaging pT1 (lamina propria): x mm → T1m (< 0,5 mm)" o "T1e (≥ 0,5 mm)", senza la classe ROL.
+- Criteri del pT1: tolta la frase sulla progressione associata al ROL2.
+
+### Cambiato (interfaccia e testi)
+- Indicatore del substaging con soglia 0,5 mm (era 1,0 mm) e indicazione T1m/T1e; opzione "MM non valutabile" con "preferire la misura micrometrica"; scenario "Carcinoma invasivo pT1 (T1e)" (era "(ROL2)"); matrice con T1m/T1e.
+- Il ROL resta citato solo in consultazione (scheda IHC e staging) tra i sistemi esistenti; fonti nel piè di pagina: van Rhijn 2012 ed EAU 2026 al posto della validazione ROL.
+
 ## 2.6.0 — 2026-11-27
 
 Allineamento al capitolo WHO 2022 (Blue Book, 5ª ed.) *Urothelial carcinoma in situ*, consultato da Filippo; modifiche approvate da lui.

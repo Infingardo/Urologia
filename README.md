@@ -22,12 +22,12 @@ L'esito è un **orientamento morfologico**: non sostituisce la diagnosi, che res
 - **Nessun verdetto su dati incompleti**: servono architettura, polarità, grado e stato della membrana basale; nei papillari di basso grado serve la quota di alto grado (anche 0%); nelle lesioni piatte con atipia lieve serve lo stato della flogosi.
 - **Nessun verdetto su dati contraddittori**: le combinazioni incoerenti (per esempio architettura infiltrante con membrana basale integra, invasione con citologia normale o reattiva, pT2 senza muscolare propria nel campione) sospendono il verdetto e vengono elencate.
 - **Nessun campo ne modifica un altro di nascosto.**
-- **Nessuna falsa precisione**: senza misura dell'estensione in lamina propria non si calcola alcuna classe ROL o T1m/T1e; senza quota di alto grado non si scrive 100%.
+- **Nessuna falsa precisione**: senza misura dell'estensione in lamina propria non si calcola alcuna classe T1m/T1e; senza quota di alto grado non si scrive 100%.
 - **Regola del 5%** applicata ai papillari non invasivi (pTa), come nel Blue Book, e per scelta del curatore anche ai papillari con invasione indeterminata (estensione non scritta nella fonte). Nel pT1/pT2 senza sottotipo dichiarato il grado segue il passo 3, e se la quota di alto grado è ≥ 5% compare un avviso; con un sottotipo dichiarato il grado è alto per definizione e l'avviso non compare.
 - **Grado nell'invasivo**: ogni carcinoma invasivo va graduato; il basso grado invasivo è raro ma riconosciuto (WHO 2022). Il campo "sottotipo istologico" prevede tutti gli 11 sottotipi del Blue Book, con il loro codice ICD-O nel referto solo per pT1/pT2 (i codici provengono dal capitolo sul carcinoma invasivo; in pTa e pTis il referto riporta nome e percentuale senza codice). Se è dichiarato un sottotipo, il grado è sempre alto: "i sottotipi e le differenziazioni divergenti sono tutti considerati di alto grado" (WHO 2022).
 - **Papilloma e PUNLMP (WHO 2022)**: il papilloma richiede il pattern di crescita (esofitico 8120/0, invertito 8121/0). La PUNLMP richiede al passo 3 il grado "lieve ingrandimento monotono, senza variazione" e la storia di carcinoma uroteliale: se è presente, la PUNLMP non è applicabile (criterio essenziale) e il verdetto è sospeso. La PUNLMP è pTa.
-- **Soglie sul valore inserito**: 5% di alto grado, 0,5 mm e 1,0 mm si confrontano sul numero digitato, senza arrotondamenti.
-- **Substaging pT1** riportato in parallelo con i sistemi in uso: micrometrico T1m/T1e (soglia 0,5 mm), ROL (soglia 1,0 mm) e livello rispetto alla muscularis mucosae, in forma descrittiva.
+- **Soglie sul valore inserito**: 5% di alto grado e 0,5 mm si confrontano sul numero digitato, senza arrotondamenti.
+- **Substaging pT1**: micrometrico T1m/T1e (van Rhijn, soglia 0,5 mm) e livello rispetto alla muscularis mucosae, in forma descrittiva. Il sistema ROL (soglia 1,0 mm) non è usato, per scelta del curatore; resta citato tra i sistemi esistenti nella sezione di consultazione.
 
 ### Persistenza
 
@@ -49,7 +49,7 @@ npm test
 - van Rhijn BWG et al. A new and highly prognostic system to discern T1 bladder cancer substage. Eur Urol 2012;61:378-84. doi:10.1016/j.eururo.2011.10.026
 - Fransen van de Putte EE et al. Metric substage according to micro and extensive lamina propria invasion improves prognostics in T1 bladder cancer. Urol Oncol 2018;36:361.e7-361.e13. doi:10.1016/j.urolonc.2018.05.007
 - Colombo R et al. Feasibility and clinical roles of different substaging systems at first and second transurethral resection in patients with T1 high-grade bladder cancer. Eur Urol Focus 2018;4:87-93. doi:10.1016/j.euf.2016.06.004
-- Valeri M et al. Prospective validation of the ROL system in substaging pT1 high-grade urothelial carcinoma. Cancers 2023;15:934. doi:10.3390/cancers15030934
+- (Sistema ROL, citato solo in consultazione) Valeri M et al. Prospective validation of the ROL system in substaging pT1 high-grade urothelial carcinoma. Cancers 2023;15:934. doi:10.3390/cancers15030934
 
 Le altre fonti sono citate nel piè di pagina della checklist.
 

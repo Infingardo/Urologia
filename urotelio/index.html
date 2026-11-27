@@ -568,7 +568,7 @@
       font-weight: 600;
     }
 
-    /* Reference range meter for 5% cutoff and ROL 1.0mm */
+    /* Reference range meter for 5% cutoff and T1m/T1e 0.5mm */
     .threshold-meter {
       position: relative;
       height: 12px;
@@ -1162,7 +1162,7 @@
               <button type="button" class="preset-btn" data-preset="pTa_LG_minorHG" onclick="applyPreset('pTa_LG_minorHG')">Papillare con focus HG 3% (&lt; 5%)</button>
               <button type="button" class="preset-btn" data-preset="CIS_denudato" onclick="applyPreset('CIS_denudato')">CIS piatto / Clinging (pTis)</button>
               <button type="button" class="preset-btn" data-preset="reattiva_BCG" onclick="applyPreset('reattiva_BCG')">Atipia reattiva post-BCG</button>
-              <button type="button" class="preset-btn" data-preset="pT1_ROL2" onclick="applyPreset('pT1_ROL2')">Carcinoma invasivo pT1 (ROL2)</button>
+              <button type="button" class="preset-btn" data-preset="pT1_T1e" onclick="applyPreset('pT1_T1e')">Carcinoma invasivo pT1 (T1e)</button>
               <button type="button" class="preset-btn" data-preset="tangenziale" onclick="applyPreset('tangenziale')">Sospetto taglio tangenziale pTa</button>
             </div>
           </details>
@@ -1321,20 +1321,20 @@
               <div class="control-box hidden" id="pt1-substaging-box">
                 <div class="step-head">
                   <span class="control-label">Substaging pT1 (fortemente raccomandato da WHO 2022)</span>
-                  <span class="chip" id="rol-chip" data-status="info">ROL1 (&lt; 1,0 mm)</span>
+                  <span class="chip" id="rol-chip" data-status="info">Estensione non misurata</span>
                 </div>
                 <div class="dual-input-row">
                   <div class="slider-wrap">
                     <label class="control-label" for="slider-pt1-mm">Estensione massima invasione in lamina propria (mm)</label>
                     <input type="range" id="slider-pt1-mm" min="0.1" max="5.0" step="0.1" value="0.6" oninput="syncPt1FromSlider(this.value)">
                     <div class="threshold-meter" aria-hidden="true">
-                      <div class="threshold-band-safe" style="width: 20%;"></div>
-                      <div class="threshold-fill" id="pt1-meter-fill" style="width: 12%;"></div>
-                      <div class="threshold-marker" style="left: 20%;"></div>
+                      <div class="threshold-band-safe" style="width: 10%;"></div>
+                      <div class="threshold-fill" id="pt1-meter-fill" style="width: 0%;"></div>
+                      <div class="threshold-marker" style="left: 10%;"></div>
                     </div>
                     <div class="threshold-legend">
                       <span>0,1 mm</span>
-                      <span>Cut-off ROL: 1,0 mm (van Rhijn: 0,5 mm)</span>
+                      <span>Soglia T1m / T1e (van Rhijn): 0,5 mm</span>
                       <span>5,0 mm</span>
                     </div>
                   </div>
@@ -1353,7 +1353,7 @@
                     <option value="sopra_mm">pT1a &mdash; Superficiale alla muscularis mucosae / plesso vascolare</option>
                     <option value="entro_mm">pT1b &mdash; Nel contesto della muscularis mucosae</option>
                     <option value="oltre_mm">pT1c (o pT1b nel sistema a 2 livelli) &mdash; Oltre la muscularis mucosae</option>
-                    <option value="non_valutabile">Non valutabile (MM assente o frammentazione TURBT; preferire ROL micrometrico)</option>
+                    <option value="non_valutabile">Non valutabile (MM assente o frammentazione TURBT; preferire la misura micrometrica)</option>
                   </select>
                 </div>
               </div>
@@ -1602,7 +1602,7 @@
           </div>
           <div class="search-field">
             <label class="control-label" for="matrix-search">Cerca entità, criterio o marcatore</label>
-            <input type="text" id="matrix-search" placeholder="Es. CK20, 5%, ROL, nested, ombrello…" oninput="searchMatrix(this.value)">
+            <input type="text" id="matrix-search" placeholder="Es. CK20, 5%, T1e, nested, ombrello…" oninput="searchMatrix(this.value)">
           </div>
         </div>
 
@@ -1739,6 +1739,7 @@
               <li><strong>Pancheratina (AE1/AE3):</strong> evidenzia invasione precoce oscurata dalla flogosi o colonizzazione di fasci muscolari da <em>floaters</em>.</li>
               <li><strong>Desmina:</strong> distingue i fasci di muscolo liscio dalla desmoplasia miofibroblastica e ne delinea i contorni; <strong>ISUP non raccomanda</strong> <em>smoothelin</em> o <em>vimentina</em> di routine per sottoclassificare il muscolo.</li>
               <li><strong>Collagene IV:</strong> valuta la continuità della membrana basale nei sospetti tagli tangenziali di pTa.</li>
+              <li><strong>Substaging pT1:</strong> la checklist usa il sistema micrometrico T1m/T1e (van Rhijn, soglia 0,5 mm) e il livello rispetto alla muscularis mucosae. Esistono altri sistemi micrometrici, per esempio ROL (Rete Oncologica Lombarda, soglia 1,0 mm), non usato qui; WHO 2022 ed EAU 2026 non indicano un sistema ottimale.</li>
             </ul>
           </div>
 
@@ -1758,7 +1759,7 @@
       <footer class="app-footer">
         <strong>Riferimenti scientifici e classificativi di base</strong>
         <span>
-          WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª edizione (IARC, 2022) &middot; Raspollini MR et al., <em>News in the classification of WHO 2022 bladder tumors</em>, Pathologica 2023 &middot; Lopez-Beltran A, Cheng L, <em>Stage T1 bladder carcinoma: diagnostic criteria and pitfalls</em>, Pathology 2021 &middot; Brimo F, Epstein JI, <em>Selected common diagnostic problems in urologic pathology</em>, Arch Pathol Lab Med 2012 &middot; Amin MB et al., <em>ISUP Best Practices Recommendations in Immunohistochemistry</em>, Am J Surg Pathol 2014 &middot; Validazione prospettica sistema ROL pT1 (<em>Rete Oncologica Lombarda</em>, 1,0 mm).
+          WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª edizione (IARC, 2022) &middot; Raspollini MR et al., <em>News in the classification of WHO 2022 bladder tumors</em>, Pathologica 2023 &middot; Lopez-Beltran A, Cheng L, <em>Stage T1 bladder carcinoma: diagnostic criteria and pitfalls</em>, Pathology 2021 &middot; Brimo F, Epstein JI, <em>Selected common diagnostic problems in urologic pathology</em>, Arch Pathol Lab Med 2012 &middot; Amin MB et al., <em>ISUP Best Practices Recommendations in Immunohistochemistry</em>, Am J Surg Pathol 2014 &middot; van Rhijn BWG et al., <em>A new and highly prognostic system to discern T1 bladder cancer substage</em>, Eur Urol 2012 &middot; EAU Guidelines on Non-muscle-invasive Bladder Cancer, 2026.
         </span>
         <span>
           Nota metodologica: le linee guida cliniche non sostituiscono né comandano su diagnosi istologica, classificazione nosologica, grading, criteri morfologici o pannelli immunoistochimici diagnostici.
@@ -1878,7 +1879,7 @@
       s.grade = normalizeEnum(src.grade, ENUMS.grade);
       s.invasion = normalizeEnum(src.invasion, ENUMS.invasion);
       s.growth = s.arch === `papillare` ? normalizeEnum(src.growth, ENUMS.growth) : null;
-      /* Nessun arrotondamento: le soglie (5%, 0,5 mm, 1,0 mm) si confrontano sul valore inserito */
+      /* Nessun arrotondamento: le soglie (5%, 0,5 mm) si confrontano sul valore inserito */
       s.hgPct = normalizeNum(src.hgPct, 0, 100);
       s.pt1Mm = normalizeNum(src.pt1Mm, 0.01, 20);
       s.pt1Anat = normalizeEnum(src.pt1Anat, ENUMS.pt1Anat);
@@ -2146,14 +2147,13 @@
       } else if (s.invasion === `lamina_propria`) {
         var measured = s.pt1Mm !== null;
         var mmText = measured ? `${formatNum(s.pt1Mm)} mm` : `non misurata`;
-        var rolClass = measured ? (s.pt1Mm >= 1.0 ? `ROL2` : `ROL1`) : null;
         var vanRhijn = measured ? (s.pt1Mm >= 0.5 ? `T1e` : `T1m`) : null;
         var anatText = anatDescription(s.pt1Anat);
 
         result.status = `alert`;
-        result.stage = measured ? `pT1 (${rolClass})` : `pT1`;
+        result.stage = measured ? `pT1 (${vanRhijn})` : `pT1`;
         result.icdo = `8120/3`;
-        result.chip = measured ? `pT1 · ${rolClass} (${mmText})` : `pT1 · estensione non misurata`;
+        result.chip = measured ? `pT1 · ${vanRhijn} (${mmText})` : `pT1 · estensione non misurata`;
         result.gradeLabel = s.blandSubtype === `presente`
           ? GRADE_SUBTYPE_HG
           : (s.grade === `lieve` ? `Basso grado (LG)` : `Alto grado (HG)`);
@@ -2162,14 +2162,14 @@
           : `Carcinoma uroteliale invasivo della lamina propria (pT1)`;
         result.svgMode = `invasive_pt1`;
         result.schematicCaption = measured
-          ? `Superamento della membrana basale in lamina propria (${mmText} → ${rolClass} / ${vanRhijn}); detrusore indenne.`
+          ? `Superamento della membrana basale in lamina propria (${mmText} → ${vanRhijn}); detrusore indenne.`
           : `Superamento della membrana basale in lamina propria (estensione non misurata); detrusore indenne.`;
         result.criteria = [
           `Superamento focale o esteso della membrana basale nel tessuto connettivo subepiteliale (lamina propria).`,
           measured
-            ? `Substaging micrometrico: ${mmText} → ${rolClass} (soglia ROL 1,0 mm) / ${vanRhijn} (soglia 0,5 mm).`
-            : `Substaging micrometrico: estensione non misurata (nessuna classe ROL / T1m-T1e calcolata).`,
-          `Valutazione anatomica: ${anatText}. La presenza di ROL2 (≥ 1,0 mm) si associa a un rischio significativamente aumentato di progressione.`
+            ? `Substaging micrometrico: ${mmText} → ${vanRhijn} (soglia 0,5 mm; T1m < 0,5 mm, T1e \u2265 0,5 mm).`
+            : `Substaging micrometrico: estensione non misurata (nessuna classe T1m/T1e calcolata).`,
+          `Valutazione anatomica: ${anatText}.`
         ];
         result.dd = [
           `Taglio tangenziale di carcinoma papillare non invasivo (pTa): contorni lisci, Collagene IV continuo, capillari paralleli.`,
@@ -2471,9 +2471,8 @@
       }
       if (s.invasion === `lamina_propria`) {
         if (s.pt1Mm !== null) {
-          var rClass = s.pt1Mm >= 1.0 ? `ROL2 (≥ 1,0 mm)` : `ROL1 (< 1,0 mm)`;
           var vClass = s.pt1Mm >= 0.5 ? `T1e (≥ 0,5 mm)` : `T1m (< 0,5 mm)`;
-          lines.push(`- Substaging pT1 (lamina propria): ${formatNum(s.pt1Mm)} mm → ${rClass} / ${vClass}`);
+          lines.push(`- Substaging pT1 (lamina propria): ${formatNum(s.pt1Mm)} mm → ${vClass}`);
         } else {
           lines.push(`- Substaging pT1 (lamina propria): estensione non misurata`);
         }
@@ -2725,7 +2724,7 @@
         arch: `Nidi irregolari, cordoni o singole cellule infiltranti; nei sottotipi nested/large nested/tubulare/microcistico nidi blandi confluenti in profondità.`,
         polarity: `Perdita di polarizzazione al fronte; eosinofilia citoplasmatica (\u201cdifferenziazione paradossa\u201d), desmoplasia, mixoide o retrazione.`,
         cytology: `Prevalentemente alto grado; rari carcinomi invasivi di basso grado, senza criteri standardizzati. Tutti i sottotipi, anche quelli a citologia blanda (nested, large nested, tubulare e microcistico), sono considerati di alto grado (WHO 2022).`,
-        bm: `Superata: lamina propria (pT1, substaging ROL1 < 1,0 mm vs ROL2 \u2265 1,0 mm) o muscolare propria/detrusore (pT2).`,
+        bm: `Superata: lamina propria (pT1, substaging T1m < 0,5 mm vs T1e \u2265 0,5 mm) o muscolare propria/detrusore (pT2).`,
         ihc: `GATA3, p63, HMWCK per linea; Desmina per detrusore vs desmoplasia; TERT promoter mutation utile per DD nested vs von Brunn. Riportare % sottotipi.`,
         preset: { arch: `invasiva`, polarity: `fronte_irregolare`, grade: `alto`, hgPct: 100, invasion: `lamina_propria`, pt1Mm: 1.4, pt1Anat: `oltre_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
       }
@@ -3200,11 +3199,11 @@
         if (!mmKnown) {
           rolChip.textContent = `Estensione non misurata`;
           rolChip.setAttribute(`data-status`, `info`);
-        } else if (appState.pt1Mm >= 1.0) {
-          rolChip.textContent = `ROL2 (\u2265 1,0 mm) \u00b7 Alto rischio`;
+        } else if (appState.pt1Mm >= 0.5) {
+          rolChip.textContent = `T1e (\u2265 0,5 mm)`;
           rolChip.setAttribute(`data-status`, `alert`);
         } else {
-          rolChip.textContent = `ROL1 (< 1,0 mm)`;
+          rolChip.textContent = `T1m (< 0,5 mm)`;
           rolChip.setAttribute(`data-status`, `info`);
         }
       }
@@ -3442,7 +3441,7 @@
       pTa_LG_minorHG: { arch: `papillare`, polarity: `lg_lieve_disordine`, grade: `lieve`, hgPct: 3, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
       CIS_denudato: { arch: `piatta`, polarity: `perdita_polarita`, grade: `alto`, invasion: `integra`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `cis` },
       reattiva_BCG: { arch: `piatta`, polarity: `flogosi_attiva`, grade: `reattivo`, invasion: `integra`, inflammation: true, tangential: false, blandSubtype: false, ihcSummary: `reactive` },
-      pT1_ROL2: { arch: `invasiva`, polarity: `fronte_irregolare`, grade: `alto`, invasion: `lamina_propria`, pt1Mm: 1.4, pt1Anat: `oltre_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
+      pT1_T1e: { arch: `invasiva`, polarity: `fronte_irregolare`, grade: `alto`, invasion: `lamina_propria`, pt1Mm: 1.4, pt1Anat: `oltre_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` },
       tangenziale: { arch: `invasiva`, polarity: `tangenziale_sospetto`, grade: `lieve`, invasion: `indeterminato`, inflammation: false, tangential: true, blandSubtype: false, ihcSummary: `none` }
     };
 
