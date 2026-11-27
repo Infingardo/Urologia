@@ -273,11 +273,13 @@ test('displasia: grado "non graduata" (prima "Pre-CIS (basso/intermedio)") e avv
   assert.equal(r.title, 'Displasia uroteliale');
   assert.equal(r.gradeLabel, 'Displasia uroteliale (non graduata)');
   assert.ok(r.criteria.some((c) => /poco riproducibile/.test(c) && /non sono raccomandati/.test(c)));
+  assert.ok(r.criteria.some((c) => /criterio della checklist, non del Blue Book/.test(c)), 'anche la displasia dichiara la regola della flogosi');
 });
 test('atipia di significato indeterminato: avvertenza WHO e regola della flogosi dichiarata come della checklist', () => {
   const r = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', invasion: 'integra', inflammation: 'presente' });
   issued(r);
   assert.ok(r.criteria.some((c) => /criterio della checklist, non del Blue Book/.test(c)));
+  assert.ok(r.criteria.some((c) => /alcuni autori/.test(c)));
 });
 test('CIS: mitosi non necessarie, diffusione pagetoide sufficiente, pattern a piccole cellule, IHC non di routine', () => {
   const r = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'integra' });

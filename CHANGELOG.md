@@ -8,9 +8,10 @@ Allineamento al capitolo WHO 2022 (Blue Book, 5ª ed.) *Urothelial carcinoma in 
 - Displasia: grado "Displasia uroteliale (non graduata)" (prima "Pre-CIS (basso/intermedio)"). Fonte: "high-grade dysplasia; low-grade dysplasia" tra i termini non raccomandati.
 
 ### Cambiato (testi)
-- Displasia e atipia di significato indeterminato: aggiunta l'avvertenza della fonte (categoria poco riproducibile; mancano criteri riproducibili per distinguerle). La distinzione in base alla flogosi resta, dichiarata come criterio della checklist.
+- Displasia e atipia di significato indeterminato: aggiunta l'avvertenza della fonte (categoria diagnosticata raramente e poco riproducibile; il Blue Book riporta che alcuni autori segnalano la mancanza di criteri riproducibili per distinguerle). La distinzione in base alla flogosi resta, dichiarata in entrambi i verdetti come criterio della checklist.
 - CIS: nuclei "di solito" 5–6× un linfocita, non nel pattern a piccole cellule (indicazione di Filippo); caratteri riconoscibili a piccolo-medio ingrandimento; cellule neoplastiche non necessariamente a tutto spessore, diffusione pagetoide sufficiente; mitosi non necessarie (prima "mitosi frequenti anche in assenza di flogosi"); pattern a grandi cellule, piccole cellule, plasmacitoide, clinging senza significato prognostico; IHC non necessaria di routine, nessun marcatore del tutto sensibile o specifico.
 - Passo 3, grado alto: stessa precisazione sul pattern a piccole cellule.
+- Coerenza: matrice (CIS: diffusione pagetoide, mitosi non necessarie, IHC non di routine), scheda trappole "Flogosi vs CIS" e didascalia dello schema del CIS allineate agli stessi criteri; diagnosi differenziale della displasia "pattern a grandi cellule" (era "variante"). Dalla revisione indipendente.
 - Simulatore IHC: p53 "diffuso e intenso" come nella fonte, con la soglia pratica "> 70–80% dei nuclei" indicata come tale; "displasia severa" sostituito (termine non raccomandato); marcatori meno consolidati completati (ERBB2, CD138).
 
 ## 2.4.0 — 2026-11-27

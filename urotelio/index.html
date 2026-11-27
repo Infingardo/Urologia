@@ -1855,7 +1855,7 @@
           conflicts.push(`Il passo 2 indica flogosi / contesto post-terapia, ma nel contesto la flogosi è dichiarata assente.`);
         }
         if (s.grade === `lieve` && s.invasion === `integra` && !s.inflammation) {
-          missing.push(`Flogosi intraepiteliale o post-terapia (assente / presente): con atipia lieve in lesione piatta la checklist distingue così displasia e atipia di significato indeterminato (criterio della checklist: il Blue Book non indica criteri riproducibili).`);
+          missing.push(`Flogosi intraepiteliale o post-terapia (assente / presente): con atipia lieve in lesione piatta la checklist distingue così displasia e atipia di significato indeterminato (criterio della checklist: il Blue Book riporta che alcuni autori segnalano la mancanza di criteri riproducibili).`);
         }
       }
 
@@ -2110,10 +2110,10 @@
           result.svgMode = `flat_cis`;
           result.schematicCaption = `Proliferazione piatta di cellule maligne di alto grado con perdita di polarità, discoesione e membrana basale integra.`;
           result.criteria = [
-            `Nuclei di solito grandi e pleomorfi (circa 5\u20136\u00d7 un linfocita della lamina propria), ipercromatici, con cromatina e profilo irregolari, riconoscibili a piccolo-medio ingrandimento; nel pattern a piccole cellule i nuclei sono più piccoli e contano pleomorfismo e ipercromasia.`,
+            `Nuclei di solito grandi e pleomorfi (circa 5\u20136\u00d7 un linfocita della lamina propria), ipercromatici, con cromatina e profilo irregolari, riconoscibili a piccolo-medio ingrandimento; nel pattern a piccole cellule (citoplasma scarso) la soglia di 5\u20136\u00d7 un linfocita non si applica.`,
             `Spessore variabile (ispessito, normale, assottigliato o quasi denudato/clinging) con discoesione superficiale; le cellule neoplastiche non devono occupare tutto lo spessore: diffusione pagetoide o cellule che sottominano l\u2019urotelio benigno sono sufficienti.`,
             `Perdita di polarità e affollamento irregolare frequenti; mitosi spesso presenti, anche atipiche, ma non necessarie per la diagnosi.`,
-            `Pattern morfologici (a grandi cellule, a piccole cellule, plasmacitoide, denudante/clinging): utili a riconoscere il CIS, senza significato prognostico noto (WHO 2022).`
+            `Pattern morfologici (a grandi cellule, a piccole cellule, plasmacitoide, denudante/clinging): di valore puramente morfologico, senza evidenza attuale di significato clinico o prognostico (WHO 2022).`
           ];
           result.dd = [
             `Atipia uroteliale reattiva severa (in presenza di flogosi acuta/BCG/RT/MMC).`,
@@ -2139,7 +2139,7 @@
             result.criteria = [
               `Presenza di flogosi intraepiteliale significativa associata ad atipia lievemente sproporzionata rispetto all’infiltrato.`,
               `Criteri insufficienti per diagnosi definitiva di CIS.`,
-              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; mancano criteri riproducibili per distinguerla dall\u2019atipia di significato incerto. I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati. La distinzione in base alla flogosi è un criterio della checklist, non del Blue Book.`
+              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; il Blue Book riporta che alcuni autori segnalano la mancanza di criteri riproducibili per distinguerla dall\u2019atipia di significato indeterminato (\u201catypia of uncertain significance\u201d). I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati. La distinzione in base alla flogosi è un criterio della checklist, non del Blue Book.`
             ];
             result.dd = [
               `Atipia uroteliale reattiva florida vs CIS con flogosi secondaria.`,
@@ -2158,11 +2158,11 @@
             result.criteria = [
               `Alterazioni citologiche e architetturali considerate neoplastiche ma inferiori per gravità al CIS (WHO 2022).`,
               `Lieve-moderato disordine della polarità, assenza di marcato pleomorfismo o ipercromasia franca.`,
-              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; mancano criteri riproducibili per distinguerla dall\u2019atipia di significato incerto. I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati.`
+              `WHO 2022: la displasia è una categoria diagnosticata raramente e poco riproducibile; il Blue Book riporta che alcuni autori segnalano la mancanza di criteri riproducibili per distinguerla dall\u2019atipia di significato indeterminato (\u201catypia of uncertain significance\u201d). I termini \u201cdisplasia di basso / alto grado\u201d non sono raccomandati. La distinzione in base alla flogosi è un criterio della checklist, non del Blue Book.`
             ];
             result.dd = [
               `Atipia uroteliale reattiva (verificare l’assenza di flogosi e anamnesi terapeutica).`,
-              `Carcinoma in situ (CIS) iniziale o variante a grandi cellule monotone.`
+              `Carcinoma in situ (CIS) iniziale o pattern a grandi cellule.`
             ];
             result.ihcNote = `Nella WHO 2022 la displasia non ha più un capitolo autonomo ed è riconosciuta come categoria a bassa riproducibilità inter-osservatore. CK20/p53/CD44 spesso intermedi o non dirimenti.`;
           }
@@ -2555,7 +2555,7 @@
         polarity: `Perdita di polarità frequente; le cellule neoplastiche non devono occupare tutto lo spessore (diffusione pagetoide sufficiente); discoesione superficiale con esfoliazione urinaria.`,
         cytology: `Alto grado: nuclei di solito grandi (circa 5\u20136\u00d7 linfocita; non nel pattern a piccole cellule), pleomorfi, ipercromatici, cromatina e profilo irregolari, riconoscibili a piccolo-medio ingrandimento; mitosi spesso presenti ma non necessarie. Pattern: a grandi cellule, a piccole cellule, plasmacitoide, clinging.`,
         bm: `Integra (se superata focale: CIS con microinvasione pT1).`,
-        ihc: `CK20 aberrante full-thickness, p53 aberrante (diffuso/intenso o null), CD44 basale/assente. L\u2019IHC supporta ma non sostituisce la morfologia.`,
+        ihc: `CK20 aberrante full-thickness, p53 aberrante (diffuso/intenso o null), CD44 basale/assente. L\u2019IHC supporta ma non sostituisce la morfologia; nessun marcatore è del tutto sensibile o specifico e non è necessaria di routine (WHO 2022).`,
         preset: { arch: `piatta`, polarity: `perdita_polarita`, grade: `alto`, hgPct: 100, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `cis` }
       },
       {
@@ -2665,8 +2665,8 @@
         ],
         malignantItems: [
           `Atipia marcata anche in totale assenza di flogosi intraepiteliale (una moderata flogosi nella sola lamina propria è normale).`,
-          `Nuclei 5\u20136\u00d7 linfocita con ipercromasia reale, cromatina grossolana e membrane irregolari.`,
-          `Perdita di polarità, discoesione superficiale e mitosi atipiche/alte.`,
+          `Nuclei di solito 5\u20136\u00d7 linfocita (non nel pattern a piccole cellule) con ipercromasia reale, cromatina grossolana e membrane irregolari.`,
+          `Perdita di polarità e discoesione superficiale; mitosi spesso presenti, anche atipiche, ma non necessarie per la diagnosi.`,
           `Se atipia sproporzionata ma flogosi severa: usare \u201catipia uroteliale di significato indeterminato\u201d e ripetere biopsia post-terapia.`
         ],
         tip: `Le alterazioni da radioterapia possono persistere fino a 1 anno nell\u2019urotelio e ancora più a lungo nei nidi di von Brunn.`
@@ -2921,7 +2921,7 @@
           </g>
           <circle cx="215" cy="65" r="5" fill="${cError}" opacity="0.7" />
           <circle cx="242" cy="58" r="5.5" fill="${cError}" opacity="0.7" />
-          <text x="18" y="48" font-family="sans-serif" font-size="10" font-weight="700" fill="${cError}">CIS (pTis): nuclei 5\u20136\u00d7, perdita di polarità, discoesione e aree denudate</text>
+          <text x="18" y="48" font-family="sans-serif" font-size="10" font-weight="700" fill="${cError}">CIS (pTis): nuclei di solito 5\u20136\u00d7, perdita di polarità, discoesione e aree denudate</text>
         `;
       } else if (mode === `papillary_papilloma` || mode === `papillary_punlmp` || mode === `papillary_lg` || mode === `papillary_hg`) {
         var pCol = mode === `papillary_hg` ? cError : (mode === `papillary_papilloma` ? cGreen : cWarn);
