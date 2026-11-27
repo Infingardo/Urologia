@@ -1128,7 +1128,7 @@
             </button>
             <button type="button" class="btn btn-ghost" id="btn-reset-checklist" data-armed="false" onclick="handleResetChecklist(this)">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-              <span>Ripristina checklist</span>
+              <span>Nuovo caso</span>
             </button>
           </div>
         </div>
@@ -3459,24 +3459,24 @@
       if (btn.getAttribute(`data-armed`) !== `true`) {
         btn.setAttribute(`data-armed`, `true`);
         var span = btn.querySelector(`span`);
-        if (span) span.textContent = `Clicca ancora per azzerare`;
+        if (span) span.textContent = `Clicca ancora: nuovo caso`;
         setTimeout(function () {
           if (btn.getAttribute(`data-armed`) === `true`) {
             btn.setAttribute(`data-armed`, `false`);
             var s2 = btn.querySelector(`span`);
-            if (s2) s2.textContent = `Ripristina checklist`;
+            if (s2) s2.textContent = `Nuovo caso`;
           }
         }, 3500);
         return;
       }
       btn.setAttribute(`data-armed`, `false`);
       var s3 = btn.querySelector(`span`);
-      if (s3) s3.textContent = `Ripristina checklist`;
+      if (s3) s3.textContent = `Nuovo caso`;
       applyCase({});
       appState.activePreset = ``;
       updateVerdict();
       var fb = document.getElementById(`copy-feedback`);
-      if (fb) fb.textContent = `Checklist azzerata: tutti i campi sono “non valutato”.`;
+      if (fb) fb.textContent = `Nuovo caso: tutti i campi sono “non valutato”.`;
     }
 
     function copyReportText() {

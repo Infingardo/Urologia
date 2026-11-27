@@ -2,7 +2,7 @@
 
 ## 2.6.1 — 2026-11-27
 
-Solo testo dell'interfaccia: gli scenari di riferimento "Papillare con focus HG 3% (< 5%)" e "Papillare eterogeneo (HG 8% ≥ 5%)" si chiamano ora "Papillare con focus HG < 5%" e "Papillare eterogeneo (HG ≥ 5%)", perché le categorie comprendono qualunque quota sotto o da 5% in su (3% e 8% erano solo i valori di esempio, che restano negli scenari). Nessun esito cambia.
+Solo testo dell'interfaccia: gli scenari di riferimento "Papillare con focus HG 3% (< 5%)" e "Papillare eterogeneo (HG 8% ≥ 5%)" si chiamano ora "Papillare con focus HG < 5%" e "Papillare eterogeneo (HG ≥ 5%)", perché le categorie comprendono qualunque quota sotto o da 5% in su (3% e 8% erano solo i valori di esempio, che restano negli scenari). Il pulsante "Ripristina checklist" si chiama "Nuovo caso" (stessa funzione: azzera tutti i campi, con doppio clic di conferma). Nessun esito cambia.
 
 ## 2.6.0 — 2026-11-27
 
