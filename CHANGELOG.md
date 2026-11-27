@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.1 — 2026-11-27
+
+Solo documentazione: README precisato su due punti (segnalati da Codex via AI-Bridge#16 e verificati). Nessun cambiamento di comportamento.
+- Regola del 5% nel pT1/pT2: l'avviso compare solo senza sottotipo dichiarato; con sottotipo il grado è alto per definizione.
+- Codice ICD-O del sottotipo: riportato solo in pT1/pT2, non in pTa né in pTis.
+
 ## 2.2.0 — 2026-11-26
 
 Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Invasive urothelial carcinoma* e *Non-invasive papillary urothelial carcinoma, low-grade / high-grade*, su indicazione di Filippo.
