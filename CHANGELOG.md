@@ -2,7 +2,7 @@
 
 ## 2.6.1 — 2026-11-27
 
-Solo testo dell'interfaccia: lo scenario di riferimento "Papillare con focus HG 3% (< 5%)" si chiama ora "Papillare con focus HG < 5%", perché la categoria comprende qualunque quota di alto grado sotto il 5% (il 3% era solo il valore di esempio, che resta nello scenario). Nessun esito cambia.
+Solo testo dell'interfaccia: gli scenari di riferimento "Papillare con focus HG 3% (< 5%)" e "Papillare eterogeneo (HG 8% ≥ 5%)" si chiamano ora "Papillare con focus HG < 5%" e "Papillare eterogeneo (HG ≥ 5%)", perché le categorie comprendono qualunque quota sotto o da 5% in su (3% e 8% erano solo i valori di esempio, che restano negli scenari). Nessun esito cambia.
 
 ## 2.6.0 — 2026-11-27
 
