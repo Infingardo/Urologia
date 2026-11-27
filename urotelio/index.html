@@ -1113,6 +1113,14 @@
                   <span class="option-btn-desc">Nidi irregolari, cordoni, singole cellule oltre la membrana basale o pattern <em>nested</em>/microcistico.</span>
                 </button>
               </div>
+              <div class="control-box hidden" id="growth-box">
+                <label class="control-label" for="sel-growth">Pattern di crescita della lesione papillare</label>
+                <select id="sel-growth" onchange="setGrowth(this.value)">
+                  <option value="">&mdash; Non valutato &mdash;</option>
+                  <option value="esofitica">Esofitico</option>
+                  <option value="invertita">Invertito (endofitico)</option>
+                </select>
+              </div>
               <div class="callout" id="upump-note">
                 <strong>Aggiornamento WHO 2022 (UPUMP / AUP abolita):</strong> la categoria &ldquo;proliferazione uroteliale papillare a potenziale maligno indeterminato&rdquo; (2016) non è più riconosciuta come entità autonoma; tali lesioni ondulanti sono oggi classificate come pTa LG precoci o estensioni marginali di carcinoma papillare.
               </div>
@@ -1147,6 +1155,10 @@
                 <button type="button" class="option-btn" data-grade="reattivo" aria-pressed="false" onclick="setGrade('reattivo')">
                   <span class="option-btn-title">Reattivo / Rigenerativo</span>
                   <span class="option-btn-desc">Ingrandimento nucleare uniforme, cromatina fine/chiara, nucleoli centrali; N/C conservato.</span>
+                </button>
+                <button type="button" class="option-btn" data-grade="monotono" aria-pressed="false" onclick="setGrade('monotono')">
+                  <span class="option-btn-title">Lieve monotono (PUNLMP)</span>
+                  <span class="option-btn-desc">Solo lesioni papillari: cellule monotone con lieve ingrandimento cellulare e nucleare, senza variazione di dimensione, forma o cromatina (WHO 2022).</span>
                 </button>
                 <button type="button" class="option-btn" data-grade="lieve" aria-pressed="false" onclick="setGrade('lieve')">
                   <span class="option-btn-title">Lieve / Basso grado (LG)</span>
@@ -1263,6 +1275,14 @@
               <div class="field-group">
                 <span class="control-label">Contesto morfologico, trappole e stato IHC (opzionale)</span>
                 <div class="check-grid">
+                  <div class="field-group">
+                    <label class="control-label" for="sel-history-uc">Storia di carcinoma uroteliale (criterio WHO 2022 per PUNLMP e papilloma)</label>
+                    <select id="sel-history-uc" data-tri="historyUC" onchange="setTri('historyUC', this.value)">
+                      <option value="">&mdash; Non valutato &mdash;</option>
+                      <option value="assente">Assente</option>
+                      <option value="presente">Presente</option>
+                    </select>
+                  </div>
                   <div class="field-group">
                     <label class="control-label" for="sel-inflammation">Flogosi intraepiteliale o post-terapia (BCG / RT / MMC)</label>
                     <select id="sel-inflammation" data-tri="inflammation" onchange="setTri('inflammation', this.value)">
@@ -1626,6 +1646,7 @@
             <ul class="detail-list">
               <li>Il grading a due livelli (LG vs HG) della WHO 2022 si correla direttamente con <strong>TPS</strong>, focalizzato sull&rsquo;identificazione del carcinoma uroteliale di alto grado (HGUC).</li>
               <li><strong>Criteri TPS per HGUC:</strong> almeno <strong>5&ndash;10 cellule uroteliali</strong> ben conservate con rapporto <strong>N:C &ge; 0,7</strong>, ipercromasia moderata-severa, cromatina grossolana e membrana nucleare irregolare.</li>
+              <li><strong>Low-grade urothelial neoplasm (LGUN):</strong> categoria TPS che comprende papilloma, PUNLMP e carcinoma uroteliale di basso grado, che la citologia non riconosce in modo affidabile.</li>
               <li><strong>Attenzione al tratto superiore:</strong> cellule di pelvi, uretra e collo vescicale hanno fisiologicamente nuclei più ampi e citoplasma meno chiaro.</li>
             </ul>
           </div>
@@ -1670,12 +1691,15 @@
       mp: null,
       lvi: null,
       cisAssoc: null,
+      growth: null,
+      historyUC: null,
       ihcSummary: `none`
     };
 
     var ENUMS = {
       arch: [`piatta`, `papillare`, `invasiva`],
-      grade: [`assente`, `reattivo`, `lieve`, `alto`],
+      grade: [`assente`, `reattivo`, `monotono`, `lieve`, `alto`],
+      growth: [`esofitica`, `invertita`],
       invasion: [`integra`, `lamina_propria`, `detrusore`, `indeterminato`],
       pt1Anat: [`sopra_mm`, `entro_mm`, `oltre_mm`, `non_valutabile`],
       subtypeName: [`nested`, `large_nested`, `tubulare_microcistico`, `micropapillare`, `linfoepitelioma_like`, `plasmacitoide`, `giant_cell`, `lipid_rich`, `clear_cell`, `sarcomatoide`, `poorly_differentiated`],
@@ -1688,11 +1712,12 @@
       invasiva: [`fronte_irregolare`, `pattern_blando`, `tangenziale_sospetto`]
     };
 
-    var TRI_FIELDS = [`inflammation`, `tangential`, `blandSubtype`, `mp`, `lvi`, `cisAssoc`];
+    var TRI_FIELDS = [`inflammation`, `tangential`, `blandSubtype`, `mp`, `lvi`, `cisAssoc`, `historyUC`];
 
     var GRADE_NAMES = {
       assente: `Assente (normale)`,
       reattivo: `Reattivo / Rigenerativo`,
+      monotono: `Lieve ingrandimento monotono, senza variazione (PUNLMP)`,
       lieve: `Lieve / Basso grado`,
       alto: `Marcato / Alto grado`
     };
@@ -1751,6 +1776,7 @@
       s.polarity = s.arch && POLARITY_IDS[s.arch].indexOf(src.polarity) !== -1 ? src.polarity : null;
       s.grade = normalizeEnum(src.grade, ENUMS.grade);
       s.invasion = normalizeEnum(src.invasion, ENUMS.invasion);
+      s.growth = s.arch === `papillare` ? normalizeEnum(src.growth, ENUMS.growth) : null;
       /* Nessun arrotondamento: le soglie (5%, 0,5 mm, 1,0 mm) si confrontano sul valore inserito */
       s.hgPct = normalizeNum(src.hgPct, 0, 100);
       s.pt1Mm = normalizeNum(src.pt1Mm, 0.01, 20);
@@ -1807,11 +1833,15 @@
       if (s.arch === `invasiva` && s.invasion === `integra`) {
         conflicts.push(`Architettura “invasiva / infiltrante” con membrana basale “integra”: le due risposte si escludono. Se l’invasione non è dimostrabile, usare “Indeterminato per invasione”.`);
       }
-      if (invasionClaimed && (s.grade === `assente` || s.grade === `reattivo`)) {
+      if (invasionClaimed && (s.grade === `assente` || s.grade === `reattivo` || s.grade === `monotono`)) {
         conflicts.push(`Invasione accertata o sospetta con grado citonucleare “${GRADE_NAMES[s.grade]}”: un carcinoma invasivo presuppone atipia neoplastica (basso o alto grado). Rivedere il passo 3 o il passo 4.`);
       }
       if (s.invasion === `detrusore` && s.mp === `assente`) {
         conflicts.push(`Invasione del detrusore (pT2) con muscolare propria dichiarata assente nel campione.`);
+      }
+
+      if (s.grade === `monotono` && s.arch === `piatta`) {
+        conflicts.push(`Grado \u201cLieve ingrandimento monotono (PUNLMP)\u201d con lesione piatta: l\u2019opzione descrive la citologia della PUNLMP ed è valida solo per le lesioni papillari.`);
       }
 
       if (s.arch === `piatta`) {
@@ -1833,7 +1863,7 @@
         if (s.grade === `reattivo`) {
           conflicts.push(`Grado “Reattivo / Rigenerativo” con architettura papillare: combinazione non prevista dalla checklist (considerare cistite papillare / polipoide).`);
         }
-        if (s.polarity === `papille_normali` && (s.grade === `lieve` || s.grade === `alto`)) {
+        if (s.polarity === `papille_normali` && (s.grade === `lieve` || s.grade === `alto` || s.grade === `monotono`)) {
           conflicts.push(`Il passo 2 descrive un rivestimento identico all’urotelio normale, il passo 3 un’atipia (${GRADE_NAMES[s.grade]}): rivedere uno dei due.`);
         }
         if (s.polarity === `punlmp_ordinato` && s.grade === `alto`) {
@@ -1842,11 +1872,30 @@
         if (s.grade === `assente` && (s.polarity === `lg_lieve_disordine` || s.polarity === `hg_disordine`)) {
           conflicts.push(`Disordine architetturale con citologia “assente (normale)”: indicare il grado citonucleare della neoplasia papillare.`);
         }
+        /* WHO 2022, PUNLMP: "mild cytological atypia" (cellule monotone, lieve ingrandimento, nessuna variazione) */
+        if (s.grade === `assente` && s.polarity === `punlmp_ordinato`) {
+          conflicts.push(`Urotelio papillare ispessito con citologia \u201cassente (normale)\u201d: secondo la WHO 2022 la PUNLMP ha atipia lieve (cellule monotone con lieve ingrandimento, senza variazione). Scegliere \u201cLieve ingrandimento monotono\u201d al passo 3, oppure rivedere il passo 2.`);
+        }
+        if (s.grade === `monotono` && (s.polarity === `lg_lieve_disordine` || s.polarity === `hg_disordine`)) {
+          conflicts.push(`Disordine architetturale con citologia monotona senza variazione: questa citologia descrive la PUNLMP, che ha ordine architetturale stretto. Rivedere il passo 2 o il passo 3.`);
+        }
         if (s.hgPct !== null && s.grade === `alto` && s.hgPct < 5) {
           conflicts.push(`Grado “Marcato / Alto grado” con quota HG dichiarata ${s.hgPct}% (< 5%): se l’alto grado è focale, selezionare il grado lieve e indicare la quota.`);
         }
-        if (s.hgPct !== null && s.grade === `assente` && s.hgPct > 0) {
-          conflicts.push(`Quota HG ${s.hgPct}% con citologia “assente (normale)”.`);
+        if (s.hgPct !== null && (s.grade === `assente` || s.grade === `monotono`) && s.hgPct > 0) {
+          conflicts.push(`Quota HG ${s.hgPct}% con citologia \u201c${GRADE_NAMES[s.grade]}\u201d.`);
+        }
+        /* WHO 2022, PUNLMP, criterio essenziale: "no history of urothelial carcinoma" */
+        if (s.polarity === `punlmp_ordinato` && s.grade === `monotono` && s.invasion === `integra`) {
+          if (s.historyUC === `presente`) {
+            conflicts.push(`Storia di carcinoma uroteliale presente: l\u2019assenza di storia di carcinoma uroteliale è un criterio essenziale della PUNLMP (WHO 2022), che quindi non è applicabile.`);
+          } else if (!s.historyUC) {
+            missing.push(`Storia di carcinoma uroteliale (assente / presente): criterio essenziale della PUNLMP (WHO 2022).`);
+          }
+        }
+        /* Papilloma: esofitico 8120/0, invertito 8121/0 (WHO 2022) */
+        if (s.polarity === `papille_normali` && s.grade === `assente` && s.invasion === `integra` && !s.growth) {
+          missing.push(`Pattern di crescita del papilloma (esofitico / invertito): decide il codice ICD-O (8120/0 o 8121/0).`);
         }
         if (s.grade === `lieve` && s.hgPct === null && (s.invasion === `integra` || s.invasion === `indeterminato`)) {
           missing.push(`Quota della componente di alto grado (%), anche 0%: decide basso vs alto grado con la soglia del 5%.`);
@@ -2227,43 +2276,75 @@
           result.ihcNote = `Non richiesta di routine. In caso di pattern invertito, verificare l’assenza di infiltrazione stromale distruttiva.`;
         } else if (s.polarity === `punlmp_ordinato`) {
           result.status = `warn`;
-          result.stage = `PUNLMP`;
+          /* WHO 2022 (5ª ed.), Papillary urothelial neoplasm of low malignant potential */
+          result.stage = `pTa (PUNLMP)`;
           result.icdo = `8130/1`;
           result.chip = `PUNLMP`;
-          result.gradeLabel = `Assente / Minima`;
+          result.gradeLabel = `PUNLMP: non graduata (atipia lieve e monotona)`;
           result.title = `Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)`;
           result.svgMode = `papillary_punlmp`;
-          result.schematicCaption = `Papille rivestite da urotelio ispessito (> 7 strati) con architettura strettamente ordinata e assenza di atipia.`;
+          result.schematicCaption = `Papille rivestite da urotelio ispessito o più cellulato, con architettura strettamente ordinata e atipia lieve e monotona.`;
           result.criteria = [
-            `Papille sottili e non fuse (o nidi invertiti ben circoscritti) rivestite da urotelio ispessito (> 7 strati).`,
-            `Polarità strettamente ordinata, assenza di atipia citologica o variazione nucleare minima uniforme.`,
-            `Mitosi assenti o rare e confinate allo strato basale; tassi di recidiva e progressione inferiori al pTa LG.`
+            `Strutture papillari fibrovascolari (anche ramificate) o nidi invertiti, rivestite da urotelio ispessito o con aumento della cellularità.`,
+            `Cellule monotone con lieve ingrandimento cellulare e nucleare, senza variazione di dimensione, forma o pattern cromatinico (atipia lieve, WHO 2022).`,
+            `Criterio essenziale: nessuna storia di carcinoma uroteliale. Tassi di recidiva e progressione inferiori al pTa LG; stadio pTa.`
           ];
           result.dd = [
             `Papilloma uroteliale (rivestimento di spessore normale ≤ 7 strati).`,
             `Carcinoma uroteliale papillare di basso grado (pTa LG: presenza di lieve disordine e atipia nucleare riconoscibile).`
           ];
           result.ihcNote = `Diagnosi esclusivamente morfologica; l’IHC non distingue in modo affidabile PUNLMP da pTa LG.`;
+        } else if (s.growth === `invertita`) {
+          /* WHO 2022 (5ª ed.), Inverted urothelial papilloma */
+          result.status = `ok`;
+          result.stage = `Benigno`;
+          result.icdo = `8121/0`;
+          result.chip = `Papilloma invertito`;
+          result.gradeLabel = `Assente`;
+          result.title = `Papilloma uroteliale invertito`;
+          result.svgMode = `papillary_papilloma`;
+          result.schematicCaption = `Cordoni uroteliali anastomizzati di spessore normale con crescita endofitica a margine netto nella lamina propria.`;
+          result.criteria = [
+            `Cordoni e trabecole uroteliali anastomizzati di spessore normale (5\u201310 cellule), con polarità conservata e crescita endofitica dall\u2019urotelio di superficie nella lamina propria.`,
+            `Strato basale periferico a palizzata e cellule centrali disposte a corrente; margine della lesione nettamente delimitato.`,
+            `Nessuna atipia citologica; mitosi rare e basali; componente esofitica di superficie solo minima.`
+          ];
+          result.dd = [
+            `PUNLMP o carcinoma uroteliale con crescita invertita (cordoni spessi o strutture endofitiche nodulari).`,
+            `Carcinoma uroteliale invasivo con crescita invertita (atipia marcata, mitosi atipiche, margine infiltrativo nella lamina propria).`,
+            `Nidi di von Brunn floridi / cistite cistica.`
+          ];
+          result.ihcNote = `Non necessaria; se eseguita, il papilloma invertito è CK20 negativo, con espressione di p53 e indice Ki-67 bassi (WHO 2022).`;
+          if (s.historyUC === `presente`) {
+            alerts.push(`Storia di carcinoma uroteliale presente: diagnosi di papilloma solo con estrema cautela ed esame dell\u2019intera lesione; il profilo molecolare può distinguere una recidiva da un papilloma clonalmente indipendente (WHO 2022).`);
+          } else if (!s.historyUC) {
+            alerts.push(`Storia di carcinoma uroteliale non valutata: se presente, la diagnosi di papilloma richiede estrema cautela ed esame dell\u2019intera lesione (WHO 2022).`);
+          }
         } else {
+          /* WHO 2022 (5ª ed.), Urothelial papilloma (esofitico) */
           result.status = `ok`;
           result.stage = `Benigno`;
           result.icdo = `8120/0`;
           result.chip = `Papilloma uroteliale`;
           result.gradeLabel = `Assente`;
-          result.title = `Papilloma uroteliale (esofitico o invertito)`;
+          result.title = `Papilloma uroteliale`;
           result.svgMode = `papillary_papilloma`;
-          result.schematicCaption = `Assi fibrovascolari delicati (o trabecole invertite) rivestiti da urotelio di spessore e citologia normali (≤ 7 strati).`;
+          result.schematicCaption = `Assi fibrovascolari delicati rivestiti da urotelio di spessore e citologia normali (\u2264 7 strati).`;
           result.criteria = [
-            `Papille semplici con assi fibrovascolari delicati non fusi o cordoni invertiti sottili anastomizzati.`,
-            `Rivestimento uroteliale di spessore fisiologico (≤ 7 strati) con cellule ad ombrello preservate.`,
-            `Citologia completamente normale; mitosi assenti.`
+            `Papille delicate con assi fibrovascolari sottili e crescita esofitica; ramificazioni possibili, senza fusione.`,
+            `Rivestimento uroteliale di spessore e cellularità normali (\u2264 7 strati), cellule orientate perpendicolarmente con polarità conservata.`,
+            `Citologia normale; mitosi assenti o rare e basali. Criterio essenziale: esame dell\u2019intera lesione.`
           ];
           result.dd = [
-            `PUNLMP (spessore aumentato > 7 strati).`,
-            `Cistite papillare / polipoide reattiva (assi edematosi con flogosi).`,
-            `Nidi di von Brunn floridi (nel papilloma invertito).`
+            `PUNLMP (urotelio ispessito o più cellulato, cellule monotone con lieve ingrandimento).`,
+            `Cistite papillare / polipoide reattiva (assi edematosi con flogosi).`
           ];
-          result.ihcNote = `Non necessaria (CK20 limitata alle cellule ad ombrello).`;
+          result.ihcNote = `Non necessaria (CK20 limitata alle cellule ad ombrello, CD44 basale).`;
+          if (s.historyUC === `presente`) {
+            alerts.push(`Storia di carcinoma uroteliale presente: diagnosi di papilloma solo con estrema cautela ed esame dell\u2019intera lesione; il profilo molecolare può distinguere una recidiva da un papilloma clonalmente indipendente (WHO 2022).`);
+          } else if (!s.historyUC) {
+            alerts.push(`Storia di carcinoma uroteliale non valutata: se presente, la diagnosi di papilloma richiede estrema cautela ed esame dell\u2019intera lesione (WHO 2022).`);
+          }
         }
       }
 
@@ -2277,6 +2358,12 @@
         lines.push(s.hgPct !== null
           ? `- Quota componente ad alto grado: ${s.hgPct}% (soglia WHO 2022: 5%)`
           : `- Quota componente ad alto grado: non quantificata`);
+      }
+      if (s.arch === `papillare` && s.growth) {
+        lines.push(`- Pattern di crescita: ${s.growth === `invertita` ? `invertito` : `esofitico`}`);
+      }
+      if (s.historyUC || result.chip === `PUNLMP` || result.chip === `Papilloma uroteliale` || result.chip === `Papilloma invertito`) {
+        lines.push(`- Storia di carcinoma uroteliale: ${triLabel(s.historyUC, `non valutata`)}`);
       }
       if (s.invasion === `lamina_propria`) {
         if (s.pt1Mm !== null) {
@@ -2359,13 +2446,13 @@
       papillare: [
         {
           id: `papille_normali`,
-          title: `Papille semplici o cordoni invertiti sottili (\u2264 7 strati)`,
+          title: `Papille semplici (\u2264 7 strati) o cordoni invertiti di spessore normale (5\u201310 cellule)`,
           desc: `Rivestimento identico all\u2019urotelio normale, assi fibrovascolari delicati non fusi.`
         },
         {
           id: `punlmp_ordinato`,
-          title: `Ispessimento papillare (> 7 strati), ordine stretto e monotonia`,
-          desc: `Polarità conservata, assenza di variazione citologica significativa, rare mitosi basali.`
+          title: `Urotelio papillare ispessito o più cellulato, ordine stretto e monotonia`,
+          desc: `Polarità conservata, cellule monotone senza variazione di dimensione, forma o cromatina; rare mitosi basali.`
         },
         {
           id: `lg_lieve_disordine`,
@@ -2472,29 +2559,29 @@
         id: `papilloma`,
         category: `papillare`,
         name: `Papilloma uroteliale (esofitico e invertito)`,
-        icdo: `8120/0`,
+        icdo: `8120/0 \u00b7 invertito 8121/0`,
         stage: `Benigno`,
         status: `ok`,
-        arch: `Papille semplici delicate non fuse, o cordoni endofitici sottili anastomizzati (invertito) con rivestimento \u2264 7 strati.`,
+        arch: `Esofitico: papille delicate non fuse con rivestimento \u2264 7 strati. Invertito: cordoni endofitici anastomizzati di spessore normale (5\u201310 cellule), componente esofitica minima.`,
         polarity: `Polarità conservata, cellule ad ombrello integre in superficie (o al centro delle trabecole nell\u2019invertito).`,
         cytology: `Citologia blanda identica all\u2019urotelio normale; mitosi assenti o rarissime basali.`,
         bm: `Integra; margine liscio espansivo nell\u2019invertito.`,
-        ihc: `CK20 solo ombrello; profilo wild-type. Uniche lesioni benigne con sezioni autonome dedicate nella WHO 2022.`,
-        preset: { arch: `papillare`, polarity: `papille_normali`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+        ihc: `Esofitico: CK20 solo ombrello, CD44 basale. Invertito: CK20 negativo, p53 e Ki-67 bassi. Cautela se storia di carcinoma uroteliale. Uniche lesioni benigne con sezioni autonome dedicate nella WHO 2022.`,
+        preset: { arch: `papillare`, polarity: `papille_normali`, grade: `assente`, growth: `esofitica`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
       },
       {
         id: `punlmp`,
         category: `papillare`,
         name: `PUNLMP (incluso pattern invertito)`,
         icdo: `8130/1`,
-        stage: `Basso potenziale`,
+        stage: `pTa (PUNLMP)`,
         status: `warn`,
-        arch: `Papille sottili prevalentemente non fuse con spessore aumentato (> 7 strati); variante invertita inclusa nello stesso capitolo WHO 2022.`,
+        arch: `Papille rivestite da urotelio ispessito o con aumento della cellularità; variante invertita inclusa nello stesso capitolo WHO 2022.`,
         polarity: `Polarità strettamente ordinata e monotona; maturazione preservata.`,
-        cytology: `Atipia assente o minima uniforme; nuclei piccoli regolari; rare mitosi limitate allo strato basale.`,
+        cytology: `Atipia lieve: cellule monotone con lieve ingrandimento cellulare e nucleare, senza variazione di dimensione, forma o cromatina; rare mitosi basali.`,
         bm: `Integra.`,
-        ihc: `Tassi di recidiva e progressione significativamente inferiori al pTa LG; categoria clinicamente rilevante mantenuta nella WHO 2022.`,
-        preset: { arch: `papillare`, polarity: `punlmp_ordinato`, grade: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
+        ihc: `Criterio essenziale: nessuna storia di carcinoma uroteliale. Tassi di recidiva e progressione inferiori al pTa LG; categoria clinicamente rilevante mantenuta nella WHO 2022. IHC (CK20, p53) poco utile.`,
+        preset: { arch: `papillare`, polarity: `punlmp_ordinato`, grade: `monotono`, growth: `esofitica`, historyUC: `assente`, hgPct: 0, invasion: `integra`, pt1Mm: 0.6, pt1Anat: `sopra_mm`, inflammation: false, tangential: false, blandSubtype: false, ihcSummary: `none` }
       },
       {
         id: `pta_lg`,
@@ -2935,6 +3022,11 @@
       }
 
       /* 5% threshold visibility & values */
+      var growthBox = document.getElementById(`growth-box`);
+      if (growthBox) growthBox.classList.toggle(`hidden`, appState.arch !== `papillare`);
+      var selGrowth = document.getElementById(`sel-growth`);
+      if (selGrowth) selGrowth.value = appState.growth || ``;
+
       var hgBox = document.getElementById(`hg-percent-box`);
       if (hgBox) {
         if (appState.arch === `papillare`) {
@@ -3105,7 +3197,13 @@
       if (appState.arch !== val) {
         appState.arch = val;
         appState.polarity = null; /* le opzioni del passo 2 dipendono dall'architettura */
+        if (val !== `papillare`) appState.growth = null; /* il pattern di crescita vale solo per i papillari */
       }
+      caseEdited();
+    }
+
+    function setGrowth(val) {
+      appState.growth = val === `esofitica` || val === `invertita` ? val : null;
       caseEdited();
     }
 
