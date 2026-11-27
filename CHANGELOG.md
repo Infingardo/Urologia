@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.5.1 — 2026-11-27
+
+Precisazioni di testo; nessun verdetto, stadio, grado o codice cambia.
+
+### README (segnalato da Codex via AI-Bridge#16 e verificato)
+- Regola del 5% nel pT1/pT2: l'avviso compare solo senza sottotipo dichiarato; con sottotipo il grado è alto per definizione.
+- Codice ICD-O del sottotipo: riportato solo in pT1/pT2, non in pTa né in pTis.
+
+### Testi più aderenti alla fonte (dalla revisione indipendente della 2.4.0)
+- Messaggio di contraddizione sulla quota HG con citologia normale: ripristinata la dicitura "assente (normale)" (la 2.4.0 l'aveva cambiata in "Assente (normale)").
+- Papilloma: "il profilo molecolare può aiutare a distinguere" (era "può distinguere"); criterio "lesione papillare esofitica solitaria" aggiunto. Papilloma invertito: l'avviso sulla storia di carcinoma uroteliale cita il capitolo del papilloma esofitico, l'unico che tratta il punto; nota IHC senza "non necessaria"; DD "atipia nucleare severa" (era "atipia marcata").
+- PUNLMP: etichetta del grado "PUNLMP (atipia lieve e monotona)" (era "PUNLMP: non graduata (…)").
+- Campo storia: "criterio per la PUNLMP, cautela per il papilloma". Scheda TPS: tolta l'abbreviazione LGUN, motivazione come nella fonte.
+- Pulsante "Lieve monotono (PUNLMP)" mostrato solo per le lesioni papillari (o se già selezionato).
+- Nota sulle versioni: 2.3.0 era il numero provvisorio della PR sull'impaginazione, che diventa 2.5.0.
+
 ## 2.5.0 — 2026-11-27
 
 Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi test del motore della 2.4.0).
