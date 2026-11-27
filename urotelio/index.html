@@ -116,9 +116,9 @@
       display: grid;
       gap: var(--space-xl);
       padding: var(--space-lg);
-      max-width: 1280px;
+      max-width: 1360px;
       margin: 0 auto;
-      overflow: hidden;
+      overflow-x: clip;
     }
     .page-grid * { min-width: 0; }
 
@@ -983,6 +983,97 @@
 
     .hidden { display: none !important; }
 
+    /* ===== Impaginazione compatta (PC in refertazione) ===== */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .page-grid { gap: var(--space-md); padding: var(--space-md) var(--space-lg); }
+    .app-header { padding: var(--space-md) var(--space-lg); gap: var(--space-sm); }
+    .app-header .title { font-size: 1.375rem; line-height: 1.2; }
+    .app-header .kicker { margin-bottom: 2px; }
+    .header-top-row { align-items: center; }
+    .nav-strip { padding-top: var(--space-xs); gap: var(--space-xs); }
+    .nav-link { min-height: 38px; padding: var(--space-xs) var(--space-md); }
+    .tab-panel[hidden] { display: none !important; }
+
+    .case-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm) var(--space-md);
+    }
+    details.preset-panel {
+      flex: 1 1 520px;
+      padding: var(--space-xs) var(--space-md);
+    }
+    details.preset-panel > summary,
+    details.fold > summary,
+    details.note-details > summary {
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      padding: var(--space-xs) 0;
+      list-style-position: inside;
+    }
+    details.preset-panel[open] > summary { margin-bottom: var(--space-xs); }
+    .toggle-desc {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      cursor: pointer;
+    }
+    .toggle-desc input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+    .steps-stack { gap: var(--space-sm); }
+    .step-card { padding: var(--space-md); gap: var(--space-sm); }
+    .step-title { font-size: 1rem; }
+    .option-grid { grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: var(--space-xs); }
+    .option-btn { padding: var(--space-sm) var(--space-md); align-content: center; }
+    .option-btn-title { font-size: 0.875rem; }
+    /* Descrizioni nascoste: restano nel tooltip del pulsante */
+    body:not(.show-desc) .option-btn-desc { display: none; }
+    details.note-details { padding: var(--space-xs) var(--space-md); font-size: 0.875rem; }
+    details.note-details > summary { color: inherit; font-weight: 400; }
+
+    .workspace-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-md); }
+    .verdict-card { gap: var(--space-sm); }
+    .verdict-title { font-size: 1.25rem; }
+    .kpi-mini { padding: var(--space-xs) var(--space-sm); }
+    .verdict-issues {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .verdict-issues .detail-list { font-size: 0.875rem; }
+    .verdict-issues[data-state="conflict"] { border-color: var(--error); border-left-width: 4px; }
+    .verdict-actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+    .btn-compact { min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem; }
+    .verdict-card .inline-feedback:empty { display: none; }
+    details.fold {
+      border-top: 1px solid var(--outline-variant);
+      padding-top: var(--space-xs);
+    }
+    details.fold > summary { color: var(--on-surface); }
+    .fold-body { display: grid; gap: var(--space-sm); padding: var(--space-xs) 0 var(--space-sm); }
+    .fold-body .detail-list { font-size: 0.875rem; }
+
+    @media (min-width: 901px) {
+      .verdict-column {
+        position: sticky;
+        top: var(--space-md);
+        max-height: calc(100vh - 2 * var(--space-md));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+    }
+
     /* Container queries for component cards */
     .card-wrapper { container-type: inline-size; }
     @container (max-width: 460px) {
@@ -1027,11 +1118,8 @@
       <header class="app-header">
         <div class="header-top-row">
           <div>
-            <p class="kicker">Uropatologia Diagnostica &middot; Classificazione WHO 2022 (5ª edizione)</p>
-            <h1 class="title">Checklist Decisionale delle Proliferazioni e Neoplasie Uroteliali</h1>
-            <p class="lede">
-              Strumento operativo per l&rsquo;inquadramento istologico di lesioni piatte, papillari e invasive: valutazione passo-passo, soglia del 5% per l&rsquo;alto grado, substaging pT1 (ROL e livello anatomico), trappole morfologiche e impiego selettivo dell&rsquo;IHC.
-            </p>
+            <p class="kicker">Uropatologia &middot; WHO 2022 (5ª ed.)</p>
+            <h1 class="title">Checklist delle proliferazioni e neoplasie uroteliali</h1>
           </div>
           <div class="header-actions">
             <button type="button" class="btn btn-secondary" id="btn-export-report" onclick="exportCurrentReport()">
@@ -1045,45 +1133,43 @@
           </div>
         </div>
 
-        <nav class="nav-strip" aria-label="Sezioni principali">
-          <a href="#checklist" class="nav-link is-active" onclick="setActiveNav(this)">
-            <span>1. Checklist &amp; Albero Decisionale</span>
+        <nav class="nav-strip" role="tablist" aria-label="Sezioni">
+          <a href="#checklist" class="nav-link is-active" role="tab" data-tab="checklist" onclick="return showTab('checklist')">
+            <span>Caso</span>
           </a>
-          <a href="#matrice" class="nav-link" onclick="setActiveNav(this)">
-            <span>2. Matrice Comparativa (10 Entità)</span>
+          <a href="#matrice" class="nav-link" role="tab" data-tab="matrice" onclick="return showTab('matrice')">
+            <span>Matrice delle entità</span>
           </a>
-          <a href="#trappole" class="nav-link" onclick="setActiveNav(this)">
-            <span>3. Trappole Morfologiche &amp; Sottotipi</span>
+          <a href="#trappole" class="nav-link" role="tab" data-tab="trappole" onclick="return showTab('trappole')">
+            <span>Trappole e sottotipi</span>
           </a>
-          <a href="#immunoistochimica" class="nav-link" onclick="setActiveNav(this)">
-            <span>4. Pannello IHC (CK20, p53, CD44) &amp; TPS</span>
+          <a href="#immunoistochimica" class="nav-link" role="tab" data-tab="immunoistochimica" onclick="return showTab('immunoistochimica')">
+            <span>IHC e TPS</span>
           </a>
         </nav>
       </header>
 
       <!-- SEZIONE 1: CHECKLIST & ALBERO DECISIONALE -->
-      <section id="checklist" class="section-block" aria-labelledby="heading-checklist">
-        <div class="section-header">
-          <div>
-            <h2 id="heading-checklist" class="section-title">1. Albero Decisionale &amp; Checklist Passo-Passo</h2>
-            <p class="section-subtitle">
-              La morfologia su ematossilina-eosina è il fondamento tassonomico. Seleziona i parametri istologici o carica uno scenario di riferimento.
-            </p>
-          </div>
-        </div>
+      <section id="checklist" class="section-block tab-panel" aria-labelledby="heading-checklist">
+        <h2 id="heading-checklist" class="sr-only">Caso: checklist e verdetto</h2>
 
-        <!-- Preset Scenari -->
-        <div class="preset-panel">
-          <span class="detail-group-title">Scenari diagnostici di riferimento (caricamento rapido)</span>
-          <div class="preset-row" id="preset-row">
-            <button type="button" class="preset-btn" data-preset="pTa_LG" onclick="applyPreset('pTa_LG')">pTa Basso Grado puro</button>
-            <button type="button" class="preset-btn" data-preset="pTa_HG_5" onclick="applyPreset('pTa_HG_5')">Papillare eterogeneo (HG 8% &ge; 5%)</button>
-            <button type="button" class="preset-btn" data-preset="pTa_LG_minorHG" onclick="applyPreset('pTa_LG_minorHG')">Papillare con focus HG 3% (&lt; 5%)</button>
-            <button type="button" class="preset-btn" data-preset="CIS_denudato" onclick="applyPreset('CIS_denudato')">CIS piatto / Clinging (pTis)</button>
-            <button type="button" class="preset-btn" data-preset="reattiva_BCG" onclick="applyPreset('reattiva_BCG')">Atipia reattiva post-BCG</button>
-            <button type="button" class="preset-btn" data-preset="pT1_ROL2" onclick="applyPreset('pT1_ROL2')">Carcinoma invasivo pT1 (ROL2)</button>
-            <button type="button" class="preset-btn" data-preset="tangenziale" onclick="applyPreset('tangenziale')">Sospetto taglio tangenziale pTa</button>
-          </div>
+        <div class="case-toolbar">
+          <details class="preset-panel">
+            <summary>Scenari di riferimento</summary>
+            <div class="preset-row" id="preset-row">
+              <button type="button" class="preset-btn" data-preset="pTa_LG" onclick="applyPreset('pTa_LG')">pTa Basso Grado puro</button>
+              <button type="button" class="preset-btn" data-preset="pTa_HG_5" onclick="applyPreset('pTa_HG_5')">Papillare eterogeneo (HG 8% &ge; 5%)</button>
+              <button type="button" class="preset-btn" data-preset="pTa_LG_minorHG" onclick="applyPreset('pTa_LG_minorHG')">Papillare con focus HG 3% (&lt; 5%)</button>
+              <button type="button" class="preset-btn" data-preset="CIS_denudato" onclick="applyPreset('CIS_denudato')">CIS piatto / Clinging (pTis)</button>
+              <button type="button" class="preset-btn" data-preset="reattiva_BCG" onclick="applyPreset('reattiva_BCG')">Atipia reattiva post-BCG</button>
+              <button type="button" class="preset-btn" data-preset="pT1_ROL2" onclick="applyPreset('pT1_ROL2')">Carcinoma invasivo pT1 (ROL2)</button>
+              <button type="button" class="preset-btn" data-preset="tangenziale" onclick="applyPreset('tangenziale')">Sospetto taglio tangenziale pTa</button>
+            </div>
+          </details>
+          <label class="toggle-desc">
+            <input type="checkbox" id="chk-show-desc" onchange="setShowDesc(this.checked)">
+            <span>Mostra le descrizioni delle opzioni</span>
+          </label>
         </div>
 
         <div class="workspace-grid">
@@ -1121,9 +1207,10 @@
                   <option value="invertita">Invertito (endofitico)</option>
                 </select>
               </div>
-              <div class="callout" id="upump-note">
-                <strong>Aggiornamento WHO 2022 (UPUMP / AUP abolita):</strong> la categoria &ldquo;proliferazione uroteliale papillare a potenziale maligno indeterminato&rdquo; (2016) non è più riconosciuta come entità autonoma; tali lesioni ondulanti sono oggi classificate come pTa LG precoci o estensioni marginali di carcinoma papillare.
-              </div>
+              <details class="callout note-details" id="upump-note">
+                <summary><strong>Aggiornamento WHO 2022 (UPUMP / AUP abolita)</strong></summary>
+                La categoria &ldquo;proliferazione uroteliale papillare a potenziale maligno indeterminato&rdquo; (2016) non è più riconosciuta come entità autonoma; tali lesioni ondulanti sono oggi classificate come pTa LG precoci o estensioni marginali di carcinoma papillare.
+              </details>
             </div>
 
             <!-- PASSO 2: SPESSORE E POLARITÀ -->
@@ -1271,9 +1358,18 @@
                 </div>
               </div>
 
-              <!-- Modificatori di contesto clinico-morfologico e IHC -->
+            </div>
+
+            <!-- CONTESTO E IHC -->
+            <div class="step-card">
+              <div class="step-head">
+                <div class="step-badge-row">
+                  <span class="step-num">CONTESTO</span>
+                  <h3 class="step-title">Contesto morfologico e IHC</h3>
+                </div>
+                <span class="chip" data-status="info">Richiesto solo se il verdetto lo chiede</span>
+              </div>
               <div class="field-group">
-                <span class="control-label">Contesto morfologico, trappole e stato IHC (opzionale)</span>
                 <div class="check-grid">
                   <div class="field-group">
                     <label class="control-label" for="sel-history-uc">Storia di carcinoma uroteliale (criterio WHO 2022 per PUNLMP e papilloma)</label>
@@ -1389,7 +1485,7 @@
 
           </div>
 
-          <!-- COLONNA DESTRA: VERDETTO DIAGNOSTICO LIVE -->
+          <!-- COLONNA DESTRA: VERDETTO (fisso durante lo scorrimento su schermo largo) -->
           <div class="verdict-column">
             <div class="status-card verdict-card card-wrapper" id="verdict-card" data-status="info">
               <div class="verdict-header">
@@ -1415,74 +1511,79 @@
                 </div>
               </div>
 
-              <!-- Schema Istologico Dinamico SVG -->
-              <div class="schematic-box">
-                <div class="detail-group-title" style="padding: 0 var(--space-xs);">Schema istologico dinamico degli strati vescicali</div>
-                <svg id="histology-svg" viewBox="0 0 540 220" role="img" aria-label="Rappresentazione schematica degli strati della parete vescicale"></svg>
-                <div class="schematic-caption" id="schematic-caption">
-                  Architettura papillare con membrana basale integra (linea continua) e citologia di basso grado.
-                </div>
+              <!-- Campi mancanti o contraddizioni: sempre in vista finché il verdetto non è emesso -->
+              <div class="verdict-issues" id="verdict-issues">
+                <h4 class="detail-group-title" id="verdict-issues-title">Campi da valutare</h4>
+                <ul class="detail-list" id="verdict-issues-list"></ul>
               </div>
 
               <!-- Avvisi dinamici (trappole / discrepanze / cut-off) -->
               <div class="callout hidden" id="verdict-alert-box" data-status="alert"></div>
 
-              <div>
-                <h4 class="detail-group-title" id="verdict-criteria-title">Criteri morfologici chiave</h4>
-                <ul class="detail-list" id="verdict-criteria"></ul>
-              </div>
-
-              <div>
-                <h4 class="detail-group-title">Diagnosi differenziali principali</h4>
-                <ul class="detail-list" id="verdict-dd"></ul>
-              </div>
-
-              <div>
-                <h4 class="detail-group-title">Indicazione IHC mirata</h4>
-                <p id="verdict-ihc" style="margin: 0; font-size: 0.9375rem;"></p>
-              </div>
-
-              <!-- Bozza referto strutturato -->
-              <div class="report-box">
-                <div class="step-head">
-                  <span class="detail-group-title" style="margin: 0;">Bozza referto strutturato (WHO 2022)</span>
-                  <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-                    <button type="button" class="btn btn-secondary" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="copyReportText()">
-                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                      <span>Copia referto</span>
-                    </button>
-                    <button type="button" class="btn btn-primary" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="saveCaseToLog()">
-                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/><line x1="12" x2="12" y1="7" y2="13"/><line x1="15" x2="9" y1="10" y2="10"/></svg>
-                      <span>Salva caso</span>
-                    </button>
-                  </div>
-                </div>
-                <pre class="report-text" id="report-preview"></pre>
-                <div class="inline-feedback" id="copy-feedback" aria-live="polite"></div>
-              </div>
-            </div>
-
-            <!-- Archivio Casi della Sessione (persistito con notebookAppApi) -->
-            <div class="card">
-              <div class="step-head" style="margin-bottom: var(--space-sm);">
-                <div>
-                  <h4 class="step-title" style="font-size: 1rem;">Casi salvati nella sessione</h4>
-                  <p style="margin: 0; font-size: 0.8125rem; color: var(--on-surface-variant);">
-                    Salva i casi valutati per confrontarli o riprenderli al riavvio.
-                  </p>
-                </div>
-                <button type="button" class="btn btn-ghost" id="btn-clear-log" data-armed="false" style="min-height: 36px; padding: var(--space-xs) var(--space-sm); font-size: 0.8125rem;" onclick="clearCaseLog(this)">
-                  <span>Svuota elenco</span>
+              <div class="verdict-actions">
+                <button type="button" class="btn btn-secondary btn-compact" onclick="copyReportText()">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <span>Copia referto</span>
+                </button>
+                <button type="button" class="btn btn-primary btn-compact" onclick="saveCaseToLog()">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/><line x1="12" x2="12" y1="7" y2="13"/><line x1="15" x2="9" y1="10" y2="10"/></svg>
+                  <span>Salva caso</span>
                 </button>
               </div>
-              <div class="saved-list" id="saved-cases-list"></div>
+              <div class="inline-feedback" id="copy-feedback" aria-live="polite"></div>
+
+              <div class="verdict-details" id="verdict-details">
+                <details class="fold" id="fold-criteria">
+                  <summary id="verdict-criteria-title">Criteri morfologici chiave e diagnosi differenziali</summary>
+                  <div class="fold-body">
+                    <ul class="detail-list" id="verdict-criteria"></ul>
+                    <h4 class="detail-group-title">Diagnosi differenziali principali</h4>
+                    <ul class="detail-list" id="verdict-dd"></ul>
+                  </div>
+                </details>
+
+                <details class="fold" id="fold-ihc">
+                  <summary>Indicazione IHC mirata</summary>
+                  <div class="fold-body">
+                    <p id="verdict-ihc" style="margin: 0; font-size: 0.9375rem;"></p>
+                  </div>
+                </details>
+
+                <details class="fold" id="fold-schema">
+                  <summary>Schema istologico degli strati vescicali</summary>
+                  <div class="fold-body schematic-box">
+                    <svg id="histology-svg" viewBox="0 0 540 220" role="img" aria-label="Rappresentazione schematica degli strati della parete vescicale"></svg>
+                    <div class="schematic-caption" id="schematic-caption"></div>
+                  </div>
+                </details>
+              </div>
+
+              <details class="fold" id="fold-report">
+                <summary>Bozza referto strutturato (WHO 2022)</summary>
+                <div class="fold-body">
+                  <pre class="report-text" id="report-preview"></pre>
+                </div>
+              </details>
+
+              <details class="fold" id="fold-saved">
+                <summary>Casi salvati (<span id="saved-count">0</span>)</summary>
+                <div class="fold-body">
+                  <div class="inline-row" style="justify-content: space-between;">
+                    <span style="font-size: 0.8125rem; color: var(--on-surface-variant);">Solo i reperti selezionati, nel browser (al massimo 12).</span>
+                    <button type="button" class="btn btn-ghost btn-mini" id="btn-clear-log" data-armed="false" onclick="clearCaseLog(this)">
+                      <span>Svuota elenco</span>
+                    </button>
+                  </div>
+                  <div class="saved-list" id="saved-cases-list"></div>
+                </div>
+              </details>
             </div>
           </div>
         </div>
       </section>
 
       <!-- SEZIONE 2: MATRICE COMPARATIVA DELLE 10 ENTITÀ -->
-      <section id="matrice" class="section-block" aria-labelledby="heading-matrice">
+      <section id="matrice" class="section-block tab-panel" hidden aria-labelledby="heading-matrice">
         <div class="section-header">
           <div>
             <h2 id="heading-matrice" class="section-title">2. Matrice Comparativa delle 10 Entità Uroteliali (WHO 2022)</h2>
@@ -1524,7 +1625,7 @@
       </section>
 
       <!-- SEZIONE 3: TRAPPOLE MORFOLOGICHE & SOTTOTIPI -->
-      <section id="trappole" class="section-block" aria-labelledby="heading-trappole">
+      <section id="trappole" class="section-block tab-panel" hidden aria-labelledby="heading-trappole">
         <div class="section-header">
           <div>
             <h2 id="heading-trappole" class="section-title">3. Trappole Morfologiche, Artefatti e Sottotipi Ingannevoli</h2>
@@ -1550,7 +1651,7 @@
       </section>
 
       <!-- SEZIONE 4: RUOLO LIMITATO DELL'IHC & TPS -->
-      <section id="immunoistochimica" class="section-block" aria-labelledby="heading-ihc">
+      <section id="immunoistochimica" class="section-block tab-panel" hidden aria-labelledby="heading-ihc">
         <div class="section-header">
           <div>
             <h2 id="heading-ihc" class="section-title">4. Ruolo Selettivo dell&rsquo;Immunoistochimica &amp; Correlazione TPS</h2>
@@ -2734,6 +2835,7 @@
       simCk20: `ombrello`,
       simP53: `wildtype`,
       simCd44: `full`,
+      showDesc: false,
       savedCases: []
     });
 
@@ -2766,7 +2868,7 @@
        ========================================================================= */
 
     var STORAGE_KEY = `uro-who2022-checklist-v2`;
-    var PERSISTED_KEYS = [`savedCases`, `matrixFilter`, `simCk20`, `simP53`, `simCd44`];
+    var PERSISTED_KEYS = [`savedCases`, `matrixFilter`, `simCk20`, `simP53`, `simCd44`, `showDesc`];
 
     function persistedSubset() {
       var out = {};
@@ -2817,6 +2919,7 @@
       if ([`ombrello`, `full`, `negativo`].indexOf(saved.simCk20) !== -1) appState.simCk20 = saved.simCk20;
       if ([`wildtype`, `over`, `null`].indexOf(saved.simP53) !== -1) appState.simP53 = saved.simP53;
       if ([`full`, `basale`].indexOf(saved.simCd44) !== -1) appState.simCd44 = saved.simCd44;
+      if (typeof saved.showDesc === `boolean`) appState.showDesc = saved.showDesc;
     }
 
     /* =========================================================================
@@ -2995,7 +3098,7 @@
       for (var j = 0; j < list.length; j++) {
         var opt = list[j];
         var pressed = opt.id === appState.polarity ? `true` : `false`;
-        html += `<button type="button" class="option-btn" data-pol="${opt.id}" aria-pressed="${pressed}" onclick="setPolarity('${opt.id}')">`;
+        html += `<button type="button" class="option-btn" data-pol="${opt.id}" aria-pressed="${pressed}" title="${escapeHtml(opt.desc)}" onclick="setPolarity('${opt.id}')">`;
         html += `<span class="option-btn-title">${opt.title}</span>`;
         html += `<span class="option-btn-desc">${opt.desc}</span>`;
         html += `</button>`;
@@ -3141,7 +3244,6 @@
       var icEl = document.getElementById(`kpi-icdo`);
       var capEl = document.getElementById(`schematic-caption`);
       var alertEl = document.getElementById(`verdict-alert-box`);
-      var critTitleEl = document.getElementById(`verdict-criteria-title`);
       var critEl = document.getElementById(`verdict-criteria`);
       var ddEl = document.getElementById(`verdict-dd`);
       var ihcEl = document.getElementById(`verdict-ihc`);
@@ -3172,7 +3274,21 @@
         }
       }
 
-      if (critTitleEl) critTitleEl.textContent = res.criteriaTitle;
+      var issued = res.verdictState === `issued`;
+      var issuesBox = document.getElementById(`verdict-issues`);
+      var issuesTitle = document.getElementById(`verdict-issues-title`);
+      var issuesList = document.getElementById(`verdict-issues-list`);
+      var detailsBox = document.getElementById(`verdict-details`);
+      if (issuesBox) {
+        issuesBox.classList.toggle(`hidden`, issued);
+        issuesBox.setAttribute(`data-state`, res.verdictState);
+      }
+      if (issuesTitle) issuesTitle.textContent = res.criteriaTitle;
+      if (issuesList) {
+        issuesList.innerHTML = issued ? `` : res.criteria.map(function (c) { return `<li>${escapeHtml(c)}</li>`; }).join(``);
+      }
+      if (detailsBox) detailsBox.classList.toggle(`hidden`, !issued);
+
       if (critEl) {
         critEl.innerHTML = res.criteria.map(function (c) { return `<li>${escapeHtml(c)}</li>`; }).join(``);
       }
@@ -3470,6 +3586,8 @@
     }
 
     function renderSavedCases() {
+      var countEl = document.getElementById(`saved-count`);
+      if (countEl) countEl.textContent = String((appState.savedCases || []).length);
       var list = document.getElementById(`saved-cases-list`);
       if (!list) return;
       if (!appState.savedCases || appState.savedCases.length === 0) {
@@ -3561,8 +3679,7 @@
           applyCase(p);
           appState.activePreset = ``;
           updateVerdict();
-          var el = document.getElementById(`checklist`);
-          if (el) el.scrollIntoView({ behavior: `smooth` });
+          showTab(`checklist`);
           break;
         }
       }
@@ -3671,12 +3788,43 @@
       persistState();
     }
 
-    function setActiveNav(el) {
-      var links = document.querySelectorAll(`.nav-link`);
-      for (var i = 0; i < links.length; i++) {
-        links[i].classList.remove(`is-active`);
+    /* Schede: una sezione alla volta (Caso, Matrice, Trappole, IHC e TPS) */
+    var TAB_IDS = [`checklist`, `matrice`, `trappole`, `immunoistochimica`];
+
+    function showTab(id) {
+      if (TAB_IDS.indexOf(id) === -1) id = `checklist`;
+      for (var i = 0; i < TAB_IDS.length; i++) {
+        var panel = document.getElementById(TAB_IDS[i]);
+        if (panel) panel.hidden = TAB_IDS[i] !== id;
       }
-      if (el) el.classList.add(`is-active`);
+      var links = document.querySelectorAll(`.nav-link[data-tab]`);
+      for (var j = 0; j < links.length; j++) {
+        var active = links[j].getAttribute(`data-tab`) === id;
+        links[j].classList.toggle(`is-active`, active);
+        links[j].setAttribute(`aria-selected`, active ? `true` : `false`);
+      }
+      try {
+        if (window.location.hash !== `#` + id) history.replaceState(null, ``, `#` + id);
+      } catch (e) { /* file:// o sandbox: la scheda funziona comunque */ }
+      window.scrollTo(0, 0);
+      return false;
+    }
+
+    /* Descrizioni delle opzioni: nascoste di default, sempre disponibili nel tooltip */
+    function setShowDesc(on) {
+      appState.showDesc = Boolean(on);
+      document.body.classList.toggle(`show-desc`, appState.showDesc);
+      var chk = document.getElementById(`chk-show-desc`);
+      if (chk) chk.checked = appState.showDesc;
+      persistState();
+    }
+
+    function addDescTooltips(root) {
+      var btns = (root || document).querySelectorAll(`.option-btn`);
+      for (var i = 0; i < btns.length; i++) {
+        var d = btns[i].querySelector(`.option-btn-desc`);
+        if (d && !btns[i].hasAttribute(`title`)) btns[i].setAttribute(`title`, d.textContent.trim());
+      }
     }
 
     /* =========================================================================
@@ -3701,6 +3849,11 @@
       renderSavedCases();
       updateVerdict();
       updateIhcSimulator();
+      addDescTooltips(document);
+      document.body.classList.toggle(`show-desc`, Boolean(appState.showDesc));
+      var chkDesc = document.getElementById(`chk-show-desc`);
+      if (chkDesc) chkDesc.checked = Boolean(appState.showDesc);
+      showTab((window.location.hash || ``).replace(`#`, ``) || `checklist`);
 
       if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
         window.notebookAppApi.notifyAppReady();
