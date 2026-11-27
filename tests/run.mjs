@@ -102,8 +102,9 @@ const cases = [
   ['displasia', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', invasion: 'integra' }, 'Displasia uroteliale', 'Preneoplastico'],
   ['atipia signif. indeterminato', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', invasion: 'integra', inflammation: 'presente' }, 'Atipia uroteliale di significato indeterminato (CIS non escludibile)', 'Indeterminato'],
   ['CIS', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'integra' }, 'Carcinoma uroteliale in situ (CIS / pTis)', 'pTis'],
-  ['papilloma', { arch: 'papillare', polarity: 'papille_normali', grade: 'assente', invasion: 'integra' }, 'Papilloma uroteliale (esofitico o invertito)', 'Benigno'],
-  ['PUNLMP', { arch: 'papillare', polarity: 'punlmp_ordinato', grade: 'assente', invasion: 'integra' }, 'Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)', 'PUNLMP'],
+  ['papilloma esofitico', { arch: 'papillare', polarity: 'papille_normali', grade: 'assente', growth: 'esofitica', invasion: 'integra' }, 'Papilloma uroteliale', 'Benigno'],
+  ['papilloma invertito', { arch: 'papillare', polarity: 'papille_normali', grade: 'assente', growth: 'invertita', invasion: 'integra' }, 'Papilloma uroteliale invertito', 'Benigno'],
+  ['PUNLMP', { arch: 'papillare', polarity: 'punlmp_ordinato', grade: 'monotono', historyUC: 'assente', invasion: 'integra' }, 'Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)', 'pTa (PUNLMP)'],
   ['pTa LG 0%', { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra', hgPct: 0 }, 'Carcinoma uroteliale papillare non invasivo di basso grado (pTa LG)', 'pTa LG'],
   ['pTa LG + HG 4%', { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra', hgPct: 4 }, 'Carcinoma uroteliale papillare non invasivo di basso grado con componente HG < 5%', 'pTa LG'],
   ['pTa HG per soglia 5%', { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra', hgPct: 5 }, 'Carcinoma uroteliale papillare non invasivo di alto grado (pTa HG)', 'pTa HG'],
@@ -209,6 +210,60 @@ test('pT1 papillare LG con HG >= 5%: avviso, grado non cambiato in silenzio', ()
   issued(r);
   assert.equal(r.gradeLabel, 'Basso grado (LG)');
   assert.ok(r.alerts.some((a) => /solo ai papillari non invasivi/.test(a)));
+});
+
+/* ---------- Papilloma, papilloma invertito, PUNLMP (WHO 2022, capitoli dedicati) ---------- */
+const pap = { arch: 'papillare', polarity: 'papille_normali', grade: 'assente', invasion: 'integra' };
+const pun = { arch: 'papillare', polarity: 'punlmp_ordinato', grade: 'monotono', invasion: 'integra' };
+test('papilloma senza pattern di crescita: incompleto (decide 8120/0 vs 8121/0)', () => {
+  const r = ev(pap);
+  incomplete(r);
+  assert.match(r.missing.join(' '), /Pattern di crescita del papilloma/);
+});
+test('papilloma esofitico 8120/0, invertito 8121/0 (prima un solo ramo 8120/0)', () => {
+  assert.equal(ev({ ...pap, growth: 'esofitica' }).icdo, '8120/0');
+  const inv = ev({ ...pap, growth: 'invertita' });
+  assert.equal(inv.icdo, '8121/0');
+  assert.match(inv.ihcNote, /CK20 negativo/);
+  assert.match(report(inv), /Pattern di crescita: invertito/);
+});
+test('papilloma: avviso se storia di carcinoma uroteliale presente o non valutata, nessuno se assente', () => {
+  assert.ok(ev({ ...pap, growth: 'esofitica', historyUC: 'presente' }).alerts.some((a) => /estrema cautela/.test(a)));
+  assert.ok(ev({ ...pap, growth: 'esofitica' }).alerts.some((a) => /non valutata/.test(a)));
+  assert.ok(!ev({ ...pap, growth: 'esofitica', historyUC: 'assente' }).alerts.some((a) => /cautela/.test(a)));
+});
+test('PUNLMP: stadio pTa (PUNLMP), ICD-O 8130/1, storia nel referto', () => {
+  const r = ev({ ...pun, historyUC: 'assente' });
+  issued(r);
+  assert.equal(r.stage, 'pTa (PUNLMP)');
+  assert.equal(r.icdo, '8130/1');
+  assert.match(report(r), /Storia di carcinoma uroteliale: assente/);
+});
+test('PUNLMP: storia non valutata → incompleto; storia presente → contraddizione', () => {
+  const nv = ev(pun);
+  incomplete(nv);
+  assert.match(nv.missing.join(' '), /criterio essenziale della PUNLMP/);
+  const pr = ev({ ...pun, historyUC: 'presente' });
+  conflict(pr);
+  assert.match(pr.conflicts.join(' '), /criterio essenziale della PUNLMP/);
+});
+test('urotelio ispessito ordinato con citologia "assente": contraddizione (prima PUNLMP)', () => {
+  conflict(ev({ ...pun, grade: 'assente', historyUC: 'assente' }));
+});
+test('grado monotono: contraddizione con papille normali, disordine, lesione piatta, invasione, quota HG', () => {
+  conflict(ev({ ...pap, grade: 'monotono', growth: 'esofitica' }));
+  conflict(ev({ ...pun, polarity: 'lg_lieve_disordine', hgPct: 0 }));
+  conflict(ev({ ...pun, polarity: 'hg_disordine', hgPct: 0 }));
+  conflict(ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'monotono', invasion: 'integra' }));
+  conflict(ev({ ...pun, invasion: 'lamina_propria', historyUC: 'assente' }));
+  conflict(ev({ ...pun, invasion: 'indeterminato', historyUC: 'assente' }));
+  conflict(ev({ ...pun, historyUC: 'assente', hgPct: 3 }));
+});
+test('pattern di crescita: solo per i papillari; negli altri papillari va solo nel referto', () => {
+  assert.equal(normalizeCase({ arch: 'piatta', growth: 'invertita' }).growth, null);
+  const lg = ev({ arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', hgPct: 0, invasion: 'integra', growth: 'invertita' });
+  assert.equal(lg.title, 'Carcinoma uroteliale papillare non invasivo di basso grado (pTa LG)');
+  assert.match(report(lg), /Pattern di crescita: invertito/);
 });
 
 /* ---------- Sottotipi = alto grado (WHO 2022, Invasive urothelial carcinoma, Grading) ---------- */
@@ -386,7 +441,7 @@ const ORIGINAL_ENTITY_TITLES = {
   atipia_reattiva: 'Atipia uroteliale reattiva',
   displasia: 'Displasia uroteliale',
   cis: 'Carcinoma uroteliale in situ (CIS / pTis)',
-  papilloma: 'Papilloma uroteliale (esofitico o invertito)',
+  papilloma: 'Papilloma uroteliale',
   punlmp: 'Neoplasia uroteliale papillare a basso potenziale di malignità (PUNLMP)',
   pta_lg: 'Carcinoma uroteliale papillare non invasivo di basso grado (pTa LG)',
   pta_hg: 'Carcinoma uroteliale papillare non invasivo di alto grado (pTa HG)',

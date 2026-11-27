@@ -25,6 +25,7 @@ L'esito è un **orientamento morfologico**: non sostituisce la diagnosi, che res
 - **Nessuna falsa precisione**: senza misura dell'estensione in lamina propria non si calcola alcuna classe ROL o T1m/T1e; senza quota di alto grado non si scrive 100%.
 - **Regola del 5%** applicata ai papillari non invasivi (pTa), come nel Blue Book, e per scelta del curatore anche ai papillari con invasione indeterminata (estensione non scritta nella fonte). Nel pT1/pT2 il grado segue il passo 3; se la quota di alto grado è ≥ 5% compare un avviso.
 - **Grado nell'invasivo**: ogni carcinoma invasivo va graduato; il basso grado invasivo è raro ma riconosciuto (WHO 2022). Il campo "sottotipo istologico" prevede tutti gli 11 sottotipi del Blue Book, con il loro codice ICD-O nel referto. Se è dichiarato un sottotipo, il grado è sempre alto: "i sottotipi e le differenziazioni divergenti sono tutti considerati di alto grado" (WHO 2022).
+- **Papilloma e PUNLMP (WHO 2022)**: il papilloma richiede il pattern di crescita (esofitico 8120/0, invertito 8121/0). La PUNLMP richiede al passo 3 il grado "lieve ingrandimento monotono, senza variazione" e la storia di carcinoma uroteliale: se è presente, la PUNLMP non è applicabile (criterio essenziale) e il verdetto è sospeso. La PUNLMP è pTa.
 - **Soglie sul valore inserito**: 5% di alto grado, 0,5 mm e 1,0 mm si confrontano sul numero digitato, senza arrotondamenti.
 - **Substaging pT1** riportato in parallelo con i sistemi in uso: micrometrico T1m/T1e (soglia 0,5 mm), ROL (soglia 1,0 mm) e livello rispetto alla muscularis mucosae, in forma descrittiva.
 
@@ -43,7 +44,7 @@ npm test
 
 ## Fonti principali
 
-- WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª ed. (IARC, 2022), capitoli *Invasive urothelial carcinoma*, *Non-invasive papillary urothelial carcinoma, low-grade* e *high-grade* (consultati da Filippo, novembre 2026).
+- WHO Classification of Tumours: Urinary and Male Genital Tumours, 5ª ed. (IARC, 2022), capitoli *Invasive urothelial carcinoma*, *Non-invasive papillary urothelial carcinoma, low-grade* e *high-grade*, *Urothelial papilloma*, *Inverted urothelial papilloma*, *Papillary urothelial neoplasm of low malignant potential* (consultati da Filippo, novembre 2026).
 - Raspollini MR et al. News in the classification of WHO 2022 bladder tumors. Pathologica 2023;115:32-40. doi:10.32074/1591-951X-838
 - van Rhijn BWG et al. A new and highly prognostic system to discern T1 bladder cancer substage. Eur Urol 2012;61:378-84. doi:10.1016/j.eururo.2011.10.026
 - Fransen van de Putte EE et al. Metric substage according to micro and extensive lamina propria invasion improves prognostics in T1 bladder cancer. Urol Oncol 2018;36:361.e7-361.e13. doi:10.1016/j.urolonc.2018.05.007
@@ -54,8 +55,7 @@ Le altre fonti sono citate nel piè di pagina della checklist.
 
 ## Punti di contenuto ancora da verificare sulla fonte
 
-- Codice ICD-O del papilloma invertito (la matrice usa 8120/0 per entrambe le forme di papilloma).
 - Definizione originale di T1m (singolo focus entro un campo a forte ingrandimento?): il motore applica solo la soglia di 0,5 mm. Il Blue Book parla solo di "microscopic vs extensive invasion".
-- Displasia e categoria "atipia di significato indeterminato" (capitolo CIS del Blue Book), PUNLMP e iperplasia uroteliale.
+- Displasia e categoria "atipia di significato indeterminato" (capitolo CIS del Blue Book) e iperplasia uroteliale.
 
-Verificati sulla fonte (novembre 2026): UPUMP non più entità autonoma; elenco e nomenclatura dei sottotipi; frase su CK7/CK20/CDX2; regola del 5% e dicitura "basso grado con componente di alto grado < 5%"; codici ICD-O 8130/2 dei papillari non invasivi e 8120/3 dell'invasivo; criteri TPS (N:C ≥ 0,7; il capitolo sull'invasivo scrive "> 0.7", incoerenza interna del Blue Book: si mantiene ≥ 0,7 come nella TPS).
+Verificati sulla fonte (novembre 2026): UPUMP non più entità autonoma; elenco e nomenclatura dei sottotipi; frase su CK7/CK20/CDX2; regola del 5% e dicitura "basso grado con componente di alto grado < 5%"; codici ICD-O 8130/2 dei papillari non invasivi e 8120/3 dell'invasivo; criteri TPS (N:C ≥ 0,7; il capitolo sull'invasivo scrive "> 0.7", incoerenza interna del Blue Book: si mantiene ≥ 0,7 come nella TPS); papilloma esofitico 8120/0 e invertito 8121/0; PUNLMP 8130/1, stadio pTa, atipia lieve e monotona, criterio essenziale "nessuna storia di carcinoma uroteliale".

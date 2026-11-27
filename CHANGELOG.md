@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.3.0 — 2026-11-26
+## 2.5.0 — 2026-11-27
 
-Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi test del motore della 2.2.0).
+Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi test del motore della 2.4.0).
 
 ### Cambiato
 - Quattro schede (Caso, Matrice delle entità, Trappole e sottotipi, IHC e TPS) al posto di un'unica pagina lunga; la scheda è indicata nell'indirizzo (`#matrice`, ecc.). "Carica" dalla matrice torna alla scheda Caso.
@@ -11,6 +11,21 @@ Impaginazione più compatta per la consultazione al PC durante la refertazione. 
 - Pulsanti delle opzioni con la sola etichetta; la descrizione completa è nel suggerimento al passaggio del mouse, oppure sempre visibile con "Mostra le descrizioni delle opzioni" (preferenza ricordata dal browser).
 - Scenari di riferimento e nota UPUMP in riquadri apribili; contesto e IHC in una scheda separata dal passo 4.
 - Intestazione ridotta a una riga.
+
+## 2.4.0 — 2026-11-27
+
+Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Urothelial papilloma*, *Inverted urothelial papilloma* e *Papillary urothelial neoplasm of low malignant potential*, su indicazione di Filippo.
+
+### Cambiato (cambia gli esiti)
+- Papilloma: nuovo campo "Pattern di crescita" (esofitico / invertito) per le lesioni papillari, obbligatorio per il verdetto di papilloma. Esofitico: "Papilloma uroteliale", ICD-O 8120/0; invertito: "Papilloma uroteliale invertito", ICD-O 8121/0, con criteri e diagnosi differenziali del capitolo dedicato. Prima: un solo esito "Papilloma uroteliale (esofitico o invertito)", 8120/0. Negli altri papillari il pattern di crescita compare solo nel referto.
+- PUNLMP: stadio "pTa (PUNLMP)" (prima "PUNLMP"); fonte: "PUNLMP is a non-invasive neoplasm and therefore considered stage pTa".
+- Nuovo grado al passo 3, solo per i papillari: "Lieve ingrandimento monotono, senza variazione (PUNLMP)". La PUNLMP richiede questo grado (fonte: "mild cytological atypia"; cellule "monotonous, with mild cellular and nuclear enlargement and without variation"). Urotelio ispessito ordinato con citologia "assente (normale)" ora è una contraddizione (prima dava PUNLMP). Grado monotono con papille normali, disordine architetturale, lesione piatta, invasione o quota HG > 0: contraddizione.
+- Nuovo campo "Storia di carcinoma uroteliale" (tre stati). PUNLMP: obbligatorio; se presente, verdetto sospeso (criterio essenziale "no history of urothelial carcinoma"). Papilloma: avviso di estrema cautela ed esame dell'intera lesione se presente o non valutato.
+
+### Cambiato (testi)
+- Passo 2: opzioni papillari allineate alla fonte (papilloma ≤ 7 strati o cordoni invertiti di 5–10 cellule; PUNLMP con urotelio ispessito o più cellulato).
+- Matrice: papilloma con codici 8120/0 e 8121/0, IHC dell'invertito (CK20 negativo, p53 e Ki-67 bassi); PUNLMP con stadio pTa, atipia lieve e monotona, criterio della storia.
+- Scheda TPS: categoria "low-grade urothelial neoplasm" (papilloma, PUNLMP, carcinoma di basso grado).
 
 ## 2.2.0 — 2026-11-26
 
