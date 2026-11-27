@@ -273,6 +273,33 @@ test('pattern di crescita: solo per i papillari; negli altri papillari va solo n
   assert.match(report(lg), /Pattern di crescita: invertito/);
 });
 
+/* ---------- CIS e displasia (WHO 2022, Urothelial carcinoma in situ) ---------- */
+test('displasia: grado "non graduata" (prima "Pre-CIS (basso/intermedio)") e avvertenza WHO', () => {
+  const r = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', invasion: 'integra' });
+  issued(r);
+  assert.equal(r.title, 'Displasia uroteliale');
+  assert.equal(r.gradeLabel, 'Displasia uroteliale (non graduata)');
+  assert.ok(r.criteria.some((c) => /poco riproducibile/.test(c) && /non sono raccomandati/.test(c)));
+  assert.ok(r.criteria.some((c) => /criterio della checklist, non del Blue Book/.test(c)), 'anche la displasia dichiara la regola della flogosi');
+});
+test('atipia di significato indeterminato: avvertenza WHO e regola della flogosi dichiarata come della checklist', () => {
+  const r = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'lieve', invasion: 'integra', inflammation: 'presente' });
+  issued(r);
+  assert.ok(r.criteria.some((c) => /criterio della checklist, non del Blue Book/.test(c)));
+  assert.ok(r.criteria.some((c) => /alcuni autori/.test(c)));
+});
+test('CIS: mitosi non necessarie, diffusione pagetoide sufficiente, pattern a piccole cellule, IHC non di routine', () => {
+  const r = ev({ arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'integra' });
+  const c = r.criteria.join(' ');
+  assert.doesNotMatch(c, /mitosi frequenti anche in assenza/);
+  assert.match(c, /non necessarie per la diagnosi/);
+  assert.match(c, /pagetoide/);
+  assert.match(c, /piccole cellule/);
+  assert.match(r.ihcNote, /non è necessaria di routine/);
+  assert.equal(r.stage, 'pTis');
+  assert.equal(r.icdo, '8120/2');
+});
+
 /* ---------- Sottotipi = alto grado (WHO 2022, Invasive urothelial carcinoma, Grading) ---------- */
 const HG_SUB = 'Alto grado (HG) — sottotipo: alto grado per definizione (WHO 2022)';
 test('pT1 con sottotipo presente e citologia lieve: alto grado (prima "Basso grado (LG)")', () => {
