@@ -14,6 +14,18 @@ Allineamento al capitolo WHO 2022 (Blue Book, 5ª ed.) *Urothelial carcinoma in 
 - Coerenza: matrice (CIS: diffusione pagetoide, mitosi non necessarie, IHC non di routine), scheda trappole "Flogosi vs CIS" e didascalia dello schema del CIS allineate agli stessi criteri; diagnosi differenziale della displasia "pattern a grandi cellule" (era "variante"). Dalla revisione indipendente.
 - Simulatore IHC: p53 "diffuso e intenso" come nella fonte, con la soglia pratica "> 70–80% dei nuclei" indicata come tale; "displasia severa" sostituito (termine non raccomandato); marcatori meno consolidati completati (ERBB2, CD138).
 
+## 2.5.0 — 2026-11-27
+
+Impaginazione più compatta per la consultazione al PC durante la refertazione. Solo presentazione: motore, testi diagnostici, soglie ed esiti invariati (stessi test del motore della 2.4.0).
+
+### Cambiato
+- Quattro schede (Caso, Matrice delle entità, Trappole e sottotipi, IHC e TPS) al posto di un'unica pagina lunga; la scheda è indicata nell'indirizzo (`#matrice`, ecc.). "Carica" dalla matrice torna alla scheda Caso.
+- Verdetto fisso a destra durante lo scorrimento. In alto: titolo, stadio, grado, ICD-O; finché il verdetto non è emesso, l'elenco dei campi da valutare o delle contraddizioni resta in vista.
+- Criteri e diagnosi differenziali, indicazione IHC, schema istologico, bozza del referto e casi salvati in riquadri apribili; "Copia referto" e "Salva caso" sempre visibili.
+- Pulsanti delle opzioni con la sola etichetta; la descrizione completa è nel suggerimento al passaggio del mouse, oppure sempre visibile con "Mostra le descrizioni delle opzioni" (preferenza ricordata dal browser).
+- Scenari di riferimento e nota UPUMP in riquadri apribili; contesto e IHC in una scheda separata dal passo 4.
+- Intestazione ridotta a una riga.
+
 ## 2.4.0 — 2026-11-27
 
 Allineamento ai capitoli WHO 2022 (Blue Book, 5ª ed.) *Urothelial papilloma*, *Inverted urothelial papilloma* e *Papillary urothelial neoplasm of low malignant potential*, su indicazione di Filippo.
