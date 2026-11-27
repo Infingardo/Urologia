@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.0 — 2026-11-27
+
+Su indicazione di Filippo: il substaging micrometrico del pT1 usa solo T1m/T1e; il sistema ROL non è più usato.
+
+### Cambiato (cambia gli esiti)
+- Stadio e riquadro del verdetto del pT1: "pT1 (T1m)" / "pT1 (T1e)" e "pT1 · T1e (1.4 mm)" (prima "pT1 (ROL1/ROL2)").
+- Referto: "Substaging pT1 (lamina propria): x mm → T1m (< 0,5 mm)" o "T1e (≥ 0,5 mm)", senza la classe ROL.
+- Criteri del pT1: tolta la frase sulla progressione associata al ROL2.
+
+### Cambiato (interfaccia e testi)
+- Indicatore del substaging con soglia 0,5 mm (era 1,0 mm) e indicazione T1m/T1e; opzione "MM non valutabile" con "preferire la misura micrometrica"; scenario "Carcinoma invasivo pT1 (T1e)" (era "(ROL2)"); matrice con T1m/T1e.
+- Il ROL resta citato solo in consultazione (scheda IHC e staging) tra i sistemi esistenti; fonti nel piè di pagina: van Rhijn 2012 ed EAU 2026 al posto della validazione ROL.
+
 ## 2.6.1 — 2026-11-27
 
 Solo testo dell'interfaccia: gli scenari di riferimento "Papillare con focus HG 3% (< 5%)" e "Papillare eterogeneo (HG 8% ≥ 5%)" si chiamano ora "Papillare con focus HG < 5%" e "Papillare eterogeneo (HG ≥ 5%)", perché le categorie comprendono qualunque quota sotto o da 5% in su (3% e 8% erano solo i valori di esempio, che restano negli scenari). Il pulsante "Ripristina checklist" si chiama "Nuovo caso" (stessa funzione: azzera tutti i campi, con doppio clic di conferma). Nessun esito cambia.

@@ -36,6 +36,7 @@ function test(name, fn) {
   try { fn(); passed++; } catch (e) { failures.push(`${name}\n    ${e.message.split('\n')[0]}`); }
 }
 
+const pt1 = (mm) => evaluateDiagnosis({ inflammation: 'assente', tangential: 'assente', blandSubtype: 'assente', arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: mm });
 const base = { inflammation: 'assente', tangential: 'assente', blandSubtype: 'assente' };
 const ev = (o) => evaluateDiagnosis({ ...base, ...o });
 const issued = (r) => assert.equal(r.verdictState, 'issued', `atteso verdetto emesso, ottenuto ${r.verdictState}: ${r.criteria.join(' | ')}`);
@@ -109,9 +110,9 @@ const cases = [
   ['pTa LG + HG 4%', { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra', hgPct: 4 }, 'Carcinoma uroteliale papillare non invasivo di basso grado con componente HG < 5%', 'pTa LG'],
   ['pTa HG per soglia 5%', { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra', hgPct: 5 }, 'Carcinoma uroteliale papillare non invasivo di alto grado (pTa HG)', 'pTa HG'],
   ['pTa HG grado alto, quota non quantificata', { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', invasion: 'integra' }, 'Carcinoma uroteliale papillare non invasivo di alto grado (pTa HG)', 'pTa HG'],
-  ['pT1 misurato', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: 1.0, pt1Anat: 'oltre_mm' }, 'Carcinoma uroteliale invasivo della lamina propria (pT1)', 'pT1 (ROL2)'],
+  ['pT1 misurato', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: 1.0, pt1Anat: 'oltre_mm' }, 'Carcinoma uroteliale invasivo della lamina propria (pT1)', 'pT1 (T1e)'],
   ['pT1 non misurato', { arch: 'papillare', polarity: 'hg_disordine', grade: 'alto', invasion: 'lamina_propria' }, 'Carcinoma uroteliale invasivo della lamina propria (pT1)', 'pT1'],
-  ['CIS + pT1', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'lamina_propria', pt1Mm: 0.4 }, 'CIS uroteliale con microinvasione / invasione lamina propria (pT1)', 'pT1 (ROL1)'],
+  ['CIS + pT1', { arch: 'piatta', polarity: 'perdita_polarita', grade: 'alto', invasion: 'lamina_propria', pt1Mm: 0.4 }, 'CIS uroteliale con microinvasione / invasione lamina propria (pT1)', 'pT1 (T1m)'],
   ['pT2', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'detrusore', mp: 'presente' }, 'Carcinoma uroteliale invasivo della muscolare propria (pT2)', 'pT2'],
   ['pT2 sottotipo blando (nested)', { arch: 'invasiva', polarity: 'pattern_blando', grade: 'lieve', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'nested' }, 'Carcinoma uroteliale muscolo-invasivo (sottotipo a citologia blanda)', 'pT2'],
   ['pT2 sottotipo non blando (micropapillare)', { arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'detrusore', blandSubtype: 'presente', subtypeName: 'micropapillare' }, 'Carcinoma uroteliale invasivo della muscolare propria (pT2), sottotipo micropapillare', 'pT2'],
@@ -153,16 +154,17 @@ test('substaging: mai "pT1b/c"; livello descrittivo', () => {
     assert.match(report(r), /Livello istoanatomico: /);
   }
 });
-test('pT1 non misurato: nessuna classe ROL / T1m-T1e', () => {
+test('pT1 non misurato: nessuna classe T1m/T1e', () => {
   const r = ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria' });
   assert.doesNotMatch(report(r) + r.chip, /ROL[12]|T1[me]\b/);
   assert.match(report(r), /estensione non misurata/);
 });
-test('soglie ROL e van Rhijn invariate', () => {
-  const at = (mm) => report(ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: mm }));
-  assert.match(at(0.4), /ROL1 .* T1m/);
-  assert.match(at(0.5), /ROL1 .* T1e/);
-  assert.match(at(1.0), /ROL2 .* T1e/);
+test('soglia van Rhijn invariata e nessun ROL nei risultati', () => {
+  const at = (mm) => report(pt1(mm)) + ' ' + pt1(mm).chip + ' ' + pt1(mm).stage + ' ' + pt1(mm).criteria.join(' ');
+  assert.match(at(0.4), /T1m/);
+  assert.match(at(0.5), /T1e/);
+  assert.match(at(1.0), /T1e/);
+  for (const mm of [0.4, 0.5, 0.99, 1.0, 1.4]) assert.doesNotMatch(at(mm), /ROL/);
 });
 test('invasivo: righe LVI, CIS associato, muscolare propria (anche se non valutate)', () => {
   const t = report(ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria' }));
@@ -385,19 +387,18 @@ test('avviso sottotipo con membrana basale integra: testo dedicato al micropapil
 });
 
 /* ---------- Soglie sul valore inserito, senza arrotondamenti (v2.0.1) ---------- */
-const pt1 = (mm) => ev({ arch: 'invasiva', polarity: 'fronte_irregolare', grade: 'alto', invasion: 'lamina_propria', pt1Mm: mm });
-test('pT1 0,45 mm: T1m e ROL1 (prima arrotondato a 0,5 → T1e)', () => {
+test('pT1 0,45 mm: T1m (prima arrotondato a 0,5 → T1e)', () => {
   const t = report(pt1(0.45));
-  assert.match(t, /0\.45 mm → ROL1 .* T1m/);
+  assert.match(t, /0\.45 mm → T1m/);
 });
 test('pT1 0,49 mm: T1m; 0,5 mm: T1e', () => {
   assert.match(report(pt1(0.49)), /T1m/);
   assert.match(report(pt1(0.5)), /T1e/);
 });
-test('pT1 0,95 e 0,99 mm: ROL1 (prima arrotondati a 1,0 → ROL2); 1,0 mm: ROL2', () => {
-  assert.equal(pt1(0.95).stage, 'pT1 (ROL1)');
-  assert.equal(pt1(0.99).stage, 'pT1 (ROL1)');
-  assert.equal(pt1(1.0).stage, 'pT1 (ROL2)');
+test('pT1: stadio con la classe micrometrica T1m/T1e (ROL tolto, 2.7.0)', () => {
+  assert.equal(pt1(0.49).stage, 'pT1 (T1m)');
+  assert.equal(pt1(0.5).stage, 'pT1 (T1e)');
+  assert.equal(pt1(1.4).chip, 'pT1 · T1e (1.4 mm)');
 });
 test('quota HG 4,5% e 4,99%: basso grado (prima 4,5 arrotondato a 5 → alto grado)', () => {
   const p = { arch: 'papillare', polarity: 'lg_lieve_disordine', grade: 'lieve', invasion: 'integra' };
@@ -408,10 +409,10 @@ test('quota HG 4,5% e 4,99%: basso grado (prima 4,5 arrotondato a 5 → alto gra
 
 test('misura nel referto mostrata come inserita, coerente con la classe (0,499 e 0,999 mm)', () => {
   const a = report(pt1(0.499));
-  assert.match(a, /0\.499 mm → ROL1 .* T1m/);
+  assert.match(a, /0\.499 mm → T1m/);
   assert.doesNotMatch(a, /0\.5 mm/);
   const b = pt1(0.999);
-  assert.match(report(b), /0\.999 mm → ROL1/);
+  assert.match(report(b), /0\.999 mm → T1e/);
   assert.match(b.chip, /0\.999 mm/);
   assert.match(b.schematicCaption, /0\.999 mm/);
 });
@@ -459,7 +460,7 @@ const ORIGINAL_PRESET_TITLES = {
   pTa_LG_minorHG: 'Carcinoma uroteliale papillare non invasivo di basso grado con componente HG < 5%',
   CIS_denudato: 'Carcinoma uroteliale in situ (CIS / pTis)',
   reattiva_BCG: 'Atipia uroteliale reattiva',
-  pT1_ROL2: 'Carcinoma uroteliale invasivo della lamina propria (pT1)',
+  pT1_T1e: 'Carcinoma uroteliale invasivo della lamina propria (pT1)',
   tangenziale: 'Proliferazione uroteliale con invasione stromale indeterminata',
 };
 for (const [key, title] of Object.entries(ORIGINAL_PRESET_TITLES)) {
